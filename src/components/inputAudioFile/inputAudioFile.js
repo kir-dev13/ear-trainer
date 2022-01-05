@@ -32,9 +32,9 @@ const InputAudioFile = (props) => {
                     props.loadAudioFiles(
                         checkInputFiles(
                             e.target.files,
-                            /audio\/mpeg|audio\/mp3|audio\/mp4|audio\/ogg|audio\/x+|wav/
-                        ),
-                        e
+                            /audio\/mpeg|audio\/mp3|audio\/mp4|audio\/ogg|audio\/x+|wav/,
+                            e
+                        )
                     );
                 }}
             />
