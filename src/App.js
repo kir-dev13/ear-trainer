@@ -8,12 +8,13 @@ import "./App.sass";
 function App() {
     const [tracks, setTracks] = useState([]);
 
-    function loadAudioFiles(audioFiles) {
+    function loadAudioFiles(audioFiles, e) {
         if (audioFiles.length > 0) {
             setTracks([...audioFiles]);
         } else {
             console.log("ни одного аудио файла не было загружено");
         }
+        e.target.value = "";
     }
 
     return (
