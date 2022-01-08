@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react";
 
 import WaveSurfer from "wavesurfer.js";
+import Button from "../button/button";
 
 const WaveForm = ({ selectedTrack }) => {
     const waveformRef = useRef(null);
 
-    useEffect(() => {
-        // let player = document.querySelector(".player");
-        WaveSurfer.create({ container: waveformRef.current });
-    }, []);
+    //TODO: wavesurfer иницируется в главном компонентe App и передаётся пропсами в компонент WaveForm для отображения формы волны. Все состояния и методы хранятся в главном компоненте App */
+
+    // useEffect(() => {
+    //     // let player = document.querySelector(".player");
+    //     WaveSurfer.create({ container: waveformRef.current });
+    // }, []);
 
     const wavesurfer = useRef(null);
 
@@ -34,21 +37,29 @@ const WaveForm = ({ selectedTrack }) => {
             wavesurfer.current.on("ready", function () {
                 // https://wavesurfer-js.org/docs/methods.html
                 wavesurfer.current.setVolume(0.5);
-                // wavesurfer.current.play();
+                //TODO: здесь меняется состояние игры (останавливается)
             });
         }
     };
 
     const handlePlay = () => {
-        if (wavesurfer) {
+        if (wavesurfer && !wavesurfer.current.isPlaying()) {
             wavesurfer.current.play();
+        } else if (wavesurfer && wavesurfer.current.isPlaying()) {
+            wavesurfer.current.pause();
         }
     };
 
     return (
         <div>
             <div id="waveform" ref={waveformRef} />
-            <button onClick={handlePlay}>Play</button>
+            {/* <button onClick={handlePlay}>Play</button>
+             */}
+            {wavesurfer.current ? (
+                <Button handlePlay={handlePlay} />
+            ) : (
+                <p>загрузи аудио файл</p>
+            )}
         </div>
     );
 };

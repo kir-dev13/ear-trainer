@@ -20,22 +20,7 @@ function App() {
     return (
         <div className="App">
             <InputAudioFile loadAudioFiles={loadAudioFiles} />
-            <button
-                onClick={() => {
-                    console.log(tracks[0]);
-                    console.log(tracks.length);
-                }}
-            >
-                Console
-            </button>
-            {/* <button
-                onClick={() => {
-                    // playMusic();
-                    wavesurfer.current.play();
-                }}
-            >
-                Play
-            </button> */}
+
             <WaveForm selectedTrack={tracks[0]} />
         </div>
     );
