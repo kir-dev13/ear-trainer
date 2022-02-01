@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import WaveForm from "./components/WaveForm/waveForm";
+import Player from "./components/Player/Player";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.css";
@@ -21,7 +21,7 @@ function App() {
         <div className="App">
             <InputAudioFile loadAudioFiles={loadAudioFiles} />
 
-            <WaveForm selectedTrack={tracks[0]} />
+            <Player selectedTrack={tracks[0]} />
         </div>
     );
 }
