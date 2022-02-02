@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 
+import { createFilters } from "../../logic/createFilters";
+
 import Button from "../button/button";
 
-import EQ from "../../logic/EQ";
+// import EQ from "../../logic/EQ";
 
 const Player = ({ selectedTrack }) => {
     // const [selectedTrack, setSelectedTrack] = useState(props.selectedTrack);
@@ -19,16 +21,14 @@ const Player = ({ selectedTrack }) => {
         wavesurfer.current = WaveSurfer.create({
             container: waveformRef.current,
             splitChannels: false,
+            hideScrollbar: true,
+            responsive: true,
         });
 
         // Removes events, elements and disconnects Web Audio nodes.
         // when component unmount
         return () => {
             wavesurfer.current.destroy();
-            document
-                .querySelector("#equalizer")
-                .querySelectorAll("input")
-                .forEach((item) => item.remove());
         };
     }, [selectedTrack]);
 
@@ -42,66 +42,49 @@ const Player = ({ selectedTrack }) => {
 
             wavesurfer.current.on("ready", function () {
                 setPlaying(false);
-                // Create filters
-                var filters = EQ.map(function (band) {
-                    var filter =
-                        wavesurfer.current.backend.ac.createBiquadFilter();
-                    filter.type = band.type;
-                    filter.gain.value = 0;
-                    filter.Q.value = 1;
-                    filter.frequency.value = band.f;
-                    return filter;
-                });
-
+                let filters = createFilters(wavesurfer.current);
                 // Connect filters to wavesurfer
                 wavesurfer.current.backend.setFilters(filters);
 
                 // Bind filters to vertical range sliders
-                let container = document.querySelector("#equalizer");
-                filters.forEach(function (filter) {
-                    let input = document.createElement("input");
-                    // console.log(typeof input);
-                    // console.log(wavesurfer.current.util.extend);
-                    // console.log(wavesurfer.current.drawer.style);
+                // let container = document.querySelector("#equalizer");
+                // filters.forEach(function (filter) {
+                //     let input = document.createElement("input");
 
-                    // wavesurfer.current.util.extend(input, {
-                    //     type: "range",
-                    //     min: -40,
-                    //     max: 40,
-                    //     value: 0,
-                    //     title: filter.frequency.value,
-                    // });
+                //     input.setAttribute("type", "range");
+                //     input.setAttribute("min", -12);
+                //     input.setAttribute("max", 12);
+                //     input.setAttribute("value", 0);
+                //     input.setAttribute("title", filter.frequency.value);
 
-                    input.setAttribute("type", "range");
-                    input.setAttribute("min", -12);
-                    input.setAttribute("max", 12);
-                    input.setAttribute("value", 0);
-                    input.setAttribute("title", filter.frequency.value);
+                //     input.style.display = "inline-block";
+                //     input.setAttribute("orient", "vertical");
 
-                    input.style.display = "inline-block";
-                    input.setAttribute("orient", "vertical");
+                //     wavesurfer.current.drawer.style(input, {
+                //         webkitAppearance: "slider-vertical",
+                //         width: "50px",
+                //         height: "150px",
+                //     });
 
-                    wavesurfer.current.drawer.style(input, {
-                        webkitAppearance: "slider-vertical",
-                        width: "50px",
-                        height: "150px",
-                    });
+                //     container.appendChild(input);
 
-                    container.appendChild(input);
+                //     let onChange = function (e) {
+                //         filter.gain.value = ~~e.target.value;
+                //     };
 
-                    let onChange = function (e) {
-                        filter.gain.value = ~~e.target.value;
-                    };
-
-                    input.addEventListener("input", onChange);
-                    input.addEventListener("change", onChange);
-                });
+                //     input.addEventListener("input", onChange);
+                //     input.addEventListener("change", onChange);
+                // });
                 wavesurfer.current.filters = filters;
             });
         }
     };
 
     const handlePlay = () => {
+        console.log(wavesurfer.current.backend.filters);
+        // wavesurfer.current.backend.filters[0].gain.value = 12;
+        // wavesurfer.current.backend.filters[1].gain.value = 12;
+        // wavesurfer.current.backend.filters[2].gain.value = 12;
         wavesurfer.current.playPause();
         setPlaying(!playing);
     };
