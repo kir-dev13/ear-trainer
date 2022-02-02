@@ -1,17 +1,18 @@
 import { useState } from "react";
 
 const Button = (props) => {
-    const [playing, setPlaying] = useState(false);
+    // const [playing, setPlaying] = useState(props.playing);
     //TODO: ТЕКСТ КНОПКИ ДОЛЖЕН ЗАВИСЕТЬ ОТ ГЛОБАЛЬНОГО СОСТОЯНИЯ ПРИЛОЖЕНИЯ */
     //TODO: МЕНЯТЬ ОНА ДОЛЖНА СОСТОЯНИЕ ВСЕГО ПРИЛОЖЕНИЯ */
     return (
         <button
             onClick={() => {
-                setPlaying(!playing);
+                // setPlaying(!playing);
                 props.handlePlay();
             }}
         >
-            {playing ? "Stop" : "Play"}
+            {/* {props.children} */}
+            {props.playing ? "Pause" : "Play"}
             {/* {playbuttonText} */}
             {/* {props.children} */}
         </button>

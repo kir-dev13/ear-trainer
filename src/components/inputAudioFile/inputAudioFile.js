@@ -25,7 +25,7 @@ const InputAudioFile = (props) => {
             <input
                 id="input"
                 type="file"
-                multiple
+                // multiple
                 onChange={(e) => {
                     props.loadAudioFiles(
                         checkInputFiles(
