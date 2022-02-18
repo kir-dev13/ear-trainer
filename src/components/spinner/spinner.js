@@ -11,7 +11,7 @@ const Spinner = () => {
         textAlign: "center",
       }}
       width="128px"
-      height="128px"
+      // height="128px"
       viewBox="0 0 100 100"
       preserveAspectRatio="xMidYMid"
     >
