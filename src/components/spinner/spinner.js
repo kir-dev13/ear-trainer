@@ -4,7 +4,8 @@ const Spinner = () => {
       style={{
         position: "absolute",
         margin: "auto",
-        transform: "translate(100%)",
+        left: "50%",
+        transform: "translate(-50%)",
         background: "none",
         display: "block",
         shapRendering: "auto",

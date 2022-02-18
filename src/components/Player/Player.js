@@ -6,9 +6,11 @@ import { createFilters } from "../../logic/createFilters";
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
 
+import "./Player.sass";
+
 // import EQ from "../../logic/EQ";
 
-const Player = ({ selectedTrack }) => {
+const Player = ({ selectedTrack, WavesurferCreate }) => {
   // const [selectedTrack, setSelectedTrack] = useState(props.selectedTrack);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -111,9 +113,7 @@ const Player = ({ selectedTrack }) => {
       ></div>
       {/* <div id="equalizer" style={{ marginTop: "10px" }}></div> */}
       {wavesurfer.current ? (
-        <Button handlePlay={handlePlay} playing={playing}>
-          {/* {wavesurfer.current.isPlaying() ? "Stop" : "Start"} */}
-        </Button>
+        <Button handlePlay={handlePlay} playing={playing}></Button>
       ) : (
         <p>загрузи аудио файл</p>
       )}
