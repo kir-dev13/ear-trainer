@@ -38,16 +38,13 @@ const Player = ({ selectedTrack, WavesurferCreate }) => {
 
   useEffect(() => {
     loadInWaveSurf();
+    document.querySelector("#equalizer").remove();
   }, [selectedTrack]);
 
   const loadInWaveSurf = () => {
     if (selectedTrack) {
       wavesurfer.current.loadBlob(selectedTrack);
       setLoading(true);
-
-      wavesurfer.current.on("loading", (progress) => {
-        console.log(progress);
-      });
 
       wavesurfer.current.on("ready", function () {
         setPlaying(false);
@@ -57,34 +54,37 @@ const Player = ({ selectedTrack, WavesurferCreate }) => {
         wavesurfer.current.backend.setFilters(filters);
 
         // Bind filters to vertical range sliders
-        // let container = document.querySelector("#equalizer");
-        // filters.forEach(function (filter) {
-        //     let input = document.createElement("input");
+        const equalizer = document.createElement("div");
+        equalizer.id = "equalizer";
+        document.querySelector("#player").append(equalizer);
 
-        //     input.setAttribute("type", "range");
-        //     input.setAttribute("min", -12);
-        //     input.setAttribute("max", 12);
-        //     input.setAttribute("value", 0);
-        //     input.setAttribute("title", filter.frequency.value);
+        filters.forEach(function (filter) {
+          let input = document.createElement("input");
 
-        //     input.style.display = "inline-block";
-        //     input.setAttribute("orient", "vertical");
+          input.setAttribute("type", "range");
+          input.setAttribute("min", -12);
+          input.setAttribute("max", 12);
+          input.setAttribute("value", 0);
+          input.setAttribute("title", filter.frequency.value);
 
-        //     wavesurfer.current.drawer.style(input, {
-        //         webkitAppearance: "slider-vertical",
-        //         width: "50px",
-        //         height: "150px",
-        //     });
+          input.style.display = "inline-block";
+          input.setAttribute("orient", "vertical");
 
-        //     container.appendChild(input);
+          wavesurfer.current.drawer.style(input, {
+            webkitAppearance: "slider-vertical",
+            width: "50px",
+            height: "150px",
+          });
 
-        //     let onChange = function (e) {
-        //         filter.gain.value = ~~e.target.value;
-        //     };
+          equalizer.appendChild(input);
 
-        //     input.addEventListener("input", onChange);
-        //     input.addEventListener("change", onChange);
-        // });
+          let onChange = function (e) {
+            filter.gain.value = ~~e.target.value;
+          };
+
+          input.addEventListener("input", onChange);
+          input.addEventListener("change", onChange);
+        });
         wavesurfer.current.filters = filters;
       });
 
@@ -96,15 +96,12 @@ const Player = ({ selectedTrack, WavesurferCreate }) => {
 
   const handlePlay = () => {
     console.log(wavesurfer.current.backend.filters);
-    // wavesurfer.current.backend.filters[0].gain.value = 12;
-    // wavesurfer.current.backend.filters[1].gain.value = 12;
-    // wavesurfer.current.backend.filters[2].gain.value = 12;
     wavesurfer.current.playPause();
     setPlaying(!playing);
   };
 
   return (
-    <div>
+    <div id="player">
       {selectedTrack && loading ? <Spinner /> : null}
       <div
         style={{ position: "relative" }}
