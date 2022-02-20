@@ -38,7 +38,10 @@ const Player = ({ selectedTrack, WavesurferCreate }) => {
 
   useEffect(() => {
     loadInWaveSurf();
-    document.querySelector("#equalizer").remove();
+    // document.querySelector("#equalizer").remove();
+    if (document.querySelector("#equalizer")) {
+      document.querySelector("#equalizer").remove();
+    }
   }, [selectedTrack]);
 
   const loadInWaveSurf = () => {
