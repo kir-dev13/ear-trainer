@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
-    "sass": "^1.45.2"
+    "sass": "^1.45.2",
+    "wavesurfer-react": "^2.0.12"
   }
 }
