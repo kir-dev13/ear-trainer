@@ -35,9 +35,51 @@ function App() {
         wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
-            const filters = createFilters(wavesurfer);
-            wavesurfer.backend.setFilters(filters);
+            const filters = createFilters(wavesurfer); //create
+            wavesurfer.backend.setFilters(filters); //connect
             console.log("filters ready: ", filters);
+
+            // Create vertical range sliders and bind filter to them
+            function createEQSliders() {
+                if (document.querySelector("#equalizer")) {
+                    console.log("check");
+
+                    document.querySelector("#equalizer").remove();
+                }
+                const equalizer = document.createElement("div");
+                equalizer.id = "equalizer";
+                document.querySelector(".App").append(equalizer);
+
+                filters.forEach(function (filter) {
+                    let input = document.createElement("input");
+
+                    input.setAttribute("type", "range");
+                    input.setAttribute("min", -12);
+                    input.setAttribute("max", 12);
+                    input.setAttribute("value", 0);
+                    input.setAttribute("title", filter.frequency.value);
+
+                    input.style.display = "inline-block";
+                    input.setAttribute("orient", "vertical");
+
+                    wavesurfer.drawer.style(input, {
+                        webkitAppearance: "slider-vertical",
+                        width: "50px",
+                        height: "150px",
+                    });
+
+                    equalizer.appendChild(input);
+
+                    let onChange = function (e) {
+                        filter.gain.value = ~~e.target.value;
+                    };
+
+                    input.addEventListener("input", onChange);
+                    input.addEventListener("change", onChange);
+                });
+                wavesurfer.filters = filters;
+            }
+            createEQSliders();
         });
 
         wavesurfer.on("finish", () => {
