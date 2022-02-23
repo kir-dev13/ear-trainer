@@ -3,6 +3,7 @@ import { WaveSurfer, WaveForm } from "wavesurfer-react";
 
 import Player from "./components/Player/Player";
 import Button from "./components/button/button";
+import Spinner from "./components/spinner/spinner";
 
 import { createFilters } from "./logic/createFilters";
 
@@ -14,6 +15,7 @@ function App() {
     const [track, setTracks] = useState(null);
     const [wavesurfer, setWavesurfer] = useState(null);
     const [playing, setPlaying] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -26,6 +28,7 @@ function App() {
     useEffect(() => {
         if (track) {
             wavesurfer.loadBlob(track);
+            setLoading(true);
             setPlaying(false);
             eventsSubscribe();
         }
@@ -35,6 +38,7 @@ function App() {
         wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
+            setLoading(false);
             const filters = createFilters(wavesurfer); //create
             wavesurfer.backend.setFilters(filters); //connect
             console.log("filters ready: ", filters);
@@ -121,7 +125,11 @@ function App() {
                     waveColor={"green"}
                     progressColor={"black"}
                     id="waveform"
-                ></WaveForm>
+                    style={{ position: "relative" }}
+                >
+                    {loading ? <Spinner /> : null}
+                    {/* !! стили спинера.... !! */}
+                </WaveForm>
             </WaveSurfer>
 
             <Button undisabled={!!track} handleAction={handlePlayPauseTrack}>
