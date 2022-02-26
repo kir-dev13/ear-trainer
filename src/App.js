@@ -6,6 +6,7 @@ import Button from "./components/button/button";
 import Spinner from "./components/spinner/spinner";
 
 import { createFilters } from "./logic/createFilters";
+import { changeGain } from "./logic/trainingEQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.css";
@@ -35,13 +36,12 @@ function App() {
     }, [track]);
 
     const eventsSubscribe = () => {
-        wavesurfer.on("loading", (progress) => console.log(progress));
+        // wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
             setLoading(false);
             const filters = createFilters(wavesurfer); //create
             wavesurfer.backend.setFilters(filters); //connect
-            console.log("filters ready: ", filters);
 
             // Create vertical range sliders and bind filter to them
             function createEQSliders() {
@@ -109,6 +109,10 @@ function App() {
             setPlaying(!playing);
         }
     };
+
+    // if (wavesurfer?.filters) {
+    //     changeGain(wavesurfer.filters);
+    // } //!!!
 
     return (
         <div className="App">
