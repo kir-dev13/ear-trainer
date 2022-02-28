@@ -40,14 +40,15 @@ function App() {
 
         wavesurfer.on("ready", () => {
             setLoading(false);
+            wavesurfer.setVolume(0.5);
+            // wavesurfer.getVolume();
+            console.log("wavesurfer.getVolume(): ", wavesurfer.getVolume());
             const filters = createFilters(wavesurfer); //create
             wavesurfer.backend.setFilters(filters); //connect
 
             // Create vertical range sliders and bind filter to them
             function createEQSliders() {
                 if (document.querySelector("#equalizer")) {
-                    console.log("check");
-
                     document.querySelector("#equalizer").remove();
                 }
                 const equalizer = document.createElement("div");

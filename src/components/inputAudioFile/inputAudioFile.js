@@ -37,7 +37,9 @@ const InputAudioFile = (props) => {
                     );
                 }}
             />
-            <label htmlFor="input">{props.trackName}</label>
+            <label htmlFor="input">
+                {props.trackName || "change audio file"}
+            </label>
         </form>
     );
 };
