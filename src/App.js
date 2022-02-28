@@ -17,6 +17,7 @@ function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [volume, setVolume] = useState(0.5);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -35,53 +36,55 @@ function App() {
         }
     }, [track]);
 
+    // Create vertical range sliders and bind filter to them
+    function createEQSliders(filters) {
+        if (document.querySelector("#equalizer")) {
+            document.querySelector("#equalizer").remove();
+        }
+        const equalizer = document.createElement("div");
+        equalizer.id = "equalizer";
+        document.querySelector(".App").append(equalizer);
+
+        filters.forEach(function (filter) {
+            let input = document.createElement("input");
+
+            input.setAttribute("type", "range");
+            input.setAttribute("min", -12);
+            input.setAttribute("max", 12);
+            input.setAttribute("value", 0);
+            input.setAttribute("title", filter.frequency.value);
+
+            input.style.display = "inline-block";
+            input.setAttribute("orient", "vertical");
+
+            wavesurfer.drawer.style(input, {
+                webkitAppearance: "slider-vertical",
+                width: "50px",
+                height: "150px",
+            });
+
+            equalizer.appendChild(input);
+
+            let onChange = function (e) {
+                filter.gain.value = ~~e.target.value;
+            };
+
+            input.addEventListener("input", onChange);
+            input.addEventListener("change", onChange);
+        });
+        wavesurfer.filters = filters;
+    }
+
     const eventsSubscribe = () => {
         // wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
             setLoading(false);
-            const filters = createFilters(wavesurfer); //create
+            wavesurfer.setVolume(volume);
+            const filters = createFilters(wavesurfer); //create filters
             wavesurfer.backend.setFilters(filters); //connect
 
-            // Create vertical range sliders and bind filter to them
-            function createEQSliders() {
-                if (document.querySelector("#equalizer")) {
-                    document.querySelector("#equalizer").remove();
-                }
-                const equalizer = document.createElement("div");
-                equalizer.id = "equalizer";
-                document.querySelector(".App").append(equalizer);
-
-                filters.forEach(function (filter) {
-                    let input = document.createElement("input");
-
-                    input.setAttribute("type", "range");
-                    input.setAttribute("min", -12);
-                    input.setAttribute("max", 12);
-                    input.setAttribute("value", 0);
-                    input.setAttribute("title", filter.frequency.value);
-
-                    input.style.display = "inline-block";
-                    input.setAttribute("orient", "vertical");
-
-                    wavesurfer.drawer.style(input, {
-                        webkitAppearance: "slider-vertical",
-                        width: "50px",
-                        height: "150px",
-                    });
-
-                    equalizer.appendChild(input);
-
-                    let onChange = function (e) {
-                        filter.gain.value = ~~e.target.value;
-                    };
-
-                    input.addEventListener("input", onChange);
-                    input.addEventListener("change", onChange);
-                });
-                wavesurfer.filters = filters;
-            }
-            createEQSliders();
+            // createEQSliders(filters);
         });
 
         wavesurfer.on("finish", () => {
@@ -115,6 +118,12 @@ function App() {
         }
     };
 
+    const handleChangeVolume = (e) => {
+        wavesurfer.setVolume(~~e.target.value / 100);
+        setVolume(~~e.target.value / 100);
+        console.log(~~e.target.value / 100);
+    };
+
     return (
         <div className="App">
             <InputAudioFile
@@ -137,7 +146,20 @@ function App() {
                 </WaveForm>
             </WaveSurfer>
 
-            <Button undisabled={!!track} handleAction={handlePlayPauseTrack}>
+            {track ? (
+                <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={volume * 100}
+                    onChange={(e) => handleChangeVolume(e)}
+                />
+            ) : null}
+
+            <Button
+                undisabled={!!track && !loading}
+                handleAction={handlePlayPauseTrack}
+            >
                 {playing ? "Pause" : "Play"}
             </Button>
             <Button undisabled={playing} handleAction={handleTrainingStart}>
