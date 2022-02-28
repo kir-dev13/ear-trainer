@@ -6,7 +6,7 @@ import Button from "./components/button/button";
 import Spinner from "./components/spinner/spinner";
 
 import { createFilters } from "./logic/createFilters";
-import { changeGain } from "./logic/trainingEQ";
+import { training } from "./logic/trainingEQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.css";
@@ -46,8 +46,6 @@ function App() {
             // Create vertical range sliders and bind filter to them
             function createEQSliders() {
                 if (document.querySelector("#equalizer")) {
-                    console.log("check");
-
                     document.querySelector("#equalizer").remove();
                 }
                 const equalizer = document.createElement("div");
@@ -110,9 +108,12 @@ function App() {
         }
     };
 
-    // if (wavesurfer?.filters) {
-    //     changeGain(wavesurfer.filters);
-    // } //!!!
+    //training start
+    const handleTrainingStart = () => {
+        if (playing) {
+            training(wavesurfer.filters);
+        }
+    };
 
     return (
         <div className="App">
@@ -138,6 +139,9 @@ function App() {
 
             <Button undisabled={!!track} handleAction={handlePlayPauseTrack}>
                 {playing ? "Pause" : "Play"}
+            </Button>
+            <Button undisabled={playing} handleAction={handleTrainingStart}>
+                Start training!
             </Button>
         </div>
     );
