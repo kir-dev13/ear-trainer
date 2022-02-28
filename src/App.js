@@ -1,15 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
 
-import Player from "./components/Player/Player";
 import Button from "./components/button/button";
 import Spinner from "./components/spinner/spinner";
+import AnswerArea from "./components/AnswerArea/AnswerArea";
 
 import { createFilters } from "./logic/createFilters";
-import { training } from "./logic/trainingEQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
-import "./App.css";
 import "./App.sass";
 
 function App() {
@@ -83,7 +81,7 @@ function App() {
             wavesurfer.setVolume(volume);
             const filters = createFilters(wavesurfer); //create filters
             wavesurfer.backend.setFilters(filters); //connect
-
+            wavesurfer.filters = filters;
             // createEQSliders(filters);
         });
 
@@ -111,21 +109,15 @@ function App() {
         }
     };
 
-    //training start
-    const handleTrainingStart = () => {
-        if (playing) {
-            training(wavesurfer.filters);
-        }
+    const handleChangeVolume = (e) => {
+        wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
+        setVolume(+(e.target.value / 100).toFixed(2));
     };
 
-    const handleChangeVolume = (e) => {
-        wavesurfer.setVolume(~~e.target.value / 100);
-        setVolume(~~e.target.value / 100);
-        console.log(~~e.target.value / 100);
-    };
+    //training start
 
     return (
-        <div className="App">
+        <main className="App">
             <InputAudioFile
                 trackName={track?.name}
                 loadAudioFiles={loadAudioFiles}
@@ -162,10 +154,9 @@ function App() {
             >
                 {playing ? "Pause" : "Play"}
             </Button>
-            <Button undisabled={playing} handleAction={handleTrainingStart}>
-                Start training!
-            </Button>
-        </div>
+
+            <AnswerArea wavesurfer={wavesurfer} playing={playing} />
+        </main>
     );
 }
 

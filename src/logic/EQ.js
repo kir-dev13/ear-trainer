@@ -1,5 +1,9 @@
 const EQ = [
     {
+        f: 0,
+        type: "peaking",
+    },
+    {
         f: 64,
         type: "peaking",
     },
