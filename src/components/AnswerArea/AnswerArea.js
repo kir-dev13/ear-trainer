@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import EQ from "../../logic/EQ";
 import Button from "../button/button";
@@ -10,70 +10,80 @@ import "./AnswerArea.sass";
 const AnswerArea = ({ playing, wavesurfer }) => {
     // const [trainingStatus, setTrainingStatus] = useState("");
     const [answer, setAnswer] = useState({});
-    const [answerFreq, setAnswerFreq] = useState({
+    const [selectedFreq, setSelectedFreq] = useState({
         state: false,
         value: null,
     });
-    const [answerDir, setAnswerDir] = useState({
+    const [selectedDir, setSelectedDir] = useState({
         state: false,
         value: null,
     });
+    const [answersArray, setAnswersArray] = useState([]);
+
+    useEffect(() => {
+        console.log(answersArray);
+    }, [answersArray]);
 
     const handleTrainingStart = () => {
-        setAnswerFreq({
+        checkAnswer();
+
+        setSelectedFreq({
             state: false,
             value: null,
         });
+        setSelectedDir({
+            state: false,
+            value: null,
+        });
+
         if (playing) {
             setAnswer(training(wavesurfer.filters));
         }
     };
 
-    // const handleCheckAnswer = (e) => {
-    //     const buttons = document.querySelectorAll(".frequency");
-    //     buttons.forEach((item) => item.setAttribute("disabled", true));
-    //     if (+e.target.dataset.freq === answer[0]) {
-    //         e.target.classList.add("green");
-    //     } else {
-    //         e.target.classList.add("red");
-    //         buttons.forEach((item) => {
-    //             if (+item.dataset.freq === answer[0]) {
-    //                 item.classList.add("green");
-    //             }
-    //         });
-    //     }
-    //     setTimeout(() => {
-    //         document
-    //             .querySelectorAll(".frequency")
-    //             .forEach((item) => item.classList.remove("red", "green"));
-    //         handleTrainingStart();
-    //     }, 2000);
-    // };
-
     const handleAnswerFreq = (e) => {
-        setAnswerFreq({
+        setSelectedFreq({
             state: true,
             value: +e.target.dataset.freq,
         });
     };
     const handleAnswerDir = (e) => {
-        setAnswerDir({
+        setSelectedDir({
             state: true,
-            value: e.target.dataset.direction,
+            value: +e.target.dataset.direction,
         });
+    };
+
+    const checkAnswer = () => {
+        if (selectedFreq.state && selectedDir.state) {
+            if (
+                selectedFreq.value === answer.freq &&
+                selectedDir.value === answer.dir
+            ) {
+                setAnswersArray([...answersArray, true]);
+            } else {
+                setAnswersArray([...answersArray, false]);
+            }
+        }
+    };
+
+    const showAnswer = (target, selected, answer) => {
+        let s = "";
+        if (selectedFreq.state && selectedDir.state) {
+            if (target === answer) {
+                s = "green";
+            } else if (selected.value === target) {
+                s = "red";
+            }
+        } else if (selected.state) {
+            target === selected.value ? (s = "select") : (s = "");
+        }
+        return s;
     };
 
     const AnswerFreq = () => {
         const buttonsList = EQ.map((item, i) => {
-            //checking function !!!!!!
-            let s = "";
-            if (answerFreq.state) {
-                if (item.f === answer.freq) {
-                    s = "green";
-                } else if (answerFreq.value === item.f) {
-                    s = "red";
-                }
-            }
+            const s = showAnswer(item.f, selectedFreq, answer.freq);
             return (
                 <li key={i}>
                     <button
@@ -86,15 +96,13 @@ const AnswerArea = ({ playing, wavesurfer }) => {
                 </li>
             );
         });
-        console.log("render");
-        return <ul>{buttonsList}</ul>;
+        return <ul className="frequencies">{buttonsList}</ul>;
     };
 
     const AnswerDir = () => {
-        // checking function !!!!
-        let s = "";
         const directionButtons = [];
         for (let i = 1; i > -2; i -= 2) {
+            const s = showAnswer(i, selectedDir, answer.dir);
             directionButtons.push(
                 <button
                     key={i}
