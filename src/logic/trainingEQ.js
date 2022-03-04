@@ -14,7 +14,8 @@ function randomDirection() {
 }
 
 const changeGain = (filters) => {
-    const filterNumber = randomFilter();
+    const filterNumber = 0;
+    // const filterNumber = randomFilter();
     const direction = randomDirection();
     delay(2000)
         .then(() => {
