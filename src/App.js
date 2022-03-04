@@ -11,11 +11,11 @@ import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.sass";
 
 function App() {
-    const [track, setTracks] = useState(null);
     const [wavesurfer, setWavesurfer] = useState(null);
-    const [playing, setPlaying] = useState(false);
+    const [track, setTracks] = useState(null);
     const [loading, setLoading] = useState(false);
     const [volume, setVolume] = useState(0.5);
+    const [playing, setPlaying] = useState(false);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount

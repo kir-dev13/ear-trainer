@@ -1,12 +1,9 @@
 import EQ from "./EQ";
+import { delay } from "./sideFunctions";
 
 function randomFilter() {
     return Math.floor(Math.random() * EQ.length);
 }
-
-const delay = (ms) => {
-    return new Promise((resolve) => setTimeout(() => resolve(), ms));
-};
 
 function randomDirection() {
     let result = Math.floor(Math.random() * 3) - 1;

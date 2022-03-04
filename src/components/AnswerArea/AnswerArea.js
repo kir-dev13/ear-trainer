@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 
-import EQ from "../../logic/EQ";
-import Button from "../button/button";
-
 import { getQuest } from "../../logic/trainingEQ";
+import { delay, delayWithInterval } from "../../logic/sideFunctions";
+import EQ from "../../logic/EQ";
+
+import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
 const AnswerArea = ({ playing, wavesurfer }) => {
     // const [trainingStatus, setTrainingStatus] = useState("");
+    //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [answer, setAnswer] = useState({});
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
@@ -22,10 +24,20 @@ const AnswerArea = ({ playing, wavesurfer }) => {
 
     useEffect(() => {
         console.log(answersArray);
+        delay(2000).then(() => handleTrainingStart());
     }, [answersArray]);
 
-    const handleTrainingStart = () => {
+    useEffect(() => {
         checkAnswer();
+    }, [selectedFreq.state, selectedDir.state]);
+
+    function log(a) {
+        console.log(a / 1000);
+    }
+
+    const handleTrainingStart = () => {
+        console.log("GO!!");
+        // delayWithInterval(5000, log).then(() => console.log("поехали!"));
 
         setSelectedFreq({
             state: false,
@@ -42,6 +54,9 @@ const AnswerArea = ({ playing, wavesurfer }) => {
     };
 
     const handleAnswerFreq = (e) => {
+        if (selectedFreq.state && selectedDir.state) {
+            return;
+        }
         //исключаем direction, если freq === 0
         if (answer.freq === 0 || +e.target.dataset.freq === 0) {
             setSelectedDir({
@@ -55,6 +70,9 @@ const AnswerArea = ({ playing, wavesurfer }) => {
         });
     };
     const handleAnswerDir = (e) => {
+        if (selectedFreq.state && selectedDir.state) {
+            return;
+        }
         setSelectedDir({
             state: true,
             value: +e.target.dataset.direction,
@@ -62,6 +80,8 @@ const AnswerArea = ({ playing, wavesurfer }) => {
     };
 
     const checkAnswer = () => {
+        console.log("check Answer");
+
         if (selectedFreq.state && selectedDir.state) {
             if (
                 selectedFreq.value === answer.freq &&
