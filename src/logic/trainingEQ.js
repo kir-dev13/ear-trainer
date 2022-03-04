@@ -14,8 +14,7 @@ function randomDirection() {
 }
 
 const changeGain = (filters) => {
-    const filterNumber = 0;
-    // const filterNumber = randomFilter();
+    const filterNumber = randomFilter();
     const direction = randomDirection();
     delay(2000)
         .then(() => {
@@ -34,10 +33,10 @@ const changeGain = (filters) => {
     };
 };
 
-function training(filters) {
+function getQuest(filters) {
     const currentAnswer = changeGain(filters);
     console.log("currentAnswer: ", currentAnswer);
     return currentAnswer;
 }
 
-export { training };
+export { getQuest };

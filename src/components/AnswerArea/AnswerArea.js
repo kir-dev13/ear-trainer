@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import EQ from "../../logic/EQ";
 import Button from "../button/button";
 
-import { training } from "../../logic/trainingEQ";
+import { getQuest } from "../../logic/trainingEQ";
 
 import "./AnswerArea.sass";
 
@@ -37,7 +37,7 @@ const AnswerArea = ({ playing, wavesurfer }) => {
         });
 
         if (playing) {
-            setAnswer(training(wavesurfer.filters));
+            setAnswer(getQuest(wavesurfer.filters));
         }
     };
 
