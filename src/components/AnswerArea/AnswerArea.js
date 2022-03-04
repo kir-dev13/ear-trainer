@@ -43,7 +43,7 @@ const AnswerArea = ({ playing, wavesurfer }) => {
 
     const handleAnswerFreq = (e) => {
         //исключаем direction, если freq === 0
-        if (answer.freq === 0) {
+        if (answer.freq === 0 || +e.target.dataset.freq === 0) {
             setSelectedDir({
                 state: true,
                 value: answer.dir,
@@ -109,10 +109,12 @@ const AnswerArea = ({ playing, wavesurfer }) => {
     const AnswerDir = () => {
         const directionButtons = [];
         for (let i = 1; i > -2; i -= 2) {
-            const s =
-                answer.freq === 0 && !selectedFreq.state
-                    ? showAnswer(i, selectedDir, answer.dir)
-                    : "";
+            let s = showAnswer(i, selectedDir, answer.dir);
+
+            if (answer.freq === 0 && selectedFreq.state) {
+                s = "";
+            }
+
             directionButtons.push(
                 <button
                     key={i}
