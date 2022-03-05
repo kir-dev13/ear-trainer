@@ -128,9 +128,6 @@ function App() {
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
-            if (playing) {
-                setTraining(false);
-            }
             setPlaying(!playing);
         }
     };
@@ -147,7 +144,6 @@ function App() {
 
     const handleTrainingRepeat = () => {
         console.log("repeat");
-        //!! для того чтобы повторить вопрос, нужно в getQuest в changeGain передать тот же номер фильтра, что и в answer
         setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
     };
 
@@ -200,7 +196,6 @@ function App() {
             </Button>
 
             <AnswerArea
-                wavesurfer={wavesurfer}
                 playing={playing}
                 training={training}
                 answer={answer}

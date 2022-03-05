@@ -6,7 +6,7 @@ import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ training, answer, checkAnswer }) => {
+const AnswerArea = ({ playing, training, answer, checkAnswer }) => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
@@ -39,7 +39,11 @@ const AnswerArea = ({ training, answer, checkAnswer }) => {
 
     //запись выбранных ответов в state
     const handleAnswerFreq = (e) => {
-        if ((selectedFreq.state && selectedDir.state) || !training) {
+        if (
+            (selectedFreq.state && selectedDir.state) ||
+            !training ||
+            !playing
+        ) {
             return;
         }
         //исключаем direction, если freq === 0
@@ -56,7 +60,11 @@ const AnswerArea = ({ training, answer, checkAnswer }) => {
     };
 
     const handleAnswerDir = (e) => {
-        if ((selectedFreq.state && selectedDir.state) || !training) {
+        if (
+            (selectedFreq.state && selectedDir.state) ||
+            !training ||
+            !playing
+        ) {
             return;
         }
         setSelectedDir({
