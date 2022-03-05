@@ -10,9 +10,11 @@ function randomDirection() {
     return result === 0 ? randomDirection() : result;
 }
 
-const changeGain = (filters) => {
-    const filterNumber = randomFilter();
-    const direction = randomDirection();
+const changeGain = (
+    filters,
+    direction = randomDirection(),
+    filterNumber = randomFilter()
+) => {
     delay(2000)
         .then(() => {
             filters[filterNumber].gain.value += 12 * direction;
@@ -27,13 +29,14 @@ const changeGain = (filters) => {
     return {
         freq: filters[filterNumber].frequency.value,
         dir: direction,
+        num: filterNumber,
     };
 };
 
-function getQuest(filters) {
-    const currentAnswer = changeGain(filters);
+function getQuestEq(filters, direction, filterNumber) {
+    const currentAnswer = changeGain(filters, direction, filterNumber);
     console.log("currentAnswer: ", currentAnswer);
     return currentAnswer;
 }
 
-export { getQuest };
+export { getQuestEq };

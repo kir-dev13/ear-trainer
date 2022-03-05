@@ -1,17 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
-import { getQuest } from "../../logic/trainingEQ";
-import { delay, delayWithInterval } from "../../logic/sideFunctions";
 import EQ from "../../logic/EQ";
 
 import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ playing, wavesurfer, training }) => {
-    // const [trainingStatus, setTrainingStatus] = useState("");
+const AnswerArea = ({ training, answer, checkAnswer }) => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
-    const [answer, setAnswer] = useState({});
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
         value: null,
@@ -20,45 +16,28 @@ const AnswerArea = ({ playing, wavesurfer, training }) => {
         state: false,
         value: null,
     });
-    const [answersArray, setAnswersArray] = useState([]);
 
-    useEffect(() => {
-        if (training) {
-            doTraining();
+    useLayoutEffect(() => {
+        if (training && answer) {
+            setSelectedFreq({
+                state: false,
+                value: null,
+            });
+            setSelectedDir({
+                state: false,
+                value: null,
+            });
         }
-    }, [training]);
+    }, [answer]);
 
+    //Проверить ответ, когда все кнопки выбраны
     useEffect(() => {
-        console.log(answersArray);
-        delay(2000).then(() => doTraining());
-    }, [answersArray]);
-
-    useEffect(() => {
-        checkAnswer();
+        if (selectedFreq.state && selectedDir.state && training) {
+            checkAnswer(selectedFreq, selectedDir);
+        }
     }, [selectedFreq.state, selectedDir.state]);
 
-    function log(a) {
-        console.log(a / 1000);
-    }
-
-    const doTraining = () => {
-        console.log("GO!!");
-        // delayWithInterval(5000, log).then(() => console.log("поехали!"));
-
-        setSelectedFreq({
-            state: false,
-            value: null,
-        });
-        setSelectedDir({
-            state: false,
-            value: null,
-        });
-
-        if (playing && training) {
-            setAnswer(getQuest(wavesurfer.filters));
-        }
-    };
-
+    //запись выбранных ответов в state
     const handleAnswerFreq = (e) => {
         if ((selectedFreq.state && selectedDir.state) || !training) {
             return;
@@ -75,6 +54,7 @@ const AnswerArea = ({ playing, wavesurfer, training }) => {
             value: +e.target.dataset.freq,
         });
     };
+
     const handleAnswerDir = (e) => {
         if ((selectedFreq.state && selectedDir.state) || !training) {
             return;
@@ -83,21 +63,6 @@ const AnswerArea = ({ playing, wavesurfer, training }) => {
             state: true,
             value: +e.target.dataset.direction,
         });
-    };
-
-    const checkAnswer = () => {
-        console.log("check Answer");
-
-        if (selectedFreq.state && selectedDir.state && training) {
-            if (
-                selectedFreq.value === answer.freq &&
-                selectedDir.value === answer.dir
-            ) {
-                setAnswersArray([...answersArray, true]);
-            } else {
-                setAnswersArray([...answersArray, false]);
-            }
-        }
     };
 
     const showAnswer = (target, selected, answer) => {

@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
 
+import { createFilters } from "./logic/createFilters";
+import { getQuestEq } from "./logic/trainingEQ";
+import { delay } from "./logic/sideFunctions";
+
 import Button from "./components/button/button";
 import Spinner from "./components/spinner/spinner";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
-
-import { createFilters } from "./logic/createFilters";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.sass";
@@ -17,6 +19,8 @@ function App() {
     const [volume, setVolume] = useState(0.5);
     const [playing, setPlaying] = useState(false);
     const [training, setTraining] = useState(false);
+    const [answer, setAnswer] = useState({});
+    const [answersArray, setAnswersArray] = useState([]);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -35,6 +39,23 @@ function App() {
             eventsSubscribe();
         }
     }, [track]);
+
+    useEffect(() => {
+        if (training) {
+            delay(2000).then(() => setAnswer(getQuestEq(wavesurfer.filters)));
+        }
+    }, [training, answersArray]);
+
+    const checkAnswer = (selectedFreq, selectedDir) => {
+        if (
+            selectedFreq.value === answer.freq &&
+            selectedDir.value === answer.dir
+        ) {
+            setAnswersArray([...answersArray, true]);
+        } else {
+            setAnswersArray([...answersArray, false]);
+        }
+    };
 
     // Create vertical range sliders and bind filter to them
     function createEQSliders(filters) {
@@ -124,6 +145,12 @@ function App() {
         setTraining(!training);
     };
 
+    const handleTrainingRepeat = () => {
+        console.log("repeat");
+        //!! для того чтобы повторить вопрос, нужно в getQuest в changeGain передать тот же номер фильтра, что и в answer
+        setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
+    };
+
     return (
         <main className="App">
             <InputAudioFile
@@ -136,8 +163,8 @@ function App() {
                 <WaveForm
                     hideScrollbar={true}
                     responsive={true}
-                    waveColor={"blue"}
-                    progressColor={"orange"}
+                    waveColor={"rgb(116, 60, 121)"}
+                    progressColor={"#ffa70467"}
                     id="waveform"
                     style={{ position: "relative" }}
                 >
@@ -163,14 +190,21 @@ function App() {
                 {playing ? "Pause" : "Play"}
             </Button>
 
-            <Button handleAction={handleTrainingStart} undisabled={playing}>
-                {training ? "Stop" : "Start"} training
+            <Button
+                handleAction={
+                    training ? handleTrainingRepeat : handleTrainingStart
+                }
+                undisabled={playing}
+            >
+                {training ? "Repeat question" : "Start"} training
             </Button>
 
             <AnswerArea
                 wavesurfer={wavesurfer}
                 playing={playing}
                 training={training}
+                answer={answer}
+                checkAnswer={checkAnswer}
             />
         </main>
     );
