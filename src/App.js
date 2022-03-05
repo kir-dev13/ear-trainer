@@ -16,6 +16,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [playing, setPlaying] = useState(false);
+    const [training, setTraining] = useState(false);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -30,6 +31,7 @@ function App() {
             wavesurfer.loadBlob(track);
             setLoading(true);
             setPlaying(false);
+            setTraining(false);
             eventsSubscribe();
         }
     }, [track]);
@@ -105,6 +107,9 @@ function App() {
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
+            if (playing) {
+                setTraining(false);
+            }
             setPlaying(!playing);
         }
     };
@@ -115,6 +120,9 @@ function App() {
     };
 
     //training start
+    const handleTrainingStart = () => {
+        setTraining(!training);
+    };
 
     return (
         <main className="App">
@@ -128,8 +136,8 @@ function App() {
                 <WaveForm
                     hideScrollbar={true}
                     responsive={true}
-                    waveColor={"green"}
-                    progressColor={"black"}
+                    waveColor={"blue"}
+                    progressColor={"orange"}
                     id="waveform"
                     style={{ position: "relative" }}
                 >
@@ -155,7 +163,15 @@ function App() {
                 {playing ? "Pause" : "Play"}
             </Button>
 
-            <AnswerArea wavesurfer={wavesurfer} playing={playing} />
+            <Button handleAction={handleTrainingStart} undisabled={playing}>
+                {training ? "Stop" : "Start"} training
+            </Button>
+
+            <AnswerArea
+                wavesurfer={wavesurfer}
+                playing={playing}
+                training={training}
+            />
         </main>
     );
 }

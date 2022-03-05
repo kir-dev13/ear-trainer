@@ -8,7 +8,7 @@ import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ playing, wavesurfer }) => {
+const AnswerArea = ({ playing, wavesurfer, training }) => {
     // const [trainingStatus, setTrainingStatus] = useState("");
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [answer, setAnswer] = useState({});
@@ -23,8 +23,14 @@ const AnswerArea = ({ playing, wavesurfer }) => {
     const [answersArray, setAnswersArray] = useState([]);
 
     useEffect(() => {
+        if (training) {
+            doTraining();
+        }
+    }, [training]);
+
+    useEffect(() => {
         console.log(answersArray);
-        delay(2000).then(() => handleTrainingStart());
+        delay(2000).then(() => doTraining());
     }, [answersArray]);
 
     useEffect(() => {
@@ -35,7 +41,7 @@ const AnswerArea = ({ playing, wavesurfer }) => {
         console.log(a / 1000);
     }
 
-    const handleTrainingStart = () => {
+    const doTraining = () => {
         console.log("GO!!");
         // delayWithInterval(5000, log).then(() => console.log("поехали!"));
 
@@ -48,13 +54,13 @@ const AnswerArea = ({ playing, wavesurfer }) => {
             value: null,
         });
 
-        if (playing) {
+        if (playing && training) {
             setAnswer(getQuest(wavesurfer.filters));
         }
     };
 
     const handleAnswerFreq = (e) => {
-        if (selectedFreq.state && selectedDir.state) {
+        if ((selectedFreq.state && selectedDir.state) || !training) {
             return;
         }
         //исключаем direction, если freq === 0
@@ -70,7 +76,7 @@ const AnswerArea = ({ playing, wavesurfer }) => {
         });
     };
     const handleAnswerDir = (e) => {
-        if (selectedFreq.state && selectedDir.state) {
+        if ((selectedFreq.state && selectedDir.state) || !training) {
             return;
         }
         setSelectedDir({
@@ -82,7 +88,7 @@ const AnswerArea = ({ playing, wavesurfer }) => {
     const checkAnswer = () => {
         console.log("check Answer");
 
-        if (selectedFreq.state && selectedDir.state) {
+        if (selectedFreq.state && selectedDir.state && training) {
             if (
                 selectedFreq.value === answer.freq &&
                 selectedDir.value === answer.dir
@@ -151,9 +157,6 @@ const AnswerArea = ({ playing, wavesurfer }) => {
 
     return (
         <div className={"answers"}>
-            <Button handleAction={handleTrainingStart} undisabled={playing}>
-                Start training!
-            </Button>
             <div>
                 <AnswerDir />
                 <AnswerFreq />
