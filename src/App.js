@@ -45,7 +45,8 @@ function App() {
         if (training) {
             answersArray.length === 0
                 ? setAppState("get ready")
-                : setAppState(answersArray[answersArray.length - 1]);
+                : setAppState(answersArray[answersArray.length - 1].status);
+            console.log(answersArray);
             delay(3000).then(() => {
                 setAppState(3);
                 setAnswer(getQuestEq(wavesurfer.filters));
@@ -59,10 +60,10 @@ function App() {
             selectedFreq.value === answer.freq &&
             selectedDir.value === answer.dir
         ) {
-            setAnswersArray([...answersArray, "right"]);
+            setAnswersArray([...answersArray, { ...answer, status: "right" }]);
             setAppState("right");
         } else {
-            setAnswersArray([...answersArray, "wrong"]);
+            setAnswersArray([...answersArray, { ...answer, status: "wrong" }]);
             setAppState("wrong");
         }
     };
@@ -111,7 +112,7 @@ function App() {
         if (audioFiles.length > 0) {
             setTracks(audioFiles[0]);
         } else {
-            console.log("ни одного аудио файла не было загружено");
+            setAppState("ни одного аудио файла не было загружено");
         }
         e.target.value = "";
     }
