@@ -15,17 +15,23 @@ const changeGain = (
     direction = randomDirection(),
     filterNumber = randomFilter()
 ) => {
-    delay(2000)
-        .then(() => {
-            filters[filterNumber].gain.value += 12 * direction;
-            console.log("start");
-        })
-        .then(() =>
-            delay(3000).then(() => {
-                filters[filterNumber].gain.value -= 12 * direction;
-                console.log("finish");
-            })
-        );
+    // delay(2000)
+    //     .then(() => {
+    //         filters[filterNumber].gain.value += 12 * direction;
+    //         console.log("start");
+    //     })
+    //     .then(() =>
+    //         delay(3000).then(() => {
+    //             filters[filterNumber].gain.value -= 12 * direction;
+    //             console.log("finish");
+    //         })
+    //     );
+    filters[filterNumber].gain.value += 12 * direction;
+    console.log("start");
+    delay(3000).then(() => {
+        filters[filterNumber].gain.value -= 12 * direction;
+        console.log("finish");
+    });
     return {
         freq: filters[filterNumber].frequency.value,
         dir: direction,

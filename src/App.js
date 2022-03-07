@@ -34,8 +34,23 @@ function App() {
     };
 
     useEffect(() => {
+        if (typeof appState === "number" && appState > 0) {
+            setTimeout(setAppState, 1000, appState - 1);
+        } else if (appState === 0) {
+            setAppState("your answer?");
+        }
+    }, [appState]);
+
+    useEffect(() => {
         if (training) {
-            delay(2000).then(() => setAnswer(getQuestEq(wavesurfer.filters)));
+            answersArray.length === 0
+                ? setAppState("get ready")
+                : setAppState(answersArray[answersArray.length - 1]);
+            delay(3000).then(() => {
+                setAppState(3);
+                setAnswer(getQuestEq(wavesurfer.filters));
+            });
+            // setAnswer(getQuestEq(wavesurfer.filters));
         }
     }, [training, answersArray]);
 
@@ -44,9 +59,11 @@ function App() {
             selectedFreq.value === answer.freq &&
             selectedDir.value === answer.dir
         ) {
-            setAnswersArray([...answersArray, true]);
+            setAnswersArray([...answersArray, "right"]);
+            setAppState("right");
         } else {
-            setAnswersArray([...answersArray, false]);
+            setAnswersArray([...answersArray, "wrong"]);
+            setAppState("wrong");
         }
     };
 
