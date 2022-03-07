@@ -1,43 +1,37 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-import { createFilters } from "./logic/createFilters";
 import { getQuestEq } from "./logic/trainingEQ";
 import { delay } from "./logic/sideFunctions";
 
+import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
 import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
+import AppState from "./components/AppState/AppState";
 
-import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import "./App.sass";
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [volume, setVolume] = useState(0.5);
     const [playing, setPlaying] = useState(false);
     const [training, setTraining] = useState(false);
     const [answer, setAnswer] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
+    const [appState, setAppState] = useState("load audio file");
 
-    const wavesurferRef = useRef();
-    //create wavesurfer instance once, when component Wavesurfer mount
-    const handleWSMount = (waveSurfer) => {
-        wavesurferRef.current = waveSurfer;
-        setWavesurfer(wavesurferRef.current);
+    const setWavesurferInState = (ws) => {
+        setWavesurfer(ws);
     };
-
-    //loading file in wavesurfer
-    useEffect(() => {
-        if (track) {
-            wavesurfer.loadBlob(track);
-            setLoading(true);
-            setPlaying(false);
-            setTraining(false);
-            eventsSubscribe();
-        }
-    }, [track]);
+    const setPlayingInState = (state) => {
+        setPlaying(state);
+    };
+    const setTrainingInState = (state) => {
+        setTraining(state);
+    };
+    const setAppStateInState = (state) => {
+        setAppState(state);
+    };
 
     useEffect(() => {
         if (training) {
@@ -95,24 +89,6 @@ function App() {
         wavesurfer.filters = filters;
     }
 
-    const eventsSubscribe = () => {
-        // wavesurfer.on("loading", (progress) => console.log(progress));
-
-        wavesurfer.on("ready", () => {
-            setLoading(false);
-            wavesurfer.setVolume(volume);
-            const filters = createFilters(wavesurfer); //create filters
-            wavesurfer.backend.setFilters(filters); //connect
-            wavesurfer.filters = filters;
-            // createEQSliders(filters);
-        });
-
-        wavesurfer.on("finish", () => {
-            wavesurfer.stop();
-            setPlaying(false);
-        });
-    };
-
     //upload files and save first in state
     function loadAudioFiles(audioFiles, e) {
         if (audioFiles.length > 0) {
@@ -129,11 +105,6 @@ function App() {
             wavesurfer.playPause();
             setPlaying(!playing);
         }
-    };
-
-    const handleChangeVolume = (e) => {
-        wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
-        setVolume(+(e.target.value / 100).toFixed(2));
     };
 
     //training start
@@ -154,15 +125,17 @@ function App() {
             />
 
             <Player
-                handleWSMount={handleWSMount}
+                setWavesurferInState={setWavesurferInState}
+                setPlayingInState={setPlayingInState}
+                setTrainingInState={setTrainingInState}
+                setAppStateInState={setAppStateInState}
                 wavesurfer={wavesurfer}
                 track={track}
                 playing={playing}
-                loading={loading}
-                volume={volume}
                 handlePlayPauseTrack={handlePlayPauseTrack}
-                handleChangeVolume={handleChangeVolume}
             />
+
+            <AppState>{appState}</AppState>
 
             <Button
                 handleAction={
