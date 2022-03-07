@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { WaveSurfer, WaveForm } from "wavesurfer-react";
 
 import { createFilters } from "./logic/createFilters";
 import { getQuestEq } from "./logic/trainingEQ";
 import { delay } from "./logic/sideFunctions";
 
+import Player from "./components/Player/Player";
 import Button from "./components/button/button";
-import Spinner from "./components/spinner/spinner";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
@@ -154,37 +153,16 @@ function App() {
                 loadAudioFiles={loadAudioFiles}
             />
 
-            {/* <Player selectedTrack={tracks} /> */}
-            <WaveSurfer onMount={handleWSMount}>
-                <WaveForm
-                    hideScrollbar={true}
-                    responsive={true}
-                    waveColor={"rgb(116, 60, 121)"}
-                    progressColor={"#ffa70467"}
-                    id="waveform"
-                    style={{ position: "relative" }}
-                >
-                    {loading ? <Spinner /> : null}
-                    {/* !! стили спинера.... !! */}
-                </WaveForm>
-            </WaveSurfer>
-
-            {track ? (
-                <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={volume * 100}
-                    onChange={(e) => handleChangeVolume(e)}
-                />
-            ) : null}
-
-            <Button
-                undisabled={!!track && !loading}
-                handleAction={handlePlayPauseTrack}
-            >
-                {playing ? "Pause" : "Play"}
-            </Button>
+            <Player
+                handleWSMount={handleWSMount}
+                wavesurfer={wavesurfer}
+                track={track}
+                playing={playing}
+                loading={loading}
+                volume={volume}
+                handlePlayPauseTrack={handlePlayPauseTrack}
+                handleChangeVolume={handleChangeVolume}
+            />
 
             <Button
                 handleAction={
