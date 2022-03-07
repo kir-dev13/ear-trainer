@@ -130,7 +130,7 @@ function App() {
     };
 
     const handleTrainingRepeat = () => {
-        console.log("repeat");
+        setAppState(3);
         setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
     };
 
