@@ -8,6 +8,7 @@ import Player from "./components/Player/Player";
 import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 import AppState from "./components/AppState/AppState";
+import Statistic from "./components/statistic/statstic";
 
 import "./App.sass";
 
@@ -34,8 +35,14 @@ function App() {
     };
 
     useEffect(() => {
-        if (typeof appState === "number" && appState > 0) {
-            setTimeout(setAppState, 1000, appState - 1);
+        if (
+            typeof appState === "number" &&
+            appState > 0 &&
+            wavesurfer.isPlaying()
+        ) {
+            setTimeout(() => {
+                setAppState(appState - 1);
+            }, 1000);
         } else if (appState === 0) {
             setAppState("your answer?");
         }
@@ -46,14 +53,19 @@ function App() {
             answersArray.length === 0
                 ? setAppState("get ready")
                 : setAppState(answersArray[answersArray.length - 1].status);
-            console.log(answersArray);
             delay(3000).then(() => {
-                setAppState(3);
-                setAnswer(getQuestEq(wavesurfer.filters));
+                startQuestion();
             });
             // setAnswer(getQuestEq(wavesurfer.filters));
         }
     }, [training, answersArray]);
+
+    const startQuestion = () => {
+        if (wavesurfer.isPlaying()) {
+            setAppState(3);
+            setAnswer(getQuestEq(wavesurfer.filters));
+        }
+    };
 
     const checkAnswer = (selectedFreq, selectedDir) => {
         if (
@@ -121,6 +133,13 @@ function App() {
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
+            if (!wavesurfer.isPlaying()) {
+                setAppState("paused");
+            } else if (training) {
+                setAppState("give you answer or press repeat question");
+            } else {
+                setAppState("press Start training");
+            }
             setPlaying(!playing);
         }
     };
@@ -131,8 +150,10 @@ function App() {
     };
 
     const handleTrainingRepeat = () => {
-        setAppState(3);
-        setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
+        setAppState("get ready");
+        delay(3000).then(() => {
+            startQuestion();
+        });
     };
 
     return (
@@ -153,7 +174,7 @@ function App() {
                 handlePlayPauseTrack={handlePlayPauseTrack}
             />
 
-            <AppState>{appState}</AppState>
+            <AppState playing={playing}>{appState}</AppState>
 
             <Button
                 handleAction={
@@ -161,7 +182,7 @@ function App() {
                 }
                 undisabled={playing}
             >
-                {training ? "Repeat question" : "Start"} training
+                {training ? "Repeat question" : "Start training"}
             </Button>
 
             <AnswerArea
@@ -170,6 +191,7 @@ function App() {
                 answer={answer}
                 checkAnswer={checkAnswer}
             />
+            <Statistic answersArray={answersArray} />
         </main>
     );
 }

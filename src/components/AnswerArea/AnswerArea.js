@@ -42,7 +42,8 @@ const AnswerArea = ({ playing, training, answer, checkAnswer }) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
             !training ||
-            !playing
+            !playing ||
+            Object.keys(answer).length === 0
         ) {
             return;
         }
@@ -63,7 +64,8 @@ const AnswerArea = ({ playing, training, answer, checkAnswer }) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
             !training ||
-            !playing
+            !playing ||
+            Object.keys(answer).length === 0
         ) {
             return;
         }

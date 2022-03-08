@@ -1,9 +1,14 @@
 import "./AppState.sass";
 
-const AppState = ({ children }) => {
+const AppState = ({ children, playing, training }) => {
+    let state = children;
+
+    if ((!playing && training) || (!playing && typeof state === "number")) {
+        state = "paused";
+    }
     return (
         <div className="app_state">
-            <p>{children}</p>
+            <p>{state}</p>
         </div>
     );
 };
