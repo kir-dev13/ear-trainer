@@ -53,6 +53,7 @@ const Player = ({
 
         wavesurfer.on("finish", () => {
             wavesurfer.stop();
+            setAppStateInState("Нажмите play и затем начать тренировку");
             setPlayingInState(false);
         });
     };

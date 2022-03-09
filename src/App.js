@@ -21,7 +21,7 @@ function App() {
     const [track, setTracks] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [training, setTraining] = useState(false);
-    const [answer, setAnswer] = useState({});
+    const [quest, setQuest] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
 
@@ -65,6 +65,8 @@ function App() {
             if (answersArray.length === 0) {
                 setAppState("приготовьтесь");
             } else {
+                //!! то что ниже срабатывает после включения тренировки
+                //!! текущее состояние тренировки: 1) пауза перед вопросом 2) вопрос 3)ожидание ответа 4)ответ
                 answersArray[answersArray.length - 1].status
                     ? setAppState("верно")
                     : setAppState("неверно");
@@ -74,21 +76,21 @@ function App() {
         }
     }, [training, answersArray]);
 
-    const startQuestion = (answer = undefined) => {
+    const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
             setAppState(3);
-            setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
+            setQuest(getQuestEq(wavesurfer.filters, quest?.dir, quest?.num));
         }
     };
 
     const checkAnswer = (selectedFreq, selectedDir) => {
         if (
-            selectedFreq.value === answer.freq &&
-            selectedDir.value === answer.dir
+            selectedFreq.value === quest.freq &&
+            selectedDir.value === quest.dir
         ) {
-            setAnswersArray([...answersArray, { ...answer, status: true }]);
+            setAnswersArray([...answersArray, { ...quest, status: true }]);
         } else {
-            setAnswersArray([...answersArray, { ...answer, status: false }]);
+            setAnswersArray([...answersArray, { ...quest, status: false }]);
         }
     };
 
@@ -138,9 +140,10 @@ function App() {
         if (wavesurfer) {
             wavesurfer.playPause();
             if (!wavesurfer.isPlaying()) {
+                clearInterval(timerReverse);
                 setAppState("пауза");
             } else if (training) {
-                setAppState("Дайте ответ или нажмите повторить");
+                trainingRepeat();
             } else {
                 setAppState("Нажмите Начать тренировку");
             }
@@ -150,14 +153,17 @@ function App() {
 
     //training start
     const handleTrainingStart = () => {
-        if (!training) setAppState("приготовьтесь");
+        if (training) {
+            //!! clearTimeout(timerReverse.current);
+            setAppState("тренировка остановлена");
+        }
         setTraining(!training);
     };
 
-    const handleTrainingRepeat = () => {
-        setAppState("приготовьтесь");
+    const trainingRepeat = () => {
+        setAppState("сейчас будет повтор вопроса");
         delay(3000).then(() => {
-            startQuestion(answer);
+            startQuestion(quest);
         });
     };
 
@@ -182,19 +188,14 @@ function App() {
 
             <AppState playing={playing}>{appState}</AppState>
 
-            <Button
-                handleAction={
-                    training ? handleTrainingRepeat : handleTrainingStart
-                }
-                undisabled={playing}
-            >
-                {training ? "Повтор вопроса" : "Начать тренировку"}
+            <Button handleAction={handleTrainingStart} undisabled={playing}>
+                {training ? "Остановить тренировку" : "Начать тренировку"}
             </Button>
 
             <AnswerArea
                 playing={playing}
                 training={training}
-                answer={answer}
+                quest={quest}
                 checkAnswer={checkAnswer}
             />
             <Statistic answersArray={answersArray} />
