@@ -4,7 +4,7 @@ const AppState = ({ children, playing, training }) => {
     let state = children;
 
     if ((!playing && training) || (!playing && typeof state === "number")) {
-        state = "paused";
+        state = "пауза";
     }
     return (
         <div className="app_state">

@@ -2,24 +2,37 @@
 
 import "./inputAudioFile.sass";
 
-function checkInputFiles(data, dataType, e = null) {
-    const resultFiles = [];
-    for (let file of data) {
-        if (resultFiles.length < 5) {
-            if (dataType.test(file.type)) {
-                resultFiles.push(file);
+const InputAudioFile = ({
+    setTracksInState,
+    setAppStateInState,
+    trackName,
+}) => {
+    function checkInputFiles(data, dataType, e = null) {
+        const resultFiles = [];
+        for (let file of data) {
+            if (resultFiles.length < 5) {
+                if (dataType.test(file.type)) {
+                    resultFiles.push(file);
+                } else {
+                    console.log("не аудио!");
+                }
             } else {
-                console.log("не аудио!");
+                console.log("попытались загрузить больше файлов");
+                return resultFiles;
             }
-        } else {
-            console.log("попытались загрузить больше файлов");
-            return resultFiles;
         }
+        return resultFiles;
     }
-    return resultFiles;
-}
 
-const InputAudioFile = (props) => {
+    function loadAudioFiles(audioFiles, e) {
+        if (audioFiles.length > 0) {
+            setTracksInState(audioFiles[0]);
+        } else {
+            setAppStateInState("ни одного аудио файла не было загружено");
+        }
+        e.target.value = "";
+    }
+
     return (
         <form action="">
             <input
@@ -27,7 +40,7 @@ const InputAudioFile = (props) => {
                 type="file"
                 // multiple
                 onChange={(e) => {
-                    props.loadAudioFiles(
+                    loadAudioFiles(
                         checkInputFiles(
                             e.target.files,
                             /audio\/mpeg|audio\/flac|audio\/mp3|audio\/mp4|audio\/ogg|audio\/x+|wav/,
@@ -37,7 +50,7 @@ const InputAudioFile = (props) => {
                     );
                 }}
             />
-            <label htmlFor="input">{props.trackName}</label>
+            <label htmlFor="input">{trackName}</label>
         </form>
     );
 };

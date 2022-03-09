@@ -28,7 +28,7 @@ const Player = ({
             setLoading(true);
             setPlayingInState(false);
             setTrainingInState(false);
-            setAppStateInState("press play and then training");
+            setAppStateInState("Нажмите play и затем начать тренировку");
             eventsSubscribe();
         }
     }, [track]);

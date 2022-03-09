@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { getQuestEq } from "./logic/trainingEQ";
 import { delay } from "./logic/sideFunctions";
@@ -12,6 +12,10 @@ import Statistic from "./components/statistic/statstic";
 
 import "./App.sass";
 
+//TODO при ответе, если поставить на паузу - приложение останавливается
+//TODO повтор вопроса при нажатии play и активированной тренировке
+//TODO состояние текущего ответа!!
+
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
@@ -24,6 +28,9 @@ function App() {
     const setWavesurferInState = (ws) => {
         setWavesurfer(ws);
     };
+    const setTracksInState = (tracks) => {
+        setTracks(tracks);
+    };
     const setPlayingInState = (state) => {
         setPlaying(state);
     };
@@ -34,36 +41,43 @@ function App() {
         setAppState(state);
     };
 
+    // let timerQuest = useRef();
+    let timerReverse = useRef();
+
     useEffect(() => {
         if (
             typeof appState === "number" &&
             appState > 0 &&
             wavesurfer.isPlaying()
         ) {
-            setTimeout(() => {
-                setAppState(appState - 1);
-            }, 1000);
+            timerReverse.current = setTimeout(setAppState, 1000, appState - 1);
         } else if (appState === 0) {
             setAppState("Ваш ответ?");
+        } else if (appState === "верно" || appState === "неверно") {
+            console.log("YEP");
+            // clearTimeout(timerQuest.current);
+            clearTimeout(timerReverse.current);
         }
     }, [appState]);
 
     useEffect(() => {
         if (training) {
-            answersArray.length === 0
-                ? setAppState("приготовьтесь")
-                : setAppState(answersArray[answersArray.length - 1].status);
-            delay(3000).then(() => {
-                startQuestion();
-            });
+            if (answersArray.length === 0) {
+                setAppState("приготовьтесь");
+            } else {
+                answersArray[answersArray.length - 1].status
+                    ? setAppState("верно")
+                    : setAppState("неверно");
+            }
+            setTimeout(startQuestion, 3000);
             // setAnswer(getQuestEq(wavesurfer.filters));
         }
     }, [training, answersArray]);
 
-    const startQuestion = () => {
+    const startQuestion = (answer = undefined) => {
         if (wavesurfer.isPlaying()) {
             setAppState(3);
-            setAnswer(getQuestEq(wavesurfer.filters));
+            setAnswer(getQuestEq(wavesurfer.filters, answer.dir, answer.num));
         }
     };
 
@@ -73,10 +87,8 @@ function App() {
             selectedDir.value === answer.dir
         ) {
             setAnswersArray([...answersArray, { ...answer, status: true }]);
-            setAppState("верно");
         } else {
             setAnswersArray([...answersArray, { ...answer, status: false }]);
-            setAppState("неверно");
         }
     };
 
@@ -120,21 +132,13 @@ function App() {
     }
 
     //upload files and save first in state
-    function loadAudioFiles(audioFiles, e) {
-        if (audioFiles.length > 0) {
-            setTracks(audioFiles[0]);
-        } else {
-            setAppState("ни одного аудио файла не было загружено");
-        }
-        e.target.value = "";
-    }
 
     //play pause button
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
             if (!wavesurfer.isPlaying()) {
-                setAppState("paused");
+                setAppState("пауза");
             } else if (training) {
                 setAppState("Дайте ответ или нажмите повторить");
             } else {
@@ -146,13 +150,14 @@ function App() {
 
     //training start
     const handleTrainingStart = () => {
+        if (!training) setAppState("приготовьтесь");
         setTraining(!training);
     };
 
     const handleTrainingRepeat = () => {
         setAppState("приготовьтесь");
         delay(3000).then(() => {
-            startQuestion();
+            startQuestion(answer);
         });
     };
 
@@ -160,7 +165,8 @@ function App() {
         <main className="App">
             <InputAudioFile
                 trackName={track?.name}
-                loadAudioFiles={loadAudioFiles}
+                setAppStateInState={setAppStateInState}
+                setTracksInState={setTracksInState}
             />
 
             <Player
