@@ -19,7 +19,7 @@ function App() {
     const [training, setTraining] = useState(false);
     const [answer, setAnswer] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
-    const [appState, setAppState] = useState("load audio file");
+    const [appState, setAppState] = useState("Загрузите аудио файл");
 
     const setWavesurferInState = (ws) => {
         setWavesurfer(ws);
@@ -44,14 +44,14 @@ function App() {
                 setAppState(appState - 1);
             }, 1000);
         } else if (appState === 0) {
-            setAppState("your answer?");
+            setAppState("Ваш ответ?");
         }
     }, [appState]);
 
     useEffect(() => {
         if (training) {
             answersArray.length === 0
-                ? setAppState("get ready")
+                ? setAppState("приготовьтесь")
                 : setAppState(answersArray[answersArray.length - 1].status);
             delay(3000).then(() => {
                 startQuestion();
@@ -72,11 +72,11 @@ function App() {
             selectedFreq.value === answer.freq &&
             selectedDir.value === answer.dir
         ) {
-            setAnswersArray([...answersArray, { ...answer, status: "right" }]);
-            setAppState("right");
+            setAnswersArray([...answersArray, { ...answer, status: true }]);
+            setAppState("верно");
         } else {
-            setAnswersArray([...answersArray, { ...answer, status: "wrong" }]);
-            setAppState("wrong");
+            setAnswersArray([...answersArray, { ...answer, status: false }]);
+            setAppState("неверно");
         }
     };
 
@@ -136,9 +136,9 @@ function App() {
             if (!wavesurfer.isPlaying()) {
                 setAppState("paused");
             } else if (training) {
-                setAppState("give you answer or press repeat question");
+                setAppState("Дайте ответ или нажмите повторить");
             } else {
-                setAppState("press Start training");
+                setAppState("Нажмите Начать тренировку");
             }
             setPlaying(!playing);
         }
@@ -150,7 +150,7 @@ function App() {
     };
 
     const handleTrainingRepeat = () => {
-        setAppState("get ready");
+        setAppState("приготовьтесь");
         delay(3000).then(() => {
             startQuestion();
         });
@@ -182,7 +182,7 @@ function App() {
                 }
                 undisabled={playing}
             >
-                {training ? "Repeat question" : "Start training"}
+                {training ? "Повтор вопроса" : "Начать тренировку"}
             </Button>
 
             <AnswerArea

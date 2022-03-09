@@ -1,10 +1,10 @@
 const Statistic = ({ answersArray }) => {
-    const right = answersArray.filter((item) => item.status === "right");
-    const wrong = answersArray.filter((item) => item.status === "wrong");
+    const right = answersArray.filter((item) => item.status === true);
+    const wrong = answersArray.filter((item) => item.status === false);
     return (
         <div>
-            <p>right anwers: {right.length}</p>
-            <p>wrong answers: {wrong.length}</p>
+            <p>правильных ответов: {right.length}</p>
+            <p>неправильных ответов: {wrong.length}</p>
         </div>
     );
 };
