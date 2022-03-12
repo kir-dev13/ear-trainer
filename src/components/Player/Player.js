@@ -10,7 +10,7 @@ import Spinner from "../spinner/spinner";
 import "./Player.sass";
 
 const Player = ({
-    setWavesurferInState,
+    setWavesurfer,
     wavesurfer,
     track,
     handlePlayPauseTrack,
@@ -18,7 +18,8 @@ const Player = ({
 }) => {
     const [volume, setVolume] = useState(0.5);
     const [loading, setLoading] = useState(false);
-    const [playing, setPlaying, setTraining] = useContext(dataContext);
+    const [playing, training, setPlaying, setTraining] =
+        useContext(dataContext);
     console.log(playing);
 
     //loading file in wavesurfer
@@ -37,7 +38,7 @@ const Player = ({
     //create wavesurfer instance once, when component Wavesurfer mount
     const handleWSMount = (waveSurfer) => {
         wavesurferRef.current = waveSurfer;
-        setWavesurferInState(wavesurferRef.current);
+        setWavesurfer(wavesurferRef.current);
     };
 
     const eventsSubscribe = () => {

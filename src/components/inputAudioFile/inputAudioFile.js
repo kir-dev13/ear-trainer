@@ -2,7 +2,7 @@
 
 import "./inputAudioFile.sass";
 
-const InputAudioFile = ({ setTracksInState, setAppState, trackName }) => {
+const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
     function checkInputFiles(data, dataType, e = null) {
         const resultFiles = [];
         for (let file of data) {
@@ -23,7 +23,7 @@ const InputAudioFile = ({ setTracksInState, setAppState, trackName }) => {
     function loadAudioFiles(audioFiles, e) {
         if (audioFiles.length > 0) {
             console.log(audioFiles);
-            setTracksInState(audioFiles[0]);
+            setTracks(audioFiles[0]);
         } else {
             setAppState("ни одного аудио файла не было загружено");
         }

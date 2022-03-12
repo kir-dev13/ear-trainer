@@ -28,22 +28,6 @@ function App() {
 
     const { Provider } = dataContext;
 
-    const setWavesurferInState = (ws) => {
-        setWavesurfer(ws);
-    };
-    const setTracksInState = (tracks) => {
-        setTracks(tracks);
-    };
-    const setPlayingInState = (state) => {
-        setPlaying(state);
-    };
-    const setTrainingInState = (state) => {
-        setTraining(state);
-    };
-    const setAppStateInState = (state) => {
-        setAppState(state);
-    };
-
     // let timerQuest = useRef();
     let timerReverse = useRef();
 
@@ -172,15 +156,15 @@ function App() {
 
     return (
         <main className="App">
-            <Provider value={[playing, setPlaying, setTraining]}>
+            <Provider value={[playing, training, setPlaying, setTraining]}>
                 <InputAudioFile
                     trackName={track?.name}
                     setAppState={setAppState}
-                    setTracksInState={setTracksInState}
+                    setTracks={setTracks}
                 />
 
                 <Player
-                    setWavesurferInState={setWavesurferInState}
+                    setWavesurfer={setWavesurfer}
                     wavesurfer={wavesurfer}
                     track={track}
                     handlePlayPauseTrack={handlePlayPauseTrack}
