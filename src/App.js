@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { dataContext } from "./context";
 
 import { getQuestEq } from "./logic/trainingEQ";
 import { delay } from "./logic/sideFunctions";
@@ -24,6 +25,8 @@ function App() {
     const [quest, setQuest] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
+
+    const { Provider } = dataContext;
 
     const setWavesurferInState = (ws) => {
         setWavesurfer(ws);
@@ -169,36 +172,37 @@ function App() {
 
     return (
         <main className="App">
-            <InputAudioFile
-                trackName={track?.name}
-                setAppStateInState={setAppStateInState}
-                setTracksInState={setTracksInState}
-            />
+            <Provider value={[playing, setPlaying, setTraining]}>
+                <InputAudioFile
+                    trackName={track?.name}
+                    setAppState={setAppState}
+                    setTracksInState={setTracksInState}
+                />
 
-            <Player
-                setWavesurferInState={setWavesurferInState}
-                setPlayingInState={setPlayingInState}
-                setTrainingInState={setTrainingInState}
-                setAppStateInState={setAppStateInState}
-                wavesurfer={wavesurfer}
-                track={track}
-                playing={playing}
-                handlePlayPauseTrack={handlePlayPauseTrack}
-            />
+                <Player
+                    setWavesurferInState={setWavesurferInState}
+                    wavesurfer={wavesurfer}
+                    track={track}
+                    handlePlayPauseTrack={handlePlayPauseTrack}
+                    setAppState={setAppState}
+                    // setAppStateInState={setAppStateInState}
+                    // setTrainingInState={setTrainingInState}
+                />
 
-            <AppState playing={playing}>{appState}</AppState>
+                <AppState playing={playing}>{appState}</AppState>
 
-            <Button handleAction={handleTrainingStart} undisabled={playing}>
-                {training ? "Остановить тренировку" : "Начать тренировку"}
-            </Button>
+                <Button handleAction={handleTrainingStart} undisabled={playing}>
+                    {training ? "Остановить тренировку" : "Начать тренировку"}
+                </Button>
 
-            <AnswerArea
-                playing={playing}
-                training={training}
-                quest={quest}
-                checkAnswer={checkAnswer}
-            />
-            <Statistic answersArray={answersArray} />
+                <AnswerArea
+                    playing={playing}
+                    training={training}
+                    quest={quest}
+                    checkAnswer={checkAnswer}
+                />
+                <Statistic answersArray={answersArray} />
+            </Provider>
         </main>
     );
 }

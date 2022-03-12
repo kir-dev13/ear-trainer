@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import { dataContext } from "../../context";
 
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { createFilters } from "../../logic/createFilters";
@@ -10,25 +11,24 @@ import "./Player.sass";
 
 const Player = ({
     setWavesurferInState,
-    setPlayingInState,
-    setTrainingInState,
     wavesurfer,
     track,
-    playing,
     handlePlayPauseTrack,
-    setAppStateInState,
+    setAppState,
 }) => {
     const [volume, setVolume] = useState(0.5);
     const [loading, setLoading] = useState(false);
+    const [playing, setPlaying, setTraining] = useContext(dataContext);
+    console.log(playing);
 
     //loading file in wavesurfer
     useEffect(() => {
         if (track) {
             wavesurfer.loadBlob(track);
             setLoading(true);
-            setPlayingInState(false);
-            setTrainingInState(false);
-            setAppStateInState("Нажмите play и затем начать тренировку");
+            setPlaying(false);
+            setTraining(false);
+            setAppState("Нажмите play и затем начать тренировку");
             eventsSubscribe();
         }
     }, [track]);
@@ -53,8 +53,8 @@ const Player = ({
 
         wavesurfer.on("finish", () => {
             wavesurfer.stop();
-            setAppStateInState("Нажмите play и затем начать тренировку");
-            setPlayingInState(false);
+            setAppState("Нажмите play и затем начать тренировку");
+            setPlaying(false);
         });
     };
 
