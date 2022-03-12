@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState, useContext } from "react";
+import { dataContext } from "../../context";
 
 import EQ from "../../logic/EQ";
 
@@ -6,7 +7,7 @@ import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ playing, training, quest, checkAnswer }) => {
+const AnswerArea = ({ quest, checkAnswer }) => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
@@ -17,8 +18,10 @@ const AnswerArea = ({ playing, training, quest, checkAnswer }) => {
         value: null,
     });
 
+    const [state, dispatch] = useContext(dataContext);
+
     useLayoutEffect(() => {
-        if (training && quest) {
+        if (state.training && quest) {
             setSelectedFreq({
                 state: false,
                 value: null,
@@ -32,7 +35,7 @@ const AnswerArea = ({ playing, training, quest, checkAnswer }) => {
 
     //Проверить ответ, когда все кнопки выбраны
     useEffect(() => {
-        if (selectedFreq.state && selectedDir.state && training) {
+        if (selectedFreq.state && selectedDir.state && state.training) {
             checkAnswer(selectedFreq, selectedDir);
         }
     }, [selectedFreq.state, selectedDir.state]);
@@ -41,8 +44,8 @@ const AnswerArea = ({ playing, training, quest, checkAnswer }) => {
     const handleAnswerFreq = (e) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
-            !training ||
-            !playing ||
+            !state.training ||
+            !state.playing ||
             Object.keys(quest).length === 0
         ) {
             return;
@@ -63,8 +66,8 @@ const AnswerArea = ({ playing, training, quest, checkAnswer }) => {
     const handleAnswerDir = (e) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
-            !training ||
-            !playing ||
+            !state.training ||
+            !state.playing ||
             Object.keys(quest).length === 0
         ) {
             return;

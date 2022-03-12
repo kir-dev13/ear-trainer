@@ -19,14 +19,15 @@ import "./App.sass";
 
 function reducer(state, action) {
     switch (action.type) {
-        case "playing":
-            return { stateApp: "playing" };
-        case "ready":
-            return { stateApp: "ready" };
-        case "questStart":
-            return { stateApp: "questStart" };
-        case "waitingAnswer":
-            return { stateApp: "waitingAnswer" };
+        case "playingToggle":
+            return { ...state, playing: !state.playing };
+        case "toggleTraining":
+            return { ...state, training: !state.training };
+        case "playingOff":
+            return { ...state, playing: false };
+        case "trainingOff":
+            return { ...state, training: false };
+
         case "checkAnswer":
             return { stateApp: "checkAnswer" };
         default:
@@ -37,13 +38,16 @@ function reducer(state, action) {
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
-    const [playing, setPlaying] = useState(false);
-    const [training, setTraining] = useState(false);
+    // const [playing, setPlaying] = useState(false);
+    // const [training, setTraining] = useState(false);
     const [quest, setQuest] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
 
-    const [state, dispatch] = useReducer(reducer, { stateApp: "load" });
+    const [state, dispatch] = useReducer(reducer, {
+        playing: false,
+        stateApp: "load",
+    });
 
     const { Provider } = dataContext;
 
@@ -67,7 +71,7 @@ function App() {
     }, [appState]);
 
     useEffect(() => {
-        if (training) {
+        if (state.training) {
             if (answersArray.length === 0) {
                 setAppState("приготовьтесь");
             } else {
@@ -80,7 +84,7 @@ function App() {
             setTimeout(startQuestion, 3000);
             // setAnswer(getQuestEq(wavesurfer.filters));
         }
-    }, [training, answersArray]);
+    }, [state.training, answersArray]);
 
     const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
@@ -148,22 +152,23 @@ function App() {
             if (!wavesurfer.isPlaying()) {
                 clearInterval(timerReverse);
                 setAppState("пауза");
-            } else if (training) {
+            } else if (state.training) {
                 trainingRepeat();
             } else {
                 setAppState("Нажмите Начать тренировку");
             }
-            setPlaying(!playing);
+            dispatch({ type: "playingToggle" });
+            // setPlaying(!playing)
         }
     };
 
     //training start
     const handleTrainingStart = () => {
-        if (training) {
+        if (state.training) {
             //!! clearTimeout(timerReverse.current);
             setAppState("тренировка остановлена");
         }
-        setTraining(!training);
+        dispatch({ type: "toggleTraining" });
     };
 
     const trainingRepeat = () => {
@@ -172,10 +177,11 @@ function App() {
             startQuestion(quest);
         });
     };
+    console.log(state.playing);
 
     return (
         <main className="App">
-            <Provider value={[playing, training, setPlaying, setTraining]}>
+            <Provider value={[state, dispatch]}>
                 <InputAudioFile
                     trackName={track?.name}
                     setAppState={setAppState}
@@ -197,13 +203,17 @@ function App() {
                     {appState}
                 </AppState> */}
 
-                <Button handleAction={handleTrainingStart} undisabled={playing}>
-                    {training ? "Остановить тренировку" : "Начать тренировку"}
+                <Button
+                    handleAction={handleTrainingStart}
+                    undisabled={state.playing}
+                >
+                    {state.training
+                        ? "Остановить тренировку"
+                        : "Начать тренировку"}
                 </Button>
 
                 <AnswerArea
-                    playing={playing}
-                    training={training}
+                    // playing={playing}
                     quest={quest}
                     checkAnswer={checkAnswer}
                 />

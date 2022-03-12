@@ -18,17 +18,16 @@ const Player = ({
 }) => {
     const [volume, setVolume] = useState(0.5);
     const [loading, setLoading] = useState(false);
-    const [playing, training, setPlaying, setTraining] =
-        useContext(dataContext);
-    console.log(playing);
+    const [state, dispatch] = useContext(dataContext);
+    // console.log(state.playing);
 
     //loading file in wavesurfer
     useEffect(() => {
         if (track) {
             wavesurfer.loadBlob(track);
             setLoading(true);
-            setPlaying(false);
-            setTraining(false);
+            dispatch({ type: "playingOff" });
+            dispatch({ type: "trainingOff" });
             setAppState("Нажмите play и затем начать тренировку");
             eventsSubscribe();
         }
@@ -55,7 +54,7 @@ const Player = ({
         wavesurfer.on("finish", () => {
             wavesurfer.stop();
             setAppState("Нажмите play и затем начать тренировку");
-            setPlaying(false);
+            dispatch({ type: "playingOff" });
         });
     };
 
@@ -94,7 +93,7 @@ const Player = ({
                 undisabled={!!track && !loading}
                 handleAction={handlePlayPauseTrack}
             >
-                {playing ? "Pause" : "Play"}
+                {state.playing ? "Pause" : "Play"}
             </Button>
         </div>
     );

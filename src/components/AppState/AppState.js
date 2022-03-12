@@ -2,7 +2,7 @@ import "./AppState.sass";
 
 const AppState = ({ state }) => {
     const { stateApp } = state;
-    console.log(stateApp);
+    // console.log(stateApp);
     function status(stateApp) {
         switch (stateApp) {
             case "load":
