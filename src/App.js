@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { dataContext } from "./context";
 
 import { getQuestEq } from "./logic/trainingEQ";
@@ -17,6 +17,23 @@ import "./App.sass";
 //TODO повтор вопроса при нажатии play и активированной тренировке
 //TODO состояние текущего ответа!!
 
+function reducer(state, action) {
+    switch (action.type) {
+        case "playing":
+            return { stateApp: "playing" };
+        case "ready":
+            return { stateApp: "ready" };
+        case "questStart":
+            return { stateApp: "questStart" };
+        case "waitingAnswer":
+            return { stateApp: "waitingAnswer" };
+        case "checkAnswer":
+            return { stateApp: "checkAnswer" };
+        default:
+            throw new Error();
+    }
+}
+
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
@@ -25,6 +42,8 @@ function App() {
     const [quest, setQuest] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
+
+    const [state, dispatch] = useReducer(reducer, { stateApp: "load" });
 
     const { Provider } = dataContext;
 
@@ -53,7 +72,7 @@ function App() {
                 setAppState("приготовьтесь");
             } else {
                 //!! то что ниже срабатывает после включения тренировки
-                //!! текущее состояние тренировки: 1) пауза перед вопросом 2) вопрос 3)ожидание ответа 4)ответ
+
                 answersArray[answersArray.length - 1].status
                     ? setAppState("верно")
                     : setAppState("неверно");
@@ -173,7 +192,10 @@ function App() {
                     // setTrainingInState={setTrainingInState}
                 />
 
-                <AppState playing={playing}>{appState}</AppState>
+                <AppState state={state}></AppState>
+                {/* <AppState  playing={playing}>
+                    {appState}
+                </AppState> */}
 
                 <Button handleAction={handleTrainingStart} undisabled={playing}>
                     {training ? "Остановить тренировку" : "Начать тренировку"}
