@@ -166,19 +166,29 @@ function App() {
     return (
         <main className="App">
             <Provider value={[state, dispatch]}>
-                <InputAudioFile
-                    trackName={track?.name}
-                    setAppState={setAppState}
-                    setTracks={setTracks}
-                />
+                {track ? (
+                    <>
+                        <InputAudioFile
+                            trackName={track?.name}
+                            setAppState={setAppState}
+                            setTracks={setTracks}
+                        />
 
-                <Player
-                    setWavesurfer={setWavesurfer}
-                    wavesurfer={wavesurfer}
-                    track={track}
-                    handlePlayPauseTrack={handlePlayPauseTrack}
-                    setAppState={setAppState}
-                />
+                        <Player
+                            setWavesurfer={setWavesurfer}
+                            track={track}
+                            wavesurfer={wavesurfer}
+                            handlePlayPauseTrack={handlePlayPauseTrack}
+                            setAppState={setAppState}
+                        />
+                    </>
+                ) : (
+                    <InputAudioFile
+                        trackName={track?.name}
+                        setAppState={setAppState}
+                        setTracks={setTracks}
+                    />
+                )}
 
                 <AppState track={track}></AppState>
                 <Button

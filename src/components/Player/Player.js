@@ -21,7 +21,7 @@ const Player = ({
 
     //loading file in wavesurfer
     useEffect(() => {
-        if (track) {
+        if (track && wavesurfer) {
             wavesurfer.loadBlob(track);
             dispatch({ type: "loadingChange", payload: true });
             if (state.playing) {
@@ -30,7 +30,7 @@ const Player = ({
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
         }
-    }, [track]);
+    }, [track, wavesurfer]);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
