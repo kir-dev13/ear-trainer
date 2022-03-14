@@ -30,6 +30,9 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
         }
         e.target.value = "";
     }
+    console.log(trackName);
+
+    const s = trackName ? {} : { height: "128px" };
 
     return (
         <form action="">
@@ -49,7 +52,9 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
                 }}
             />
 
-            <label htmlFor="input">{trackName || "load audio file here"}</label>
+            <label htmlFor="input" style={s}>
+                {trackName || "load audio file here"}
+            </label>
         </form>
     );
 };

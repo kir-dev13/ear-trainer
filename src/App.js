@@ -163,32 +163,29 @@ function App() {
         });
     };
 
+    const inputComponent = (
+        <InputAudioFile
+            trackName={track?.name}
+            setAppState={setAppState}
+            setTracks={setTracks}
+        />
+    );
+
+    const playerComponent = track ? (
+        <Player
+            setWavesurfer={setWavesurfer}
+            track={track}
+            wavesurfer={wavesurfer}
+            handlePlayPauseTrack={handlePlayPauseTrack}
+            setAppState={setAppState}
+        />
+    ) : null;
+
     return (
         <main className="App">
             <Provider value={[state, dispatch]}>
-                {track ? (
-                    <>
-                        <InputAudioFile
-                            trackName={track?.name}
-                            setAppState={setAppState}
-                            setTracks={setTracks}
-                        />
-
-                        <Player
-                            setWavesurfer={setWavesurfer}
-                            track={track}
-                            wavesurfer={wavesurfer}
-                            handlePlayPauseTrack={handlePlayPauseTrack}
-                            setAppState={setAppState}
-                        />
-                    </>
-                ) : (
-                    <InputAudioFile
-                        trackName={track?.name}
-                        setAppState={setAppState}
-                        setTracks={setTracks}
-                    />
-                )}
+                {inputComponent}
+                {playerComponent}
 
                 <AppState track={track}></AppState>
                 <Button
