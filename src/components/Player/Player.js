@@ -1,8 +1,9 @@
+import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { useState, useEffect, useRef, useContext } from "react";
 import { dataContext } from "../../context";
 
-import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { createFilters } from "../../logic/createFilters";
+import { returnState } from "../../logic/sideFunctions";
 
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
@@ -17,7 +18,7 @@ const Player = ({
     setAppState,
 }) => {
     const [volume, setVolume] = useState(0.5);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [state, dispatch] = useContext(dataContext);
     // console.log(state.playing);
 
@@ -25,10 +26,14 @@ const Player = ({
     useEffect(() => {
         if (track) {
             wavesurfer.loadBlob(track);
-            setLoading(true);
-            dispatch({ type: "playingOff" });
+            dispatch({ type: "loadingChange", payload: true });
+            if (state.playing) {
+                dispatch({ type: "playingOff" });
+            }
+
             dispatch({ type: "trainingOff" });
-            setAppState("Нажмите play и затем начать тренировку");
+            // setAppState("Нажмите play и затем начать тренировку");
+
             eventsSubscribe();
         }
     }, [track]);
@@ -44,7 +49,8 @@ const Player = ({
         // wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
-            setLoading(false);
+            console.log(state);
+            dispatch({ type: "loadingChange", payload: false });
             wavesurfer.setVolume(volume);
             const filters = createFilters(wavesurfer); //create filters
             wavesurfer.backend.setFilters(filters); //connect
@@ -55,6 +61,10 @@ const Player = ({
             wavesurfer.stop();
             setAppState("Нажмите play и затем начать тренировку");
             dispatch({ type: "playingOff" });
+            dispatch({
+                type: "stateAppChange",
+                setStateApp: "трек закончен",
+            });
         });
     };
 
@@ -74,7 +84,7 @@ const Player = ({
                     id="waveform"
                     style={{ position: "relative" }}
                 >
-                    {loading ? <Spinner /> : null}
+                    {state.loading ? <Spinner /> : null}
                     {/* !! стили спинера.... !! */}
                 </WaveForm>
             </WaveSurfer>
@@ -90,7 +100,7 @@ const Player = ({
             ) : null}
 
             <Button
-                undisabled={!!track && !loading}
+                undisabled={!!track && !state.loading}
                 handleAction={handlePlayPauseTrack}
             >
                 {state.playing ? "Pause" : "Play"}

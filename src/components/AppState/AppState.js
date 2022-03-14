@@ -1,8 +1,26 @@
 import "./AppState.sass";
 
-const AppState = ({ state }) => {
-    const { stateApp } = state;
-    console.log("stateApp: ", stateApp);
+const AppState = ({ state, track, loading }) => {
+    const { stateApp, playing } = state;
+    const message = {
+        title: stateApp,
+        description: "",
+    };
+
+    switch (playing) {
+        case false:
+            message.title = "пауза";
+            break;
+        case true:
+            break;
+        default:
+            message.title =
+                track && !state.loading
+                    ? "аудиофайл загружен"
+                    : "загрузите аудио файл";
+            break;
+    }
+    console.log("message: ", message);
     // function status(stateApp) {
     //     switch (stateApp) {
     //         case "load":
@@ -14,7 +32,8 @@ const AppState = ({ state }) => {
     // }
     return (
         <div className="app_state">
-            <p>{stateApp.join(" предыдущий режим: ")}</p>
+            <h6>{message.title}</h6>
+            <span>{message.description}</span>
             {/* <p>{status(stateApp)}</p> */}
         </div>
     );

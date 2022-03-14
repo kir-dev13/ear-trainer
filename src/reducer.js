@@ -1,16 +1,25 @@
 function reducer(state, action) {
     switch (action.type) {
-        case "playingToggle":
+        case "stateAppChange":
             return {
                 ...state,
                 stateApp: action.setStateApp,
+            };
+        case "loadingChange":
+            return {
+                ...state,
+                loading: action.payload,
+            };
+
+        case "playingToggle":
+            return {
+                ...state,
                 // stateApp: "режим разминки",
                 playing: !state.playing,
             };
         case "trainingToggle":
             return {
                 ...state,
-                stateApp: action.setStateApp,
 
                 // stateApp: "режим тренировки",
                 training: !state.training,
@@ -22,12 +31,12 @@ function reducer(state, action) {
         case "getQuest":
             return {
                 ...state,
-                stateApp: ["внимание вопрос", state.stateApp[1]],
+                stateApp: "внимание вопрос!",
                 quest: action.payload,
             };
 
         case "checkAnswer":
-            return { ...state, stateApp: ["checkAnswer", state.stateApp[1]] };
+            return { ...state, stateApp: "checkAnswer" };
         default:
             throw new Error();
     }

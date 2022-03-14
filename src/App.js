@@ -19,7 +19,7 @@ import "./App.sass";
 //TODO повтор вопроса при нажатии play и активированной тренировке
 //TODO состояние текущего ответа!!
 
-//TODO сделать вместо массива в stateApp дополнительный state.mode ??? возможно
+//** */ сейчас два режима training - разминка (false) и тренировка (true) - будет как минимум 3
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
@@ -31,8 +31,8 @@ function App() {
     const [appState, setAppState] = useState("Загрузите аудио файл");
 
     const [state, dispatch] = useReducer(reducer, {
-        playing: false,
-        stateApp: ["load", "режим разминки"],
+        loading: false,
+        stateApp: "режим разминки",
     });
 
     const { Provider } = dataContext;
@@ -158,10 +158,6 @@ function App() {
             }
             dispatch({
                 type: "playingToggle",
-                setStateApp: [
-                    returnState("пауза", state.stateApp[1], state.playing),
-                    state.stateApp[0],
-                ],
             });
             // setPlaying(!playing)
         }
@@ -175,14 +171,14 @@ function App() {
         }
         dispatch({
             type: "trainingToggle",
-            setStateApp: [
-                returnState(
-                    "режим разминки",
-                    "режим тренировки",
-                    state.training
-                ),
-                state.stateApp[0],
-            ],
+        });
+        dispatch({
+            type: "stateAppChange",
+            setStateApp: returnState(
+                "режим разминки",
+                "режим тренировки",
+                state.training
+            ),
         });
     };
 
@@ -213,7 +209,7 @@ function App() {
                     // setTrainingInState={setTrainingInState}
                 />
 
-                <AppState state={state}></AppState>
+                <AppState state={state} track={track}></AppState>
                 {/* <AppState  playing={playing}>
                     {appState}
                 </AppState> */}
