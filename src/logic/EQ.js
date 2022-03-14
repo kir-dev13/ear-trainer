@@ -1,3 +1,5 @@
+export const time = 3000;
+
 const EQ = [
     {
         f: 0,

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useReducer } from "react";
 import { dataContext } from "./context";
+import reducer from "./reducer";
 
 import { getQuestEq } from "./logic/trainingEQ";
-import { delay } from "./logic/sideFunctions";
+import { delay, returnState } from "./logic/sideFunctions";
+import { time } from "./logic/EQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
@@ -17,36 +19,20 @@ import "./App.sass";
 //TODO повтор вопроса при нажатии play и активированной тренировке
 //TODO состояние текущего ответа!!
 
-function reducer(state, action) {
-    switch (action.type) {
-        case "playingToggle":
-            return { ...state, playing: !state.playing };
-        case "toggleTraining":
-            return { ...state, training: !state.training };
-        case "playingOff":
-            return { ...state, playing: false };
-        case "trainingOff":
-            return { ...state, training: false };
-
-        case "checkAnswer":
-            return { stateApp: "checkAnswer" };
-        default:
-            throw new Error();
-    }
-}
+//TODO сделать вместо массива в stateApp дополнительный state.mode ??? возможно
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
     // const [playing, setPlaying] = useState(false);
     // const [training, setTraining] = useState(false);
-    const [quest, setQuest] = useState({});
+    // const [quest, setQuest] = useState({});
     const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
 
     const [state, dispatch] = useReducer(reducer, {
         playing: false,
-        stateApp: "load",
+        stateApp: ["load", "режим разминки"],
     });
 
     const { Provider } = dataContext;
@@ -81,7 +67,7 @@ function App() {
                     ? setAppState("верно")
                     : setAppState("неверно");
             }
-            setTimeout(startQuestion, 3000);
+            setTimeout(startQuestion, time);
             // setAnswer(getQuestEq(wavesurfer.filters));
         }
     }, [state.training, answersArray]);
@@ -89,18 +75,34 @@ function App() {
     const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
             setAppState(3);
-            setQuest(getQuestEq(wavesurfer.filters, quest?.dir, quest?.num));
+            // setQuest(
+            //     getQuestEq(wavesurfer.filters, state.quest?.dir, state?.num)
+            // );
+            dispatch({
+                type: "getQuest",
+                payload: getQuestEq(
+                    wavesurfer.filters,
+                    state.quest?.dir,
+                    state?.num
+                ),
+            });
         }
     };
 
     const checkAnswer = (selectedFreq, selectedDir) => {
         if (
-            selectedFreq.value === quest.freq &&
-            selectedDir.value === quest.dir
+            selectedFreq.value === state.quest.freq &&
+            selectedDir.value === state.quest.dir
         ) {
-            setAnswersArray([...answersArray, { ...quest, status: true }]);
+            setAnswersArray([
+                ...answersArray,
+                { ...state.quest, status: true },
+            ]);
         } else {
-            setAnswersArray([...answersArray, { ...quest, status: false }]);
+            setAnswersArray([
+                ...answersArray,
+                { ...state.quest, status: false },
+            ]);
         }
     };
 
@@ -151,13 +153,16 @@ function App() {
             wavesurfer.playPause();
             if (!wavesurfer.isPlaying()) {
                 clearInterval(timerReverse);
-                setAppState("пауза");
             } else if (state.training) {
                 trainingRepeat();
-            } else {
-                setAppState("Нажмите Начать тренировку");
             }
-            dispatch({ type: "playingToggle" });
+            dispatch({
+                type: "playingToggle",
+                setStateApp: [
+                    returnState("пауза", state.stateApp[1], state.playing),
+                    state.stateApp[0],
+                ],
+            });
             // setPlaying(!playing)
         }
     };
@@ -168,13 +173,23 @@ function App() {
             //!! clearTimeout(timerReverse.current);
             setAppState("тренировка остановлена");
         }
-        dispatch({ type: "toggleTraining" });
+        dispatch({
+            type: "trainingToggle",
+            setStateApp: [
+                returnState(
+                    "режим разминки",
+                    "режим тренировки",
+                    state.training
+                ),
+                state.stateApp[0],
+            ],
+        });
     };
 
     const trainingRepeat = () => {
         setAppState("сейчас будет повтор вопроса");
-        delay(3000).then(() => {
-            startQuestion(quest);
+        delay(time).then(() => {
+            startQuestion(state.quest);
         });
     };
     console.log(state.playing);
@@ -214,7 +229,6 @@ function App() {
 
                 <AnswerArea
                     // playing={playing}
-                    quest={quest}
                     checkAnswer={checkAnswer}
                 />
                 <Statistic answersArray={answersArray} />

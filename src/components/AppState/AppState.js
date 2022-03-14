@@ -2,19 +2,20 @@ import "./AppState.sass";
 
 const AppState = ({ state }) => {
     const { stateApp } = state;
-    // console.log(stateApp);
-    function status(stateApp) {
-        switch (stateApp) {
-            case "load":
-                return "load";
-                break;
-            default:
-                return "default";
-        }
-    }
+    console.log("stateApp: ", stateApp);
+    // function status(stateApp) {
+    //     switch (stateApp) {
+    //         case "load":
+    //             return "load";
+    //             break;
+    //         default:
+    //             return "default";
+    //     }
+    // }
     return (
         <div className="app_state">
-            <p>{status(stateApp)}</p>
+            <p>{stateApp.join(" предыдущий режим: ")}</p>
+            {/* <p>{status(stateApp)}</p> */}
         </div>
     );
 };

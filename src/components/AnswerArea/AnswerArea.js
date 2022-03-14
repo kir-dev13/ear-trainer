@@ -7,7 +7,7 @@ import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ quest, checkAnswer }) => {
+const AnswerArea = ({ checkAnswer }) => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
@@ -21,7 +21,7 @@ const AnswerArea = ({ quest, checkAnswer }) => {
     const [state, dispatch] = useContext(dataContext);
 
     useLayoutEffect(() => {
-        if (state.training && quest) {
+        if (state.training && state.quest) {
             setSelectedFreq({
                 state: false,
                 value: null,
@@ -31,7 +31,7 @@ const AnswerArea = ({ quest, checkAnswer }) => {
                 value: null,
             });
         }
-    }, [quest]);
+    }, [state.quest]);
 
     //Проверить ответ, когда все кнопки выбраны
     useEffect(() => {
@@ -46,15 +46,15 @@ const AnswerArea = ({ quest, checkAnswer }) => {
             (selectedFreq.state && selectedDir.state) ||
             !state.training ||
             !state.playing ||
-            Object.keys(quest).length === 0
+            Object.keys(state.quest).length === 0
         ) {
             return;
         }
         //исключаем direction, если freq === 0
-        if (quest.freq === 0 || +e.target.dataset.freq === 0) {
+        if (state.quest.freq === 0 || +e.target.dataset.freq === 0) {
             setSelectedDir({
                 state: true,
-                value: quest.dir,
+                value: state.quest.dir,
             });
         }
         setSelectedFreq({
@@ -68,7 +68,7 @@ const AnswerArea = ({ quest, checkAnswer }) => {
             (selectedFreq.state && selectedDir.state) ||
             !state.training ||
             !state.playing ||
-            Object.keys(quest).length === 0
+            Object.keys(state.quest).length === 0
         ) {
             return;
         }
@@ -94,7 +94,7 @@ const AnswerArea = ({ quest, checkAnswer }) => {
 
     const AnswerFreq = () => {
         const buttonsList = EQ.map((item, i) => {
-            const s = showAnswer(item.f, selectedFreq, quest.freq);
+            const s = showAnswer(item.f, selectedFreq, state?.quest?.freq);
             return (
                 <li key={i}>
                     <button
@@ -113,9 +113,9 @@ const AnswerArea = ({ quest, checkAnswer }) => {
     const AnswerDir = () => {
         const directionButtons = [];
         for (let i = 1; i > -2; i -= 2) {
-            let s = showAnswer(i, selectedDir, quest.dir);
+            let s = showAnswer(i, selectedDir, state?.quest?.dir);
 
-            if (quest.freq === 0 && selectedFreq.state) {
+            if (state?.quest?.freq === 0 && selectedFreq.state) {
                 s = "";
             }
 
