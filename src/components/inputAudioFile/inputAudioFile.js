@@ -48,7 +48,8 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
                     );
                 }}
             />
-            <label htmlFor="input">{trackName}</label>
+
+            <label htmlFor="input">{trackName || "change audio file"}</label>
         </form>
     );
 };
