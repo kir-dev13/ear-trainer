@@ -7,7 +7,7 @@ import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = ({ checkAnswer }) => {
+const AnswerArea = () => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
@@ -46,7 +46,7 @@ const AnswerArea = ({ checkAnswer }) => {
             (selectedFreq.state && selectedDir.state) ||
             !state.training ||
             !state.playing ||
-            Object.keys(state.quest).length === 0
+            Object.keys(state?.quest).length === 0
         ) {
             return;
         }
@@ -68,7 +68,7 @@ const AnswerArea = ({ checkAnswer }) => {
             (selectedFreq.state && selectedDir.state) ||
             !state.training ||
             !state.playing ||
-            Object.keys(state.quest).length === 0
+            Object.keys(state?.quest).length === 0
         ) {
             return;
         }
@@ -76,6 +76,17 @@ const AnswerArea = ({ checkAnswer }) => {
             state: true,
             value: +e.target.dataset.direction,
         });
+    };
+
+    const checkAnswer = (selectedFreq, selectedDir) => {
+        if (
+            selectedFreq.value === state.quest.freq &&
+            selectedDir.value === state.quest.dir
+        ) {
+            dispatch({ type: "addAnswerInArray", payload: true });
+        } else {
+            dispatch({ type: "addAnswerInArray", payload: false });
+        }
     };
 
     const showAnswer = (target, selected, answer) => {

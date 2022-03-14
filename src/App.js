@@ -24,15 +24,14 @@ import "./App.sass";
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
-    // const [playing, setPlaying] = useState(false);
-    // const [training, setTraining] = useState(false);
-    // const [quest, setQuest] = useState({});
-    const [answersArray, setAnswersArray] = useState([]);
+    // const [answersArray, setAnswersArray] = useState([]);
     const [appState, setAppState] = useState("Загрузите аудио файл");
 
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         stateApp: "режим разминки",
+        answersArray: [],
+        quest: {},
     });
 
     const { Provider } = dataContext;
@@ -50,7 +49,6 @@ function App() {
         } else if (appState === 0) {
             setAppState("Ваш ответ?");
         } else if (appState === "верно" || appState === "неверно") {
-            console.log("YEP");
             // clearTimeout(timerQuest.current);
             clearTimeout(timerReverse.current);
         }
@@ -58,51 +56,30 @@ function App() {
 
     useEffect(() => {
         if (state.training) {
-            if (answersArray.length === 0) {
+            if (state.answersArray.length === 0) {
                 setAppState("приготовьтесь");
             } else {
                 //!! то что ниже срабатывает после включения тренировки
 
-                answersArray[answersArray.length - 1].status
+                state.answersArray[state.answersArray.length - 1].status
                     ? setAppState("верно")
                     : setAppState("неверно");
             }
             setTimeout(startQuestion, time);
-            // setAnswer(getQuestEq(wavesurfer.filters));
         }
-    }, [state.training, answersArray]);
+    }, [state.training, state.answersArray]);
 
     const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
             setAppState(3);
-            // setQuest(
-            //     getQuestEq(wavesurfer.filters, state.quest?.dir, state?.num)
-            // );
             dispatch({
                 type: "getQuest",
-                payload: getQuestEq(
+                getQuest: getQuestEq(
                     wavesurfer.filters,
                     state.quest?.dir,
                     state?.num
                 ),
             });
-        }
-    };
-
-    const checkAnswer = (selectedFreq, selectedDir) => {
-        if (
-            selectedFreq.value === state.quest.freq &&
-            selectedDir.value === state.quest.dir
-        ) {
-            setAnswersArray([
-                ...answersArray,
-                { ...state.quest, status: true },
-            ]);
-        } else {
-            setAnswersArray([
-                ...answersArray,
-                { ...state.quest, status: false },
-            ]);
         }
     };
 
@@ -145,8 +122,6 @@ function App() {
         wavesurfer.filters = filters;
     }
 
-    //upload files and save first in state
-
     //play pause button
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
@@ -159,7 +134,6 @@ function App() {
             dispatch({
                 type: "playingToggle",
             });
-            // setPlaying(!playing)
         }
     };
 
@@ -188,7 +162,6 @@ function App() {
             startQuestion(state.quest);
         });
     };
-    console.log(state.playing);
 
     return (
         <main className="App">
@@ -205,15 +178,9 @@ function App() {
                     track={track}
                     handlePlayPauseTrack={handlePlayPauseTrack}
                     setAppState={setAppState}
-                    // setAppStateInState={setAppStateInState}
-                    // setTrainingInState={setTrainingInState}
                 />
 
-                <AppState state={state} track={track}></AppState>
-                {/* <AppState  playing={playing}>
-                    {appState}
-                </AppState> */}
-
+                <AppState track={track}></AppState>
                 <Button
                     handleAction={handleTrainingStart}
                     undisabled={state.playing}
@@ -223,11 +190,8 @@ function App() {
                         : "Начать тренировку"}
                 </Button>
 
-                <AnswerArea
-                    // playing={playing}
-                    checkAnswer={checkAnswer}
-                />
-                <Statistic answersArray={answersArray} />
+                <AnswerArea />
+                <Statistic answersArray={state.answersArray} />
             </Provider>
         </main>
     );

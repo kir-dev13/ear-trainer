@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { dataContext } from "../../context";
 
 import { createFilters } from "../../logic/createFilters";
-import { returnState } from "../../logic/sideFunctions";
 
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
@@ -18,9 +17,7 @@ const Player = ({
     setAppState,
 }) => {
     const [volume, setVolume] = useState(0.5);
-    // const [loading, setLoading] = useState(false);
     const [state, dispatch] = useContext(dataContext);
-    // console.log(state.playing);
 
     //loading file in wavesurfer
     useEffect(() => {
@@ -30,10 +27,7 @@ const Player = ({
             if (state.playing) {
                 dispatch({ type: "playingOff" });
             }
-
             dispatch({ type: "trainingOff" });
-            // setAppState("Нажмите play и затем начать тренировку");
-
             eventsSubscribe();
         }
     }, [track]);
@@ -49,7 +43,6 @@ const Player = ({
         // wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
-            console.log(state);
             dispatch({ type: "loadingChange", payload: false });
             wavesurfer.setVolume(volume);
             const filters = createFilters(wavesurfer); //create filters

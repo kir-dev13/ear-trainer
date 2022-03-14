@@ -14,14 +14,11 @@ function reducer(state, action) {
         case "playingToggle":
             return {
                 ...state,
-                // stateApp: "режим разминки",
                 playing: !state.playing,
             };
         case "trainingToggle":
             return {
                 ...state,
-
-                // stateApp: "режим тренировки",
                 training: !state.training,
             };
         case "playingOff":
@@ -32,7 +29,15 @@ function reducer(state, action) {
             return {
                 ...state,
                 stateApp: "внимание вопрос!",
-                quest: action.payload,
+                quest: action.getQuest,
+            };
+        case "addAnswerInArray":
+            return {
+                ...state,
+                answersArray: [
+                    ...state.answersArray,
+                    { ...state.quest, status: action.payload },
+                ],
             };
 
         case "checkAnswer":

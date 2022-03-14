@@ -20,6 +20,7 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
         return resultFiles;
     }
 
+    //upload files and save first in state
     function loadAudioFiles(audioFiles, e) {
         if (audioFiles.length > 0) {
             console.log(audioFiles);
