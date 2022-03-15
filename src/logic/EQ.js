@@ -1,6 +1,8 @@
 export const time = 3000;
 
-const EQ = [
+export const gain = 12;
+
+export const EQ = [
     {
         f: 0,
         type: "peaking",
@@ -42,5 +44,3 @@ const EQ = [
         type: "peaking",
     },
 ];
-
-export default EQ;

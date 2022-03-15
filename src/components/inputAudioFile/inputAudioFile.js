@@ -1,8 +1,10 @@
-// import { useState } from "react";
-
+import { useContext } from "react";
+import { dataContext } from "../../context";
 import "./inputAudioFile.sass";
 
-const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
+const InputAudioFile = ({ setTracks, trackName }) => {
+    const [state, dispatch] = useContext(dataContext);
+
     function checkInputFiles(data, dataType, e = null) {
         const resultFiles = [];
         for (let file of data) {
@@ -26,11 +28,14 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
             console.log(audioFiles);
             setTracks(audioFiles[0]);
         } else {
-            setAppState("ни одного аудио файла не было загружено");
+            console.log("отработал");
+            dispatch({
+                type: "stateAppChange",
+                setStateApp: "файл не загружен",
+            });
         }
         e.target.value = "";
     }
-    console.log(trackName);
 
     const s = trackName ? {} : { height: "128px" };
 
@@ -53,7 +58,12 @@ const InputAudioFile = ({ setTracks, setAppState, trackName }) => {
             />
 
             <label htmlFor="input" style={s}>
-                {trackName || "load audio file here"}
+                {trackName || (
+                    <>
+                        <p>нажмите, чтобы загрузить аудио файл</p>
+                        <p>или перетащите его сюда</p>
+                    </>
+                )}
             </label>
         </form>
     );

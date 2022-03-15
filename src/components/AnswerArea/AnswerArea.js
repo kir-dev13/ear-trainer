@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState, useContext } from "react";
 import { dataContext } from "../../context";
 
-import EQ from "../../logic/EQ";
+import { EQ } from "../../logic/EQ";
 
 import Button from "../button/button";
 

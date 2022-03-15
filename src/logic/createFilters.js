@@ -1,4 +1,4 @@
-import EQ from "./EQ";
+import { EQ } from "./EQ";
 
 export const createFilters = (wavesurferCurrent) => {
     // Create filters

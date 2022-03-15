@@ -9,13 +9,7 @@ import Spinner from "../spinner/spinner";
 
 import "./Player.sass";
 
-const Player = ({
-    setWavesurfer,
-    wavesurfer,
-    track,
-    handlePlayPauseTrack,
-    setAppState,
-}) => {
+const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
     const [volume, setVolume] = useState(0.5);
     const [state, dispatch] = useContext(dataContext);
 
@@ -52,12 +46,7 @@ const Player = ({
 
         wavesurfer.on("finish", () => {
             wavesurfer.stop();
-            setAppState("Нажмите play и затем начать тренировку");
             dispatch({ type: "playingOff" });
-            dispatch({
-                type: "stateAppChange",
-                setStateApp: "трек закончен",
-            });
         });
     };
 

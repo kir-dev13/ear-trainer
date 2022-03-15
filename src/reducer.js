@@ -1,3 +1,5 @@
+import { time } from "./logic/EQ";
+
 function reducer(state, action) {
     switch (action.type) {
         case "stateAppChange":
@@ -28,7 +30,7 @@ function reducer(state, action) {
         case "getQuest":
             return {
                 ...state,
-                stateApp: "внимание вопрос!",
+                stateApp: time / 1000,
                 quest: action.getQuest,
             };
         case "addAnswerInArray":

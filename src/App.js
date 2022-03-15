@@ -3,7 +3,7 @@ import { dataContext } from "./context";
 import reducer from "./reducer";
 
 import { getQuestEq } from "./logic/trainingEQ";
-import { delay, returnState } from "./logic/sideFunctions";
+import { returnState } from "./logic/sideFunctions";
 import { time } from "./logic/EQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
@@ -15,18 +15,11 @@ import Statistic from "./components/statistic/statstic";
 
 import "./App.sass";
 
-//TODO при ответе, если поставить на паузу - приложение останавливается
-//TODO повтор вопроса при нажатии play и активированной тренировке
-//TODO состояние текущего ответа!!
-
 //** */ сейчас два режима training - разминка (false) и тренировка (true) - будет как минимум 3
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
-    // const [answersArray, setAnswersArray] = useState([]);
-    const [appState, setAppState] = useState("Загрузите аудио файл");
-
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         stateApp: "режим разминки",
@@ -36,48 +29,31 @@ function App() {
 
     const { Provider } = dataContext;
 
-    // let timerQuest = useRef();
-    let timerReverse = useRef();
-
+    //запускаем таймаут с получением нового вопроса после того, как массив с оответами поменялся
+    // prettier-ignore
     useEffect(() => {
-        if (
-            typeof appState === "number" &&
-            appState > 0 &&
-            wavesurfer.isPlaying()
-        ) {
-            timerReverse.current = setTimeout(setAppState, 1000, appState - 1);
-        } else if (appState === 0) {
-            setAppState("Ваш ответ?");
-        } else if (appState === "верно" || appState === "неверно") {
-            // clearTimeout(timerQuest.current);
-            clearTimeout(timerReverse.current);
-        }
-    }, [appState]);
-
-    useEffect(() => {
-        if (state.training) {
-            if (state.answersArray.length === 0) {
-                setAppState("приготовьтесь");
-            } else {
-                //!! то что ниже срабатывает после включения тренировки
-
-                state.answersArray[state.answersArray.length - 1].status
-                    ? setAppState("верно")
-                    : setAppState("неверно");
-            }
+        if (state.playing && state.training) {
+            state.answersArray[state.answersArray.length - 1]?.status
+                ? dispatch({
+                    type: "stateAppChange",                           
+                    setStateApp: "верно",
+                })
+                : dispatch({
+                    type: "stateAppChange",
+                    setStateApp: "неверно",
+                });
             setTimeout(startQuestion, time);
         }
-    }, [state.training, state.answersArray]);
+    }, [state.answersArray]);
 
     const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
-            setAppState(3);
             dispatch({
                 type: "getQuest",
                 getQuest: getQuestEq(
                     wavesurfer.filters,
-                    state.quest?.dir,
-                    state?.num
+                    quest?.dir,
+                    quest?.num
                 ),
             });
         }
@@ -126,10 +102,15 @@ function App() {
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
-            if (!wavesurfer.isPlaying()) {
-                clearInterval(timerReverse);
-            } else if (state.training) {
+            if (
+                !state.playing &&
+                state.training &&
+                state.stateApp !== "верно" &&
+                state.stateApp !== "неверно"
+            ) {
                 trainingRepeat();
+            } else if (!state.playing) {
+                setTimeout(startQuestion, time);
             }
             dispatch({
                 type: "playingToggle",
@@ -140,8 +121,9 @@ function App() {
     //training start
     const handleTrainingStart = () => {
         if (state.training) {
-            //!! clearTimeout(timerReverse.current);
-            setAppState("тренировка остановлена");
+            // clearTimeout(timerReverse.current) !!!
+        } else {
+            setTimeout(startQuestion, time);
         }
         dispatch({
             type: "trainingToggle",
@@ -157,18 +139,15 @@ function App() {
     };
 
     const trainingRepeat = () => {
-        setAppState("сейчас будет повтор вопроса");
-        delay(time).then(() => {
-            startQuestion(state.quest);
+        dispatch({
+            type: "stateAppChange",
+            setStateApp: "сейчас будет повтор вопроса",
         });
+        setTimeout(startQuestion, time, state.quest);
     };
 
     const inputComponent = (
-        <InputAudioFile
-            trackName={track?.name}
-            setAppState={setAppState}
-            setTracks={setTracks}
-        />
+        <InputAudioFile trackName={track?.name} setTracks={setTracks} />
     );
 
     const playerComponent = track ? (
@@ -177,7 +156,6 @@ function App() {
             track={track}
             wavesurfer={wavesurfer}
             handlePlayPauseTrack={handlePlayPauseTrack}
-            setAppState={setAppState}
         />
     ) : null;
 
@@ -187,7 +165,7 @@ function App() {
                 {inputComponent}
                 {playerComponent}
 
-                <AppState track={track}></AppState>
+                <AppState wavesurfer={wavesurfer} track={track}></AppState>
                 <Button
                     handleAction={handleTrainingStart}
                     undisabled={state.playing}
