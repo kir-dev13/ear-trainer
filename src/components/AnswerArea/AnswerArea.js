@@ -1,18 +1,19 @@
 import { useEffect, useLayoutEffect, useState, useContext } from "react";
 import { dataContext } from "../../context";
 
-import { changeGain } from "../../logic/trainingEQ";
-import { EQ } from "../../logic/EQ";
+import { changeGain, getQuestEq } from "../../logic/trainingEQ";
+import { EQ, time } from "../../logic/EQ";
 
 import Button from "../button/button";
 
 import "./AnswerArea.sass";
 
-const AnswerArea = () => {
+const AnswerArea = ({ wavesurfer }) => {
     //TODO добавить state training в App, отключить нажатия кнопок (убрать кнопки) когда training === false. Переименовать EQ в userSettings.
     const [selectedFreq, setSelectedFreq] = useState({
         state: false,
         value: null,
+        num: null,
     });
     const [selectedDir, setSelectedDir] = useState({
         state: false,
@@ -21,16 +22,40 @@ const AnswerArea = () => {
 
     const [state, dispatch] = useContext(dataContext);
 
+    //при изменении state.quest
     useLayoutEffect(() => {
-        if (state.training && state.quest) {
+        //если тренирока, - обнуляем выбор кнопок с ответами
+        if (state.training) {
             setSelectedFreq({
                 state: false,
                 value: null,
+                num: null,
             });
             setSelectedDir({
                 state: false,
                 value: null,
             });
+        }
+        //если разминка и выбраны кнопки с ответами, проверяем ответ и обнуляем его и кнопки через время time
+        if (!state.training && selectedDir.state && selectedFreq.state) {
+            console.log("useLayoutEffect");
+            console.log(state.quest);
+            // checkAnswer(state.quest);
+            setTimeout(() => {
+                dispatch({
+                    type: "getFilter",
+                    setQuest: {}, //!! <-- вот здесь!
+                });
+                setSelectedFreq({
+                    state: false,
+                    value: null,
+                    num: null,
+                });
+                setSelectedDir({
+                    state: false,
+                    value: null,
+                });
+            }, time);
         }
     }, [state.quest]);
 
@@ -43,8 +68,17 @@ const AnswerArea = () => {
         }
     }, [selectedFreq.state, selectedDir.state]);
 
+    //TODO перенести в App.js
     const listenFilter = () => {
-        console.log("СЛУШАЕМ ФИЛЬТР");
+        dispatch({
+            type: "getQuest",
+            setQuest: getQuestEq(
+                wavesurfer.filters,
+                selectedDir.value,
+                selectedFreq.num
+            ),
+            setStateApp: time / 1000,
+        });
     };
 
     //запись выбранных ответов в state
@@ -67,6 +101,7 @@ const AnswerArea = () => {
         setSelectedFreq({
             state: true,
             value: +e.target.dataset.freq,
+            num: +e.target.dataset.num,
         });
     };
 
@@ -87,8 +122,8 @@ const AnswerArea = () => {
 
     const checkAnswer = (selectedFreq, selectedDir) => {
         if (
-            selectedFreq.value === state.quest.freq &&
-            selectedDir.value === state.quest.dir
+            selectedFreq?.value === state.quest.freq &&
+            selectedDir?.value === state.quest.dir
         ) {
             dispatch({ type: "addAnswerInArray", payload: true });
         } else {
@@ -118,7 +153,9 @@ const AnswerArea = () => {
                     <button
                         onClick={handleAnswerFreq}
                         data-freq={item.f}
+                        data-num={i}
                         className={`frequency ${s}`}
+                        disabled={i === 0 && !state.training}
                     >
                         {i === 0 ? "none" : item.f}
                     </button>

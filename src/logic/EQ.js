@@ -1,4 +1,5 @@
-export const time = 3000;
+export const time = 5000;
+export const timeBeforeQuestion = 2000;
 
 export const gain = 12;
 

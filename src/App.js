@@ -4,7 +4,7 @@ import reducer from "./reducer";
 
 import { getQuestEq } from "./logic/trainingEQ";
 import { returnState } from "./logic/sideFunctions";
-import { time } from "./logic/EQ";
+import { time, timeBeforeQuestion } from "./logic/EQ";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
@@ -16,6 +16,8 @@ import Statistic from "./components/statistic/statstic";
 import "./App.sass";
 
 //** */ сейчас два режима training - разминка (false) и тренировка (true) - будет как минимум 3
+
+//TODO таймер в разминке запускается из-за диспатча getQuest в reducer
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
@@ -51,13 +53,14 @@ function App() {
             setTimeout(() => {
                 dispatch({
                     type: "getQuest",
-                    getQuest: getQuestEq(
+                    setQuest: getQuestEq(
                         wavesurfer.filters,
                         quest?.dir,
                         quest?.num
                     ),
+                    setStateApp: time / 1000,
                 });
-            }, time);
+            }, timeBeforeQuestion);
         }
     };
 
@@ -181,7 +184,7 @@ function App() {
                         : "Начать тренировку"}
                 </Button>
 
-                <AnswerArea />
+                <AnswerArea wavesurfer={wavesurfer} />
                 <Statistic answersArray={state.answersArray} />
             </Provider>
         </main>

@@ -33,7 +33,11 @@ const AppState = ({ track, wavesurfer }) => {
         ) {
             timerReverse.current = setTimeout(countTime, 1000, stateApp - 1);
         } else if (stateApp === 0) {
-            dispatch({ type: "stateAppChange", setStateApp: "ваш ответ?" });
+            dispatch({
+                type: "stateAppChange",
+                setStateApp: state.training ? "ваш ответ?" : "режим разминки",
+            });
+            // clearTimeout(timerReverse.current);
         } else if (
             stateApp === "верно" ||
             stateApp === "неверно" ||

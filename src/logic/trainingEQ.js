@@ -1,4 +1,4 @@
-import { EQ, gain } from "./EQ";
+import { EQ, gain, time } from "./EQ";
 import { delay } from "./sideFunctions";
 
 function randomFilter() {
@@ -17,7 +17,7 @@ const changeGain = (
 ) => {
     filters[filterNumber].gain.value += gain * direction;
     console.log("start");
-    delay(3000).then(() => {
+    delay(time).then(() => {
         filters[filterNumber].gain.value -= gain * direction;
         console.log("finish");
     });

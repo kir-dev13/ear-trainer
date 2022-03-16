@@ -49,8 +49,7 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
         });
 
         wavesurfer.on("finish", () => {
-            wavesurfer.stop();
-            dispatch({ type: "playingOff" });
+            wavesurfer.play(0);
         });
     };
 
