@@ -31,10 +31,10 @@ function reducer(state, action) {
                 stateApp: action.setStateApp,
                 quest: action.setQuest,
             };
-        case "getFilter":
+        case "nullQuest":
             return {
                 ...state,
-                quest: action.setQuest,
+                quest: {},
             };
         case "addAnswerInArray":
             return {

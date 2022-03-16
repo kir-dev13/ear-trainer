@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useState, useContext } from "react";
+import {
+    useEffect,
+    useLayoutEffect,
+    useState,
+    useRef,
+    useContext,
+} from "react";
 import { dataContext } from "../../context";
 
 import { changeGain, getQuestEq } from "../../logic/trainingEQ";
@@ -22,9 +28,11 @@ const AnswerArea = ({ wavesurfer }) => {
 
     const [state, dispatch] = useContext(dataContext);
 
+    const timerListenFilter = useRef();
+
     //при изменении state.quest
     useLayoutEffect(() => {
-        //если тренирока, - обнуляем выбор кнопок с ответами
+        //если тренирока - обнуляем выбор кнопок с ответами
         if (state.training) {
             setSelectedFreq({
                 state: false,
@@ -36,15 +44,13 @@ const AnswerArea = ({ wavesurfer }) => {
                 value: null,
             });
         }
-        //если разминка и выбраны кнопки с ответами, проверяем ответ и обнуляем его и кнопки через время time
+        //если разминка и выбраны кнопки с ответами, проверяем ответ и обнуляем его и кнопки через время time, если обнулили - не даём сработать таймауту ещё раз
         if (!state.training && selectedDir.state && selectedFreq.state) {
-            console.log("useLayoutEffect");
-            console.log(state.quest);
-            // checkAnswer(state.quest);
-            setTimeout(() => {
+            console.log("state.quest: ", state.quest);
+            timerListenFilter.current = setTimeout(() => {
+                console.log("timeOut");
                 dispatch({
-                    type: "getFilter",
-                    setQuest: {}, //!! <-- вот здесь!
+                    type: "nullQuest",
                 });
                 setSelectedFreq({
                     state: false,
@@ -56,19 +62,21 @@ const AnswerArea = ({ wavesurfer }) => {
                     value: null,
                 });
             }, time);
+            if (Object.keys(state.quest).length === 0) {
+                clearTimeout(timerListenFilter.current);
+            }
         }
     }, [state.quest]);
 
     //Проверить ответ, когда все кнопки выбраны
     useEffect(() => {
-        if (selectedFreq.state && selectedDir.state && state.training) {
-            checkAnswer(selectedFreq, selectedDir);
-        } else if (selectedFreq.state && selectedDir.state && !state.training) {
-            listenFilter();
+        if (selectedFreq.state && selectedDir.state) {
+            state.training
+                ? checkAnswer(selectedFreq, selectedDir)
+                : listenFilter();
         }
     }, [selectedFreq.state, selectedDir.state]);
 
-    //TODO перенести в App.js
     const listenFilter = () => {
         dispatch({
             type: "getQuest",
