@@ -22,7 +22,7 @@ function App() {
     const [track, setTracks] = useState(null);
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
-        stateApp: "режим разминки",
+        stateApp: "тренажёр для восприятия частот на слух",
         answersArray: [],
         quest: {},
     });
@@ -42,21 +42,31 @@ function App() {
                     type: "stateAppChange",
                     setStateApp: "неверно",
                 });
-            setTimeout(startQuestion, time);
+            startQuestion()
         }
     }, [state.answersArray]);
 
     const startQuestion = (quest = undefined) => {
         if (wavesurfer.isPlaying()) {
-            dispatch({
-                type: "getQuest",
-                getQuest: getQuestEq(
-                    wavesurfer.filters,
-                    quest?.dir,
-                    quest?.num
-                ),
-            });
+            setTimeout(() => {
+                dispatch({
+                    type: "getQuest",
+                    getQuest: getQuestEq(
+                        wavesurfer.filters,
+                        quest?.dir,
+                        quest?.num
+                    ),
+                });
+            }, time);
         }
+    };
+
+    const repeatQuestion = () => {
+        dispatch({
+            type: "stateAppChange",
+            setStateApp: "сейчас будет повтор вопроса",
+        });
+        startQuestion(state.quest);
     };
 
     // Create vertical range sliders and bind filter to them
@@ -102,15 +112,19 @@ function App() {
     const handlePlayPauseTrack = () => {
         if (wavesurfer) {
             wavesurfer.playPause();
-            if (
-                !state.playing &&
-                state.training &&
-                state.stateApp !== "верно" &&
-                state.stateApp !== "неверно"
-            ) {
-                trainingRepeat();
-            } else if (!state.playing) {
-                setTimeout(startQuestion, time);
+            if (!state.playing && state.training) {
+                dispatch({
+                    type: "stateAppChange",
+                    setStateApp: "режим тренировки",
+                });
+                state.stateApp !== "верно" && state.stateApp !== "неверно"
+                    ? repeatQuestion()
+                    : startQuestion();
+            } else if (!state.playing && !state.training) {
+                dispatch({
+                    type: "stateAppChange",
+                    setStateApp: "режим разминки",
+                });
             }
             dispatch({
                 type: "playingToggle",
@@ -123,7 +137,7 @@ function App() {
         if (state.training) {
             // clearTimeout(timerReverse.current) !!!
         } else {
-            setTimeout(startQuestion, time);
+            startQuestion();
         }
         dispatch({
             type: "trainingToggle",
@@ -136,14 +150,6 @@ function App() {
                 state.training
             ),
         });
-    };
-
-    const trainingRepeat = () => {
-        dispatch({
-            type: "stateAppChange",
-            setStateApp: "сейчас будет повтор вопроса",
-        });
-        setTimeout(startQuestion, time, state.quest);
     };
 
     const inputComponent = (

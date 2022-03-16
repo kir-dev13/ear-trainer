@@ -38,6 +38,10 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
 
         wavesurfer.on("ready", () => {
             dispatch({ type: "loadingChange", payload: false });
+            dispatch({
+                type: "stateAppChange",
+                setStateApp: "аудио файл загружен",
+            });
             wavesurfer.setVolume(volume);
             const filters = createFilters(wavesurfer); //create filters
             wavesurfer.backend.setFilters(filters); //connect

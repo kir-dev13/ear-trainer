@@ -34,4 +34,4 @@ function getQuestEq(filters, direction, filterNumber) {
     return currentAnswer;
 }
 
-export { getQuestEq };
+export { getQuestEq, changeGain };

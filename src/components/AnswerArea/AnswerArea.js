@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState, useContext } from "react";
 import { dataContext } from "../../context";
 
+import { changeGain } from "../../logic/trainingEQ";
 import { EQ } from "../../logic/EQ";
 
 import Button from "../button/button";
@@ -37,16 +38,22 @@ const AnswerArea = () => {
     useEffect(() => {
         if (selectedFreq.state && selectedDir.state && state.training) {
             checkAnswer(selectedFreq, selectedDir);
+        } else if (selectedFreq.state && selectedDir.state && !state.training) {
+            listenFilter();
         }
     }, [selectedFreq.state, selectedDir.state]);
+
+    const listenFilter = () => {
+        console.log("СЛУШАЕМ ФИЛЬТР");
+    };
 
     //запись выбранных ответов в state
     const handleAnswerFreq = (e) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
-            !state.training ||
-            !state.playing ||
-            Object.keys(state?.quest).length === 0
+            // !state.training ||
+            !state.playing
+            // ||            Object.keys(state?.quest).length === 0
         ) {
             return;
         }
@@ -66,9 +73,9 @@ const AnswerArea = () => {
     const handleAnswerDir = (e) => {
         if (
             (selectedFreq.state && selectedDir.state) ||
-            !state.training ||
-            !state.playing ||
-            Object.keys(state?.quest).length === 0
+            // !state.training ||
+            !state.playing
+            // ||            Object.keys(state?.quest).length === 0
         ) {
             return;
         }
@@ -137,7 +144,7 @@ const AnswerArea = () => {
                     data-direction={i}
                     className={`direction ${s}`}
                 >
-                    {i > 0 ? "+" : "-"}
+                    {i > 0 ? "усиление" : "ослабление"}
                 </button>
             );
         }

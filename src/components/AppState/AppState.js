@@ -44,38 +44,14 @@ const AppState = ({ track, wavesurfer }) => {
         }
     }, [stateApp, state.playing, state.training]);
 
-    switch (true) {
-        case message.title === "тренажёр для восприятия частот на слух":
-            message.description = "";
-            break;
-        case message.title === "аудиофайл загружен":
-            message.description = "нажмите Play";
-            break;
-        // case message.title === "файл не загружен":
-        //     if (!track) {
-        //         message.description = "файл не загружен";
-        //     }
-
-        //     break;
-        case typeof message.title === "number":
-            message.description = "вопрос";
-            break;
-        default:
-            break;
-    }
-
     switch (state.playing) {
         case false:
             message.title = "пауза";
             break;
         case true:
+            //
             break;
         default:
-            message.title =
-                track && !state.loading
-                    ? "аудиофайл загружен"
-                    : "тренажёр для восприятия частот на слух";
-            break;
     }
 
     return (

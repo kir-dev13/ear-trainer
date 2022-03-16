@@ -28,7 +28,6 @@ const InputAudioFile = ({ setTracks, trackName }) => {
             console.log(audioFiles);
             setTracks(audioFiles[0]);
         } else {
-            console.log("отработал");
             dispatch({
                 type: "stateAppChange",
                 setStateApp: "файл не загружен",
