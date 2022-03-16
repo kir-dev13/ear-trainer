@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ear-trainer/static/css/main.d96fd88b.css",
-    "main.js": "/ear-trainer/static/js/main.9c3d5b80.js",
+    "main.css": "/ear-trainer/static/css/main.28858a75.css",
+    "main.js": "/ear-trainer/static/js/main.ca8396dd.js",
     "static/js/787.ae9be709.chunk.js": "/ear-trainer/static/js/787.ae9be709.chunk.js",
     "index.html": "/ear-trainer/index.html",
-    "main.d96fd88b.css.map": "/ear-trainer/static/css/main.d96fd88b.css.map",
-    "main.9c3d5b80.js.map": "/ear-trainer/static/js/main.9c3d5b80.js.map",
+    "main.28858a75.css.map": "/ear-trainer/static/css/main.28858a75.css.map",
+    "main.ca8396dd.js.map": "/ear-trainer/static/js/main.ca8396dd.js.map",
     "787.ae9be709.chunk.js.map": "/ear-trainer/static/js/787.ae9be709.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d96fd88b.css",
-    "static/js/main.9c3d5b80.js"
+    "static/css/main.28858a75.css",
+    "static/js/main.ca8396dd.js"
   ]
 }
