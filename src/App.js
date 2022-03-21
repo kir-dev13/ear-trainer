@@ -20,6 +20,19 @@ import "./App.sass";
 //TODO если нажать начать тренировку а потом остановить, то таймер будет работать.
 //TODO при остановке тренировке или начале надо обнулить все фильтры
 
+function getDevice() {
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+        const outputDevices = devices.filter((device) => {
+            return device.kind === "audiooutput";
+        });
+        outputDevices.forEach((device) =>
+            console.log(device.label + ` \n ${device.deviceId}`)
+        );
+    });
+}
+
+console.log(getDevice());
+
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);

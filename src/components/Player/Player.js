@@ -46,6 +46,9 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
             const filters = createFilters(wavesurfer); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
+            // wavesurfer.setSinkId(
+            //     "06ee476bb12b9a65695f6056e41fb352c0e0a3e72f02f01be0022ce77968e355"
+            // );
         });
 
         wavesurfer.on("finish", () => {
