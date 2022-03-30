@@ -2,11 +2,6 @@ const Spinner = () => {
     return (
         <svg
             style={{
-                position: "absolute",
-                margin: "auto",
-                left: "50%",
-                top: 0,
-                transform: "translate(-50%, 50%)",
                 background: "none",
                 display: "block",
                 shapRendering: "auto",
@@ -19,7 +14,7 @@ const Spinner = () => {
         >
             <path
                 d="M21 50A29 29 0 0 0 79 50A29 32 0 0 1 21 50"
-                fill="#292664"
+                fill="#743C79"
                 stroke="none"
             >
                 <animateTransform

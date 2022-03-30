@@ -6,12 +6,17 @@ import { getQuestEq } from "./logic/trainingEQ";
 import { returnState } from "./logic/sideFunctions";
 import { time, timeBeforeQuestion } from "./logic/EQ";
 
+import { Button as ButtonAnt, DatePicker, version } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
+
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
 import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 import AppState from "./components/AppState/AppState";
 import Statistic from "./components/statistic/statstic";
+
+import "antd/dist/antd.css";
 
 import "./App.sass";
 
@@ -170,25 +175,32 @@ function App() {
     ) : null;
 
     return (
-        <main className="App">
-            <Provider value={[state, dispatch]}>
-                {inputComponent}
-                {playerComponent}
+        <div className="App">
+            <aside className="options">
+                <ButtonAnt type="link">
+                    <SettingOutlined style={{ fontSize: "50px" }} />
+                </ButtonAnt>
+            </aside>
+            <main className="main">
+                <Provider value={[state, dispatch]}>
+                    {inputComponent}
+                    {playerComponent}
 
-                <AppState wavesurfer={wavesurfer} track={track}></AppState>
-                <Button
-                    handleAction={handleTrainingStart}
-                    undisabled={state.playing}
-                >
-                    {state.training
-                        ? "Остановить тренировку"
-                        : "Начать тренировку"}
-                </Button>
+                    <AppState wavesurfer={wavesurfer} track={track}></AppState>
+                    <Button
+                        handleAction={handleTrainingStart}
+                        undisabled={state.playing}
+                    >
+                        {state.training
+                            ? "Остановить тренировку"
+                            : "Начать тренировку"}
+                    </Button>
 
-                <AnswerArea wavesurfer={wavesurfer} />
-                <Statistic answersArray={state.answersArray} />
-            </Provider>
-        </main>
+                    <AnswerArea wavesurfer={wavesurfer} />
+                    <Statistic answersArray={state.answersArray} />
+                </Provider>
+            </main>
+        </div>
     );
 }
 

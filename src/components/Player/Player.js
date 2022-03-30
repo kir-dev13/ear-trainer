@@ -4,6 +4,10 @@ import { dataContext } from "../../context";
 
 import { createFilters } from "../../logic/createFilters";
 
+import { Button as ButtonAnt, Slider, DatePicker, version } from "antd";
+
+import { PlayCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
+
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
 
@@ -67,29 +71,69 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
                     waveColor={"rgb(116, 60, 121)"}
                     progressColor={"#ffa70467"}
                     id="waveform"
-                    style={{ position: "relative" }}
+                    // style={{ position: "relative" }}
                 >
-                    {state.loading ? <Spinner /> : null}
+                    <div className="spinner">
+                        {state.loading ? <Spinner /> : null}
+                    </div>
                     {/* !! стили спинера.... !! */}
                 </WaveForm>
             </WaveSurfer>
 
-            {track ? (
-                <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={volume * 100}
-                    onChange={(e) => handleChangeVolume(e)}
-                />
-            ) : null}
+            <div className="panel">
+                {track ? (
+                    // <Slider
+                    // className="volume-slider"
+                    // min={0}
+                    // max={100}
+                    // defaultValue={volume * 100}
+                    // onChange={handleChangeVolume}
+                    //     // height="50px"
+                    // />
+                    <input
+                        type="range"
+                        className="volume-slider"
+                        min={0}
+                        max={100}
+                        value={volume * 100}
+                        onChange={(e) => handleChangeVolume(e)}
+                    />
+                ) : null}
 
-            <Button
-                undisabled={!!track && !state.loading}
-                handleAction={handlePlayPauseTrack}
-            >
-                {state.playing ? "Pause" : "Play"}
-            </Button>
+                <ButtonAnt
+                    type="link"
+                    // undisabled={!!track && !state.loading}
+                    disabled={!(!!track && !state.loading)}
+                    onClick={handlePlayPauseTrack}
+                    style={{
+                        height: "40px",
+                        width: "50px",
+                        position: "relative",
+                    }}
+                >
+                    {state.playing ? (
+                        <PauseCircleOutlined
+                            style={{
+                                fontSize: "40px",
+                                alignSelf: "self-start",
+                                position: "absolute",
+                                left: 0,
+                                top: 0,
+                            }}
+                        />
+                    ) : (
+                        <PlayCircleOutlined
+                            style={{
+                                fontSize: "40px",
+                                alignSelf: "self-start",
+                                position: "absolute",
+                                left: 0,
+                                top: 0,
+                            }}
+                        />
+                    )}
+                </ButtonAnt>
+            </div>
         </div>
     );
 };
