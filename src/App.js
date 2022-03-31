@@ -6,8 +6,10 @@ import { getQuestEq } from "./logic/trainingEQ";
 import { returnState } from "./logic/sideFunctions";
 import { time, timeBeforeQuestion } from "./logic/EQ";
 
-import { Button as ButtonAnt, DatePicker, version } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { Button as ButtonMUI } from "@mui/material/";
+import IconButton from "@mui/material/IconButton";
+
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
@@ -15,8 +17,6 @@ import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 import AppState from "./components/AppState/AppState";
 import Statistic from "./components/statistic/statstic";
-
-import "antd/dist/antd.css";
 
 import "./App.sass";
 
@@ -176,10 +176,15 @@ function App() {
 
     return (
         <div className="App">
-            <aside className="options">
-                <ButtonAnt type="link">
-                    <SettingOutlined style={{ fontSize: "50px" }} />
-                </ButtonAnt>
+            <aside>
+                <menu className="options">
+                    <IconButton color="primary">
+                        <SettingsIcon
+                            className="btn"
+                            style={{ fontSize: "50px" }}
+                        />
+                    </IconButton>
+                </menu>
             </aside>
             <main className="main">
                 <Provider value={[state, dispatch]}>

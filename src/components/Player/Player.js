@@ -4,9 +4,16 @@ import { dataContext } from "../../context";
 
 import { createFilters } from "../../logic/createFilters";
 
-import { Button as ButtonAnt, Slider, DatePicker, version } from "antd";
+import { Button as ButtonMUI } from "@mui/material/Button";
+import Slider from "@mui/material/Slider";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 
-import { PlayCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
@@ -58,6 +65,7 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
     };
 
     const handleChangeVolume = (e) => {
+        console.log(e.target.value);
         wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
         setVolume(+(e.target.value / 100).toFixed(2));
     };
@@ -82,57 +90,60 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
 
             <div className="panel">
                 {track ? (
-                    // <Slider
-                    // className="volume-slider"
+                    // <input
+                    //     type="range"
+                    //     className="volume-slider"
                     // min={0}
                     // max={100}
-                    // defaultValue={volume * 100}
-                    // onChange={handleChangeVolume}
-                    //     // height="50px"
+                    //     value={volume * 100}
+                    //     onChange={(e) => handleChangeVolume(e)}
                     // />
-                    <input
-                        type="range"
+                    <Stack
                         className="volume-slider"
-                        min={0}
-                        max={100}
-                        value={volume * 100}
-                        onChange={(e) => handleChangeVolume(e)}
-                    />
+                        spacing={2}
+                        direction="row"
+                        // sx={{ mb: 1 }}
+                        alignItems="center"
+                    >
+                        <VolumeDown />
+                        <Slider
+                            color="secondary"
+                            // min={0}
+                            // max={100}
+                            // aria-label="Volume"
+                            value={volume * 100}
+                            onChange={handleChangeVolume}
+                        />
+                        <VolumeUp />
+                    </Stack>
                 ) : null}
 
-                <ButtonAnt
-                    type="link"
+                <IconButton
+                    // type="link"
                     // undisabled={!!track && !state.loading}
-                    disabled={!(!!track && !state.loading)}
+                    disabled={state.loading}
+                    color="primary"
                     onClick={handlePlayPauseTrack}
-                    style={{
-                        height: "40px",
-                        width: "50px",
-                        position: "relative",
-                    }}
+                    // style={{
+                    //     height: "40px",
+                    //     width: "50px",
+                    //     position: "relative",
+                    // }}
                 >
                     {state.playing ? (
-                        <PauseCircleOutlined
+                        <PauseCircleOutlineIcon
                             style={{
                                 fontSize: "40px",
-                                alignSelf: "self-start",
-                                position: "absolute",
-                                left: 0,
-                                top: 0,
                             }}
                         />
                     ) : (
-                        <PlayCircleOutlined
+                        <PlayCircleOutlineIcon
                             style={{
                                 fontSize: "40px",
-                                alignSelf: "self-start",
-                                position: "absolute",
-                                left: 0,
-                                top: 0,
                             }}
                         />
                     )}
-                </ButtonAnt>
+                </IconButton>
             </div>
         </div>
     );
