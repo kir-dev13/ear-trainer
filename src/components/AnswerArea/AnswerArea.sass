@@ -1,17 +1,28 @@
 .answers
   padding: 40px 20px
   // border: 1px solid red
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px
+  // box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px
+  .btn-answers
+    border-radius: 50px
+
+    box-shadow: 1px 1px 4px #636363, -1px -1px 4px #e4efe9
+    margin-bottom: 10px
+
+    &:active
+      box-shadow: inset 2px 2px 8px #636363, inset -2px -2px 8px #e4efe9
+
   .frequencies
 
     display: flex
     flex-wrap: wrap
     .frequency
       min-width: 4em
+
+      // outline: 4px solid rgba(61, 18, 76,0.1)
     .green
-      background-color: green
+      background-color: #6f947b
     .red
-      background-color: red
+      background-color: #946f6f
   .directions
     display: flex
     justify-content: space-around

@@ -5,7 +5,9 @@ import {
     useRef,
     useContext,
 } from "react";
-import { dataContext } from "../../context";
+import { dataContext } from "../../dataContext";
+
+import { Button as ButtonMUI } from "@mui/material/";
 
 import { changeGain, getQuestEq } from "../../logic/trainingEQ";
 import { EQ, time } from "../../logic/EQ";
@@ -158,15 +160,16 @@ const AnswerArea = ({ wavesurfer }) => {
             const s = showAnswer(item.f, selectedFreq, state?.quest?.freq);
             return (
                 <li key={i}>
-                    <button
+                    <ButtonMUI
                         onClick={handleAnswerFreq}
+                        color="secondary"
                         data-freq={item.f}
                         data-num={i}
-                        className={`frequency ${s}`}
+                        className={`btn-answers frequency ${s}`}
                         disabled={i === 0 && !state.training}
                     >
                         {i === 0 ? "none" : item.f}
-                    </button>
+                    </ButtonMUI>
                 </li>
             );
         });
@@ -183,14 +186,14 @@ const AnswerArea = ({ wavesurfer }) => {
             }
 
             directionButtons.push(
-                <button
+                <ButtonMUI
                     key={i}
                     onClick={handleAnswerDir}
                     data-direction={i}
-                    className={`direction ${s}`}
+                    className={`direction btn-answers ${s}`}
                 >
                     {i > 0 ? "усиление" : "ослабление"}
-                </button>
+                </ButtonMUI>
             );
         }
         return <div className="directions">{directionButtons}</div>;

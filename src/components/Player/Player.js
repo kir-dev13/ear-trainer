@@ -1,10 +1,10 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { useState, useEffect, useRef, useContext } from "react";
-import { dataContext } from "../../context";
+import { dataContext } from "../../dataContext";
 
 import { createFilters } from "../../logic/createFilters";
 
-import { Button as ButtonMUI } from "@mui/material/Button";
+import { Button as ButtonMUI } from "@mui/material/";
 import Slider from "@mui/material/Slider";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -20,7 +20,13 @@ import Spinner from "../spinner/spinner";
 
 import "./Player.sass";
 
-const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
+const Player = ({
+    setWavesurfer,
+    wavesurfer,
+    track,
+    handlePlayPauseTrack,
+    handleTrainingStart,
+}) => {
     const [volume, setVolume] = useState(0.5);
     const [state, dispatch] = useContext(dataContext);
 
@@ -79,7 +85,6 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
                     waveColor={"rgb(116, 60, 121)"}
                     progressColor={"#ffa70467"}
                     id="waveform"
-                    // style={{ position: "relative" }}
                 >
                     <div className="spinner">
                         {state.loading ? <Spinner /> : null}
@@ -90,14 +95,6 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
 
             <div className="panel">
                 {track ? (
-                    // <input
-                    //     type="range"
-                    //     className="volume-slider"
-                    // min={0}
-                    // max={100}
-                    //     value={volume * 100}
-                    //     onChange={(e) => handleChangeVolume(e)}
-                    // />
                     <Stack
                         className="volume-slider"
                         spacing={2}
@@ -108,9 +105,6 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
                         <VolumeDown />
                         <Slider
                             color="secondary"
-                            // min={0}
-                            // max={100}
-                            // aria-label="Volume"
                             value={volume * 100}
                             onChange={handleChangeVolume}
                         />
@@ -119,16 +113,9 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
                 ) : null}
 
                 <IconButton
-                    // type="link"
-                    // undisabled={!!track && !state.loading}
                     disabled={state.loading}
                     color="primary"
                     onClick={handlePlayPauseTrack}
-                    // style={{
-                    //     height: "40px",
-                    //     width: "50px",
-                    //     position: "relative",
-                    // }}
                 >
                     {state.playing ? (
                         <PauseCircleOutlineIcon
@@ -144,6 +131,20 @@ const Player = ({ setWavesurfer, wavesurfer, track, handlePlayPauseTrack }) => {
                         />
                     )}
                 </IconButton>
+                <ButtonMUI
+                    className="btn"
+                    onClick={handleTrainingStart}
+                    disabled={!state.playing}
+                    sx={{
+                        maxWidth: "100px",
+                        minHeight: "70px",
+                        padding: "0px 15px ",
+                    }}
+                >
+                    {state.training
+                        ? "Остановить тренировку"
+                        : "Начать \n тренировку"}
+                </ButtonMUI>
             </div>
         </div>
     );

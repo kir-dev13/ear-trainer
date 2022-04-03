@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { dataContext } from "../../context";
+import { dataContext } from "../../dataContext";
 import "./inputAudioFile.sass";
 
 const InputAudioFile = ({ setTracks, trackName }) => {

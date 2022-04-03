@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-import { dataContext } from "./context";
+import { dataContext } from "./dataContext";
 import reducer from "./reducer";
 
 import { getQuestEq } from "./logic/trainingEQ";
 import { returnState } from "./logic/sideFunctions";
 import { time, timeBeforeQuestion } from "./logic/EQ";
 
-import { Button as ButtonMUI } from "@mui/material/";
 import IconButton from "@mui/material/IconButton";
-
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
@@ -34,8 +32,6 @@ function App() {
         answersArray: [],
         quest: {},
     });
-
-    const { Provider } = dataContext;
 
     //запускаем таймаут с получением нового вопроса после того, как массив с оответами поменялся
     // prettier-ignore
@@ -171,6 +167,7 @@ function App() {
             track={track}
             wavesurfer={wavesurfer}
             handlePlayPauseTrack={handlePlayPauseTrack}
+            handleTrainingStart={handleTrainingStart}
         />
     ) : null;
 
@@ -187,23 +184,15 @@ function App() {
                 </menu>
             </aside>
             <main className="main">
-                <Provider value={[state, dispatch]}>
+                <dataContext.Provider value={[state, dispatch]}>
                     {inputComponent}
                     {playerComponent}
 
                     <AppState wavesurfer={wavesurfer} track={track}></AppState>
-                    <Button
-                        handleAction={handleTrainingStart}
-                        undisabled={state.playing}
-                    >
-                        {state.training
-                            ? "Остановить тренировку"
-                            : "Начать тренировку"}
-                    </Button>
 
                     <AnswerArea wavesurfer={wavesurfer} />
                     <Statistic answersArray={state.answersArray} />
-                </Provider>
+                </dataContext.Provider>
             </main>
         </div>
     );

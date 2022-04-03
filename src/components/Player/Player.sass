@@ -2,6 +2,21 @@
     margin-bottom: 20px
     #waveform
         position: relative
+        margin-bottom: 20px
+
+        border-radius: 5px
+        position: relative
+        z-index: 1
+        background: inherit
+        overflow: hidden
+        border-radius: 25px
+        -webkit-transition: all 0.3s ease
+        -moz-transition: all 0.3s ease
+        -o-transition: all 0.3s ease
+        transition: all 0.3s ease
+        &:hover
+            box-shadow: 5px 5px 16px #636363, -2px -2px 24px #e4efe9
+
         .spinner
             position: absolute
             top: 0
@@ -9,10 +24,19 @@
             transform: translate(-50%),
     .panel
         margin: 0 auto
-        margin-left: 10%
-        width: 70%
+        // margin-left: 10%
+        width: 90%
+        padding: 0 20px
         display: flex
         justify-content: space-between
         align-items: center
+        border-radius: 25px
+        -webkit-transition: all 0.3s ease
+        -moz-transition: all 0.3s ease
+        -o-transition: all 0.3s ease
+        transition: all 0.3s ease
         .volume-slider
-            width: 70%
+            width: 50%
+        &:hover
+
+            box-shadow: 5px 5px 16px #636363, -2px -2px 24px #e4efe9

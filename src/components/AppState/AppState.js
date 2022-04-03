@@ -1,6 +1,6 @@
 import { useEffect, useRef, useContext } from "react";
 
-import { dataContext } from "../../context";
+import { dataContext } from "../../dataContext";
 
 import { time } from "../../logic/EQ";
 import "./AppState.sass";
