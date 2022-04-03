@@ -1,8 +1,6 @@
-import { EQ } from "./EQ";
-
-export const createFilters = (wavesurferCurrent) => {
+export const createFilters = (wavesurferCurrent, filtersList) => {
     // Create filters
-    let filters = EQ.map(function (band) {
+    let filters = filtersList.map(function (band) {
         // var filter = wavesurfer.current.backend.ac.createBiquadFilter();
         let filter = wavesurferCurrent.backend.ac.createBiquadFilter();
         filter.type = band.type;

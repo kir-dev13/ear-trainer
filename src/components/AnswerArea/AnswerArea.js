@@ -5,12 +5,15 @@ import {
     useRef,
     useContext,
 } from "react";
-import { dataContext } from "../../dataContext";
+import { dataContext, settingsContext } from "../../contexts/context";
 
 import { Button as ButtonMUI } from "@mui/material/";
 
 import { changeGain, getQuestEq } from "../../logic/trainingEQ";
-import { EQ, time } from "../../logic/EQ";
+import {
+    defaultFiltersList,
+    timeQuestionDefault,
+} from "../../logic/defaultSettings";
 
 import Button from "../button/button";
 
@@ -29,6 +32,7 @@ const AnswerArea = ({ wavesurfer }) => {
     });
 
     const [state, dispatch] = useContext(dataContext);
+    const settings = useContext(settingsContext)[0];
 
     const timerListenFilter = useRef();
 
@@ -63,7 +67,7 @@ const AnswerArea = ({ wavesurfer }) => {
                     state: false,
                     value: null,
                 });
-            }, time);
+            }, timeQuestionDefault);
             if (Object.keys(state.quest).length === 0) {
                 clearTimeout(timerListenFilter.current);
             }
@@ -87,7 +91,7 @@ const AnswerArea = ({ wavesurfer }) => {
                 selectedDir.value,
                 selectedFreq.num
             ),
-            setStateApp: time / 1000,
+            setStateApp: timeQuestionDefault / 1000,
         });
     };
 
@@ -156,7 +160,7 @@ const AnswerArea = ({ wavesurfer }) => {
     };
 
     const AnswerFreq = () => {
-        const buttonsList = EQ.map((item, i) => {
+        const buttonsList = settings.filtersList.map((item, i) => {
             const s = showAnswer(item.f, selectedFreq, state?.quest?.freq);
             return (
                 <li key={i}>
@@ -166,9 +170,11 @@ const AnswerArea = ({ wavesurfer }) => {
                         data-freq={item.f}
                         data-num={i}
                         className={`btn-answers frequency ${s}`}
-                        disabled={i === 0 && !state.training}
+                        disabled={
+                            (item.f === 0 && !state.training) || !state.playing
+                        }
                     >
-                        {i === 0 ? "none" : item.f}
+                        {item.f === 0 ? "none" : item.f}
                     </ButtonMUI>
                 </li>
             );
@@ -191,6 +197,7 @@ const AnswerArea = ({ wavesurfer }) => {
                     onClick={handleAnswerDir}
                     data-direction={i}
                     className={`direction btn-answers ${s}`}
+                    disabled={!state.playing}
                 >
                     {i > 0 ? "усиление" : "ослабление"}
                 </ButtonMUI>

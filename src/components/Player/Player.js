@@ -1,6 +1,6 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { useState, useEffect, useRef, useContext } from "react";
-import { dataContext } from "../../dataContext";
+import { dataContext, settingsContext } from "../../contexts/context";
 
 import { createFilters } from "../../logic/createFilters";
 
@@ -29,6 +29,7 @@ const Player = ({
 }) => {
     const [volume, setVolume] = useState(0.5);
     const [state, dispatch] = useContext(dataContext);
+    const settings = useContext(settingsContext)[0];
 
     //loading file in wavesurfer
     useEffect(() => {
@@ -60,9 +61,10 @@ const Player = ({
                 setStateApp: "аудио файл загружен",
             });
             wavesurfer.setVolume(volume);
-            const filters = createFilters(wavesurfer); //create filters
+            const filters = createFilters(wavesurfer, settings.filtersList); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
+            console.log(wavesurfer.filters);
         });
 
         wavesurfer.on("finish", () => {
@@ -71,7 +73,6 @@ const Player = ({
     };
 
     const handleChangeVolume = (e) => {
-        console.log(e.target.value);
         wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
         setVolume(+(e.target.value / 100).toFixed(2));
     };
@@ -120,13 +121,13 @@ const Player = ({
                     {state.playing ? (
                         <PauseCircleOutlineIcon
                             style={{
-                                fontSize: "40px",
+                                fontSize: "50px",
                             }}
                         />
                     ) : (
                         <PlayCircleOutlineIcon
                             style={{
-                                fontSize: "40px",
+                                fontSize: "50px",
                             }}
                         />
                     )}

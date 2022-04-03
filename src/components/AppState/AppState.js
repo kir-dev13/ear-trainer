@@ -1,8 +1,8 @@
 import { useEffect, useRef, useContext } from "react";
 
-import { dataContext } from "../../dataContext";
+import { dataContext } from "../../contexts/context";
 
-import { time } from "../../logic/EQ";
+import { time } from "../../logic/defaultSettings";
 import "./AppState.sass";
 
 const AppState = ({ track, wavesurfer }) => {
@@ -60,7 +60,7 @@ const AppState = ({ track, wavesurfer }) => {
 
     return (
         <div className="app_state">
-            <h6>{message.title}</h6>
+            <p>{message.title}</p>
             <span>{message.description}</span>
         </div>
     );

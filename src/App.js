@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-import { dataContext } from "./dataContext";
+// import { dataContext } from "./dataContext";
+import { settingsContext, dataContext } from "./contexts/context";
 import reducer from "./reducer";
 
 import { getQuestEq } from "./logic/trainingEQ";
 import { returnState } from "./logic/sideFunctions";
-import { time, timeBeforeQuestion } from "./logic/EQ";
-
-import IconButton from "@mui/material/IconButton";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+    defaultFiltersList,
+    defaultGain,
+    timeQuestionDefault,
+    timeBeforeQuestionDefault,
+} from "./logic/defaultSettings";
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
@@ -15,17 +18,23 @@ import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 import AppState from "./components/AppState/AppState";
 import Statistic from "./components/statistic/statstic";
+import ModalSettings from "./components/modalSettings/modalSettings";
 
 import "./App.sass";
 
-//** */ сейчас два режима training - разминка (false) и тренировка (true) - будет как минимум 3
-
 //TODO если нажать начать тренировку а потом остановить, то таймер будет работать.
-//TODO при остановке тренировке или начале надо обнулить все фильтры
+//TODO при остановке тренировки или начале надо обнулить все фильтры
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
+    const [settings, setSettings] = useState({
+        filtersList: defaultFiltersList,
+        gain: defaultGain,
+        timeQuestion: timeQuestionDefault,
+        timeBeforeQustion: timeBeforeQuestionDefault,
+    });
+
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         stateApp: "тренажёр для восприятия частот на слух",
@@ -60,9 +69,9 @@ function App() {
                         quest?.dir,
                         quest?.num
                     ),
-                    setStateApp: time / 1000,
+                    setStateApp: timeQuestionDefault / 1000,
                 });
-            }, timeBeforeQuestion);
+            }, timeBeforeQuestionDefault);
         }
     };
 
@@ -170,30 +179,29 @@ function App() {
             handleTrainingStart={handleTrainingStart}
         />
     ) : null;
-
     return (
         <div className="App">
-            <aside>
-                <menu className="options">
-                    <IconButton color="primary">
-                        <SettingsIcon
-                            className="btn"
-                            style={{ fontSize: "50px" }}
-                        />
-                    </IconButton>
-                </menu>
-            </aside>
-            <main className="main">
-                <dataContext.Provider value={[state, dispatch]}>
-                    {inputComponent}
-                    {playerComponent}
+            <settingsContext.Provider value={[settings, setSettings]}>
+                <aside>
+                    <menu className="options">
+                        <ModalSettings />
+                    </menu>
+                </aside>
+                <main className="main">
+                    <dataContext.Provider value={[state, dispatch]}>
+                        {inputComponent}
+                        {playerComponent}
 
-                    <AppState wavesurfer={wavesurfer} track={track}></AppState>
+                        <AppState
+                            wavesurfer={wavesurfer}
+                            track={track}
+                        ></AppState>
 
-                    <AnswerArea wavesurfer={wavesurfer} />
-                    <Statistic answersArray={state.answersArray} />
-                </dataContext.Provider>
-            </main>
+                        <AnswerArea wavesurfer={wavesurfer} />
+                        <Statistic answersArray={state.answersArray} />
+                    </dataContext.Provider>
+                </main>
+            </settingsContext.Provider>
         </div>
     );
 }

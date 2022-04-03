@@ -1,9 +1,9 @@
-export const time = 5000;
-export const timeBeforeQuestion = 2000;
+export const timeQuestionDefault = 5000;
+export const timeBeforeQuestionDefault = 2000;
 
-export const gain = 12;
+export const defaultGain = 12;
 
-export const EQ = [
+export const defaultFiltersList = [
     {
         f: 0,
         type: "peaking",

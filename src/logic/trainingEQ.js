@@ -1,8 +1,12 @@
-import { EQ, gain, time } from "./EQ";
+import {
+    defaultFiltersList,
+    defaultGain,
+    timeQuestionDefault,
+} from "./defaultSettings";
 import { delay } from "./sideFunctions";
 
-function randomFilter() {
-    return Math.floor(Math.random() * EQ.length);
+function randomFilter(filters) {
+    return Math.floor(Math.random() * filters.length);
 }
 
 function randomDirection() {
@@ -13,12 +17,11 @@ function randomDirection() {
 const changeGain = (
     filters,
     direction = randomDirection(),
-    filterNumber = randomFilter()
+    filterNumber = randomFilter(filters)
 ) => {
-    filters[filterNumber].gain.value += gain * direction;
-    console.log("start");
-    delay(time).then(() => {
-        filters[filterNumber].gain.value -= gain * direction;
+    filters[filterNumber].gain.value += defaultGain * direction;
+    delay(timeQuestionDefault).then(() => {
+        filters[filterNumber].gain.value -= defaultGain * direction;
         console.log("finish");
     });
     return {
