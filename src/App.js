@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-// import { dataContext } from "./dataContext";
 import { settingsContext, dataContext } from "./contexts/context";
 import reducer from "./reducer";
 
@@ -14,7 +13,6 @@ import {
 
 import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
 import Player from "./components/Player/Player";
-import Button from "./components/button/button";
 import AnswerArea from "./components/AnswerArea/AnswerArea";
 import AppState from "./components/AppState/AppState";
 import Statistic from "./components/statistic/statstic";

@@ -1,7 +1,6 @@
 export const createFilters = (wavesurferCurrent, filtersList) => {
     // Create filters
     let filters = filtersList.map(function (band) {
-        // var filter = wavesurfer.current.backend.ac.createBiquadFilter();
         let filter = wavesurferCurrent.backend.ac.createBiquadFilter();
         filter.type = band.type;
         filter.gain.value = 0;
