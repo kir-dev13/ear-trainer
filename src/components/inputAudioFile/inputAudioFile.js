@@ -60,7 +60,6 @@ const InputAudioFile = ({ setTracks, trackName }) => {
                 {trackName || (
                     <>
                         <p>нажмите, чтобы загрузить аудио файл</p>
-                        <p>или перетащите его сюда</p>
                     </>
                 )}
             </label>

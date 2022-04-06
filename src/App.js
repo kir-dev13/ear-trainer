@@ -67,7 +67,8 @@ function App() {
                     setQuest: getQuestEq(
                         wavesurfer.filters,
                         quest?.dir,
-                        quest?.num
+                        quest?.num,
+                        settings.gain
                     ),
                     setStateApp: timeQuestionDefault / 1000,
                 });

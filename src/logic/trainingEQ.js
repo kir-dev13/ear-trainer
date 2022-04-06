@@ -1,8 +1,4 @@
-import {
-    defaultFiltersList,
-    defaultGain,
-    timeQuestionDefault,
-} from "./defaultSettings";
+import { timeQuestionDefault } from "./defaultSettings";
 import { delay } from "./sideFunctions";
 
 function randomFilter(filters) {
@@ -17,11 +13,12 @@ function randomDirection() {
 const changeGain = (
     filters,
     direction = randomDirection(),
-    filterNumber = randomFilter(filters)
+    filterNumber = randomFilter(filters),
+    gain
 ) => {
-    filters[filterNumber].gain.value += defaultGain * direction;
+    filters[filterNumber].gain.value += gain * direction;
     delay(timeQuestionDefault).then(() => {
-        filters[filterNumber].gain.value -= defaultGain * direction;
+        filters[filterNumber].gain.value -= gain * direction;
         console.log("finish");
     });
     return {
@@ -31,8 +28,8 @@ const changeGain = (
     };
 };
 
-function getQuestEq(filters, direction, filterNumber) {
-    const currentAnswer = changeGain(filters, direction, filterNumber);
+function getQuestEq(filters, direction, filterNumber, gain) {
+    const currentAnswer = changeGain(filters, direction, filterNumber, gain);
     console.log("currentAnswer: ", currentAnswer);
     return currentAnswer;
 }

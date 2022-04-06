@@ -64,7 +64,6 @@ const Player = ({
             const filters = createFilters(wavesurfer, settings.filtersList); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
-            console.log(wavesurfer.filters);
         });
 
         wavesurfer.on("finish", () => {
@@ -105,47 +104,51 @@ const Player = ({
                     >
                         <VolumeDown />
                         <Slider
+                            className="volume"
                             color="secondary"
+                            // style={{ color: "#743C79" }}
+                            // #743C79
                             value={volume * 100}
                             onChange={handleChangeVolume}
                         />
-                        <VolumeUp />
                     </Stack>
                 ) : null}
 
-                <IconButton
-                    disabled={state.loading}
-                    color="primary"
-                    onClick={handlePlayPauseTrack}
-                >
-                    {state.playing ? (
-                        <PauseCircleOutlineIcon
-                            style={{
-                                fontSize: "50px",
-                            }}
-                        />
-                    ) : (
-                        <PlayCircleOutlineIcon
-                            style={{
-                                fontSize: "50px",
-                            }}
-                        />
-                    )}
-                </IconButton>
-                <ButtonMUI
-                    className="btn"
-                    onClick={handleTrainingStart}
-                    disabled={!state.playing}
-                    sx={{
-                        maxWidth: "100px",
-                        minHeight: "70px",
-                        padding: "0px 15px ",
-                    }}
-                >
-                    {state.training
-                        ? "Остановить тренировку"
-                        : "Начать \n тренировку"}
-                </ButtonMUI>
+                <div className="panel_transport">
+                    <IconButton
+                        disabled={state.loading}
+                        color="primary"
+                        onClick={handlePlayPauseTrack}
+                    >
+                        {state.playing ? (
+                            <PauseCircleOutlineIcon
+                                style={{
+                                    fontSize: "50px",
+                                }}
+                            />
+                        ) : (
+                            <PlayCircleOutlineIcon
+                                style={{
+                                    fontSize: "50px",
+                                }}
+                            />
+                        )}
+                    </IconButton>
+                    <ButtonMUI
+                        className="btn"
+                        onClick={handleTrainingStart}
+                        disabled={!state.playing}
+                        sx={{
+                            maxWidth: "100px",
+                            minHeight: "70px",
+                            padding: "0px 15px ",
+                        }}
+                    >
+                        {state.training
+                            ? "Остановить тренировку"
+                            : "Начать \n тренировку"}
+                    </ButtonMUI>
+                </div>
             </div>
         </div>
     );

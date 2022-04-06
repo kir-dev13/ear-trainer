@@ -9,7 +9,15 @@ export const defaultFiltersList = [
         type: "peaking",
     },
     {
-        f: 64,
+        f: 60,
+        type: "peaking",
+    },
+    {
+        f: 80,
+        type: "peaking",
+    },
+    {
+        f: 100,
         type: "peaking",
     },
     {
@@ -18,6 +26,10 @@ export const defaultFiltersList = [
     },
     {
         f: 250,
+        type: "peaking",
+    },
+    {
+        f: 350,
         type: "peaking",
     },
     {

@@ -1,24 +1,22 @@
 .answers
-  padding: 40px 20px
-  // border: 1px solid red
-  // box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px
+  padding: 20px 20px 0px 20px
+  margin-bottom: 20px
   .btn-answers
     border-radius: 50px
-
     box-shadow: 1px 1px 4px #636363, -1px -1px 4px #e4efe9
     margin-bottom: 10px
-
     &:active
       box-shadow: inset 2px 2px 8px #636363, inset -2px -2px 8px #e4efe9
 
   .frequencies
 
+    margin: 0 auto
     display: flex
     flex-wrap: wrap
+    justify-content: flex-start
+    padding: 0
     .frequency
-      min-width: 4em
-
-      // outline: 4px solid rgba(61, 18, 76,0.1)
+      width: 4em
     .green
       background-color: #6f947b
     .red
@@ -37,8 +35,6 @@
       background-color: #946f6f
   li
     margin-right: 15px
-    &:last-child
-      margin-right: 0
 
   .green
     background-color: green
@@ -46,3 +42,19 @@
     background-color: red
   .select
     outline: 2px solid blue
+
+@media (max-width: 992px)
+  .frequencies
+    width: 90%
+  .directions
+    min-width: 80%
+@media (max-width: 772px)
+  .frequencies
+    width: 80%
+  .directions
+    min-width: 90%
+@media (max-width: 576px)
+  .frequencies
+    width: 70%
+  .directions
+    min-width: 100%

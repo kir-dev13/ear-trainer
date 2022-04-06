@@ -9,11 +9,8 @@ import { dataContext, settingsContext } from "../../contexts/context";
 
 import { Button as ButtonMUI } from "@mui/material/";
 
-import { changeGain, getQuestEq } from "../../logic/trainingEQ";
-import {
-    defaultFiltersList,
-    timeQuestionDefault,
-} from "../../logic/defaultSettings";
+import { getQuestEq } from "../../logic/trainingEQ";
+import { timeQuestionDefault } from "../../logic/defaultSettings";
 
 import Button from "../button/button";
 
@@ -89,7 +86,8 @@ const AnswerArea = ({ wavesurfer }) => {
             setQuest: getQuestEq(
                 wavesurfer.filters,
                 selectedDir.value,
-                selectedFreq.num
+                selectedFreq.num,
+                settings.gain
             ),
             setStateApp: timeQuestionDefault / 1000,
         });
@@ -208,10 +206,8 @@ const AnswerArea = ({ wavesurfer }) => {
 
     return (
         <div className={"answers"}>
-            <div>
-                <AnswerDir />
-                <AnswerFreq />
-            </div>
+            <AnswerDir />
+            <AnswerFreq />
         </div>
     );
 };
