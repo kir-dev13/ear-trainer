@@ -10,12 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 
 import VolumeDown from "@mui/icons-material/VolumeDown";
-import VolumeUp from "@mui/icons-material/VolumeUp";
 
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 
-import Button from "../button/button";
 import Spinner from "../spinner/spinner";
 
 import "./Player.sass";
@@ -55,7 +53,6 @@ const Player = ({
         // wavesurfer.on("loading", (progress) => console.log(progress));
 
         wavesurfer.on("ready", () => {
-            dispatch({ type: "loadingChange", payload: false });
             dispatch({
                 type: "stateAppChange",
                 setStateApp: "аудио файл загружен",
@@ -64,6 +61,7 @@ const Player = ({
             const filters = createFilters(wavesurfer, settings.filtersList); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
+            dispatch({ type: "loadingChange", payload: false });
         });
 
         wavesurfer.on("finish", () => {

@@ -6,7 +6,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import Typography from "@mui/material/Typography";
 
-import TextField from "@mui/material/TextField";
 import Slider from "@mui/material/Slider";
 
 import Dialog from "@mui/material/Dialog";
@@ -16,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import "./modalSettings.sass";
 import { settingsContext } from "../../contexts/context";
+import { Stack } from "@mui/material";
 
 export default function ModalSettings(props) {
     const [openSettings, setOpenSettings] = useState(false);
@@ -48,21 +48,54 @@ export default function ModalSettings(props) {
             >
                 <DialogTitle>Settings</DialogTitle>
                 <DialogContent>
-                    <Typography gutterBottom>gain</Typography>
-                    <Slider
-                        max={12}
-                        min={1}
-                        name="gain"
-                        sx={{ margin: "30px auto", width: "70%" }}
-                        value={modalSettings.gain}
-                        valueLabelDisplay="auto"
-                        onChange={(e) => {
-                            setModalSettings({
-                                ...modalSettings,
-                                gain: e.target.value,
-                            });
+                    <Stack
+                        sx={{
+                            margin: "30px auto",
+                            width: "80%",
+                            display: "flex",
+                            justifyContent: "space-around",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            alignContent: "center",
                         }}
-                    />
+                    >
+                        <Typography
+                            gutterBottom
+                            sx={{
+                                flexBasis: "100%",
+                                marginBottom: "30px",
+                                textAlign: "center",
+                            }}
+                        >
+                            gain
+                        </Typography>
+                        <Slider
+                            sx={{
+                                width: "60%",
+                            }}
+                            max={12}
+                            min={1}
+                            name="gain"
+                            value={modalSettings.gain}
+                            valueLabelDisplay="auto"
+                            onChange={(e) => {
+                                setModalSettings({
+                                    ...modalSettings,
+                                    gain: e.target.value,
+                                });
+                            }}
+                        />
+                        <span
+                            style={{
+                                // width: "5%",
+                                // padding: "10px",
+                                alignSelf: "baseline",
+                                width: "10px",
+                            }}
+                        >
+                            {modalSettings.gain}
+                        </span>
+                    </Stack>
                 </DialogContent>
                 <DialogActions
                     style={{
