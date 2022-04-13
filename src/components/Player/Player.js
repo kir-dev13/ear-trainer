@@ -39,6 +39,19 @@ const Player = ({
             }
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
+
+            if (wavesurfer?.backend?.source?.context) {
+                // wavesurfer.backend.audioContext =
+                //     wavesurfer.backend.getAudioContext();
+                let osc = wavesurfer.backend.audioContext.createOscillator();
+                osc.frequency.value = 110.0;
+                osc.type = "sawtooth";
+                osc.connect(wavesurfer.backend.gainNode);
+                // wavesurfer.backend.buffer = osc;
+                // osc.start();
+            }
+            console.log(wavesurfer.playPause);
+            console.log(wavesurfer);
         }
     }, [track, wavesurfer]);
 

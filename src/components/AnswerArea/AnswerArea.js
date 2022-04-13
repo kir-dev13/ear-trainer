@@ -197,7 +197,6 @@ const AnswerArea = ({ wavesurfer }) => {
         }
         return <div className="directions">{directionButtons}</div>;
     };
-    console.log(wavesurfer);
     return (
         <div className={"answers"}>
             {!state.loading && wavesurfer?.filters ? (
