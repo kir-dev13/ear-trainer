@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-import { settingsContext, dataContext } from "./contexts/context";
-import reducer from "./reducer";
+import { settingsContext, dataContext } from "../../contexts/context";
+import reducer from "../../reducer/reducer";
 
-import { getQuestEq } from "./logic/trainingEQ";
-import { returnState } from "./logic/sideFunctions";
+import { getQuestEq } from "../../logic/trainingEQ";
+import { returnState } from "../../logic/sideFunctions";
 import {
     defaultFiltersList,
     defaultGain,
     timeQuestionDefault,
     timeBeforeQuestionDefault,
-} from "./logic/defaultSettings";
+} from "../../logic/defaultSettings";
 
-import InputAudioFile from "./components/inputAudioFile/inputAudioFile";
-import Player from "./components/Player/Player";
-import AnswerArea from "./components/AnswerArea/AnswerArea";
-import AppState from "./components/AppState/AppState";
-import Statistic from "./components/statistic/statstic";
-import ModalSettings from "./components/modalSettings/modalSettings";
+import InputAudioFile from "../InputAudioFile/InputAudioFile";
+import Player from "../Player/Player";
+import AnswerArea from "../AnswerArea/AnswerArea";
+import AppState from "../AppState/AppState";
+import Statistic from "../Statistic/Statstic";
+import ModalSettings from "../ModalSettings/ModalSettings";
 
 import "./App.sass";
 

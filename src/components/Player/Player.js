@@ -4,17 +4,8 @@ import { dataContext, settingsContext } from "../../contexts/context";
 
 import { createFilters } from "../../logic/createFilters";
 
-import { Button as ButtonMUI } from "@mui/material/";
-import Slider from "@mui/material/Slider";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-
-import VolumeDown from "@mui/icons-material/VolumeDown";
-
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
-
-import Spinner from "../spinner/spinner";
+import ControlPanel from "../ControlPanel/ControlPanel";
+import Spinner from "../Spinner/Spinner";
 
 import "./Player.sass";
 
@@ -33,6 +24,7 @@ const Player = ({
     useEffect(() => {
         if (track && wavesurfer) {
             wavesurfer.loadBlob(track);
+
             dispatch({ type: "loadingChange", payload: true });
             if (state.playing) {
                 dispatch({ type: "playingOff" });
@@ -40,18 +32,16 @@ const Player = ({
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
 
-            if (wavesurfer?.backend?.source?.context) {
-                // wavesurfer.backend.audioContext =
-                //     wavesurfer.backend.getAudioContext();
-                let osc = wavesurfer.backend.audioContext.createOscillator();
-                osc.frequency.value = 110.0;
-                osc.type = "sawtooth";
-                osc.connect(wavesurfer.backend.gainNode);
-                // wavesurfer.backend.buffer = osc;
-                // osc.start();
-            }
-            console.log(wavesurfer.playPause);
-            console.log(wavesurfer);
+            // if (wavesurfer?.backend?.source?.context) {
+            //     // wavesurfer.backend.audioContext =
+            //     //     wavesurfer.backend.getAudioContext();
+            //     let osc = wavesurfer.backend.audioContext.createOscillator();
+            //     osc.frequency.value = 110.0;
+            //     osc.type = "sawtooth";
+            //     osc.connect(wavesurfer.backend.gainNode);
+            //     // wavesurfer.backend.buffer = osc;
+            //     // osc.start();
+            // }
         }
     }, [track, wavesurfer]);
 
@@ -82,11 +72,6 @@ const Player = ({
         });
     };
 
-    const handleChangeVolume = (e) => {
-        wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
-        setVolume(+(e.target.value / 100).toFixed(2));
-    };
-
     return (
         <div className="player">
             <WaveSurfer onMount={handleWSMount}>
@@ -103,64 +88,14 @@ const Player = ({
                     {/* !! стили спинера.... !! */}
                 </WaveForm>
             </WaveSurfer>
-
-            <div className="panel">
-                {track ? (
-                    <Stack
-                        className="volume-slider"
-                        spacing={2}
-                        direction="row"
-                        // sx={{ mb: 1 }}
-                        alignItems="center"
-                    >
-                        <VolumeDown />
-                        <Slider
-                            className="volume"
-                            color="secondary"
-                            // style={{ color: "#743C79" }}
-                            // #743C79
-                            value={volume * 100}
-                            onChange={handleChangeVolume}
-                        />
-                    </Stack>
-                ) : null}
-
-                <div className="panel_transport">
-                    <IconButton
-                        disabled={state.loading}
-                        color="primary"
-                        onClick={handlePlayPauseTrack}
-                    >
-                        {state.playing ? (
-                            <PauseCircleOutlineIcon
-                                style={{
-                                    fontSize: "50px",
-                                }}
-                            />
-                        ) : (
-                            <PlayCircleOutlineIcon
-                                style={{
-                                    fontSize: "50px",
-                                }}
-                            />
-                        )}
-                    </IconButton>
-                    <ButtonMUI
-                        className="btn"
-                        onClick={handleTrainingStart}
-                        disabled={!state.playing}
-                        sx={{
-                            maxWidth: "100px",
-                            minHeight: "70px",
-                            padding: "0px 15px ",
-                        }}
-                    >
-                        {state.training
-                            ? "Остановить тренировку"
-                            : "Начать \n тренировку"}
-                    </ButtonMUI>
-                </div>
-            </div>
+            <ControlPanel
+                volume={volume}
+                setVolume={setVolume}
+                wavesurfer={wavesurfer}
+                track={track}
+                handlePlayPauseTrack={handlePlayPauseTrack}
+                handleTrainingStart={handleTrainingStart}
+            />
         </div>
     );
 };

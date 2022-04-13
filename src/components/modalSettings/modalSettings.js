@@ -17,7 +17,7 @@ import "./modalSettings.sass";
 import { settingsContext } from "../../contexts/context";
 import { Stack } from "@mui/material";
 
-export default function ModalSettings(props) {
+function ModalSettings(props) {
     const [openSettings, setOpenSettings] = useState(false);
     const [settings, setSettings] = useContext(settingsContext);
     const [modalSettings, setModalSettings] = useState(settings);
@@ -110,3 +110,5 @@ export default function ModalSettings(props) {
         </div>
     );
 }
+
+export default ModalSettings;
