@@ -13,6 +13,7 @@ import {
 
 import InputAudioFile from "../InputAudioFile/InputAudioFile";
 import Player from "../Player/Player";
+import ControlPanel from "../ControlPanel/ControlPanel";
 import AnswerArea from "../AnswerArea/AnswerArea";
 import AppState from "../AppState/AppState";
 import Statistic from "../Statistic/Statstic";
@@ -177,13 +178,19 @@ function App() {
     );
 
     const playerComponent = track ? (
-        <Player
-            setWavesurfer={setWavesurfer}
-            track={track}
-            wavesurfer={wavesurfer}
-            handlePlayPauseTrack={handlePlayPauseTrack}
-            handleTrainingStart={handleTrainingStart}
-        />
+        <>
+            <Player
+                setWavesurfer={setWavesurfer}
+                track={track}
+                wavesurfer={wavesurfer}
+            />
+            <ControlPanel
+                wavesurfer={wavesurfer}
+                track={track}
+                handlePlayPauseTrack={handlePlayPauseTrack}
+                handleTrainingStart={handleTrainingStart}
+            />
+        </>
     ) : null;
     return (
         <div className="App">

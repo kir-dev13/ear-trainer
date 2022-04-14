@@ -4,18 +4,11 @@ import { dataContext, settingsContext } from "../../contexts/context";
 
 import { createFilters } from "../../logic/createFilters";
 
-import ControlPanel from "../ControlPanel/ControlPanel";
 import Spinner from "../Spinner/Spinner";
 
 import "./Player.sass";
 
-const Player = ({
-    setWavesurfer,
-    wavesurfer,
-    track,
-    handlePlayPauseTrack,
-    handleTrainingStart,
-}) => {
+const Player = ({ setWavesurfer, wavesurfer, track }) => {
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
 
@@ -59,28 +52,24 @@ const Player = ({
     };
 
     return (
-        <div className="player">
-            <WaveSurfer onMount={handleWSMount}>
-                <WaveForm
-                    hideScrollbar={true}
-                    responsive={true}
-                    waveColor={"rgb(116, 60, 121)"}
-                    progressColor={"#ffa70467"}
-                    id="waveform"
-                >
-                    <div className="spinner">
-                        {state.loading ? <Spinner /> : null}
-                    </div>
-                    {/* !! стили спинера.... !! */}
-                </WaveForm>
-            </WaveSurfer>
-            <ControlPanel
-                wavesurfer={wavesurfer}
-                track={track}
-                handlePlayPauseTrack={handlePlayPauseTrack}
-                handleTrainingStart={handleTrainingStart}
-            />
-        </div>
+        <>
+            <div className="player">
+                <WaveSurfer onMount={handleWSMount}>
+                    <WaveForm
+                        hideScrollbar={true}
+                        responsive={true}
+                        waveColor={"rgb(116, 60, 121)"}
+                        progressColor={"#ffa70467"}
+                        id="waveform"
+                    >
+                        <div className="spinner">
+                            {state.loading ? <Spinner /> : null}
+                        </div>
+                        {/* !! стили спинера.... !! */}
+                    </WaveForm>
+                </WaveSurfer>
+            </div>
+        </>
     );
 };
 
