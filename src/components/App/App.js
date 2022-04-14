@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useReducer } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { settingsContext, dataContext } from "../../contexts/context";
 import reducer from "../../reducer/reducer";
 
@@ -36,8 +36,14 @@ function App() {
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         stateApp: "тренажёр для восприятия частот на слух",
+        volume: 0.5,
         answersArray: [],
         quest: {},
+
+        //!!
+        //?? handleTrainingStart: handleTrainingStart,
+        //?? handlePlayPauseTrack: handlePlayPauseTrack,
+        //!!
     });
 
     //запускаем таймаут с получением нового вопроса после того, как массив с оответами поменялся
@@ -66,9 +72,10 @@ function App() {
                         wavesurfer.filters,
                         quest?.dir,
                         quest?.num,
-                        settings.gain
+                        settings.gain,
+                        settings.timeQuestion
                     ),
-                    setStateApp: timeQuestionDefault / 1000,
+                    setStateApp: settings.timeQuestion / 1000,
                 });
             }, timeBeforeQuestionDefault);
         }
@@ -122,7 +129,7 @@ function App() {
     }
 
     //play pause button
-    const handlePlayPauseTrack = () => {
+    function handlePlayPauseTrack() {
         if (wavesurfer) {
             wavesurfer.playPause();
             if (!state.playing && state.training) {
@@ -143,10 +150,10 @@ function App() {
                 type: "playingToggle",
             });
         }
-    };
+    }
 
     //training start
-    const handleTrainingStart = () => {
+    function handleTrainingStart() {
         if (state.training) {
             // clearTimeout(timerReverse.current) !!!
         } else {
@@ -163,7 +170,7 @@ function App() {
                 state.training
             ),
         });
-    };
+    }
 
     const inputComponent = (
         <InputAudioFile trackName={track?.name} setTracks={setTracks} />

@@ -63,7 +63,7 @@ function ModalSettings(props) {
                             gutterBottom
                             sx={{
                                 flexBasis: "100%",
-                                marginBottom: "30px",
+                                marginBottom: "15px",
                                 textAlign: "center",
                             }}
                         >
@@ -72,12 +72,13 @@ function ModalSettings(props) {
                         <Slider
                             sx={{
                                 width: "60%",
+                                marginBottom: "35px",
                             }}
                             max={12}
                             min={1}
                             name="gain"
                             value={modalSettings.gain}
-                            valueLabelDisplay="auto"
+                            valueLabelDisplay="off"
                             onChange={(e) => {
                                 setModalSettings({
                                     ...modalSettings,
@@ -94,6 +95,42 @@ function ModalSettings(props) {
                             }}
                         >
                             {modalSettings.gain}
+                        </span>
+                        <Typography
+                            gutterBottom
+                            sx={{
+                                flexBasis: "100%",
+                                marginBottom: "15px",
+                                textAlign: "center",
+                            }}
+                        >
+                            время вопроса
+                        </Typography>
+                        <Slider
+                            sx={{
+                                width: "60%",
+                            }}
+                            max={12}
+                            min={1}
+                            name="timeQuestion"
+                            value={modalSettings.timeQuestion / 1000}
+                            valueLabelDisplay="off"
+                            onChange={(e) => {
+                                setModalSettings({
+                                    ...modalSettings,
+                                    timeQuestion: e.target.value * 1000,
+                                });
+                            }}
+                        />
+                        <span
+                            style={{
+                                // width: "5%",
+                                // padding: "10px",
+                                alignSelf: "baseline",
+                                width: "10px",
+                            }}
+                        >
+                            {modalSettings.timeQuestion / 1000}
                         </span>
                     </Stack>
                 </DialogContent>

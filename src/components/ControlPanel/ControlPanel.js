@@ -16,8 +16,6 @@ import "./controlPanel.sass";
 const ControlPanel = ({
     track,
     wavesurfer,
-    volume,
-    setVolume,
     handlePlayPauseTrack,
     handleTrainingStart,
 }) => {
@@ -25,7 +23,11 @@ const ControlPanel = ({
 
     const handleChangeVolume = (e) => {
         wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
-        setVolume(+(e.target.value / 100).toFixed(2));
+        // setVolume(+(e.target.value / 100).toFixed(2));
+        dispatch({
+            type: "setVolume",
+            payload: +(e.target.value / 100).toFixed(2),
+        });
     };
 
     return (
@@ -44,7 +46,7 @@ const ControlPanel = ({
                         color="secondary"
                         // style={{ color: "#743C79" }}
                         // #743C79
-                        value={volume * 100}
+                        value={state.volume * 100}
                         onChange={handleChangeVolume}
                     />
                 </Stack>

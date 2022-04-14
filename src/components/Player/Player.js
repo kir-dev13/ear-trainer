@@ -16,7 +16,6 @@ const Player = ({
     handlePlayPauseTrack,
     handleTrainingStart,
 }) => {
-    const [volume, setVolume] = useState(0.5);
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
 
@@ -31,17 +30,6 @@ const Player = ({
             }
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
-
-            // if (wavesurfer?.backend?.source?.context) {
-            //     // wavesurfer.backend.audioContext =
-            //     //     wavesurfer.backend.getAudioContext();
-            //     let osc = wavesurfer.backend.audioContext.createOscillator();
-            //     osc.frequency.value = 110.0;
-            //     osc.type = "sawtooth";
-            //     osc.connect(wavesurfer.backend.gainNode);
-            //     // wavesurfer.backend.buffer = osc;
-            //     // osc.start();
-            // }
         }
     }, [track, wavesurfer]);
 
@@ -53,14 +41,12 @@ const Player = ({
     };
 
     const eventsSubscribe = () => {
-        // wavesurfer.on("loading", (progress) => console.log(progress));
-
         wavesurfer.on("ready", () => {
             dispatch({
                 type: "stateAppChange",
                 setStateApp: "аудио файл загружен",
             });
-            wavesurfer.setVolume(volume);
+            wavesurfer.setVolume(state.volume);
             const filters = createFilters(wavesurfer, settings.filtersList); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
@@ -89,8 +75,6 @@ const Player = ({
                 </WaveForm>
             </WaveSurfer>
             <ControlPanel
-                volume={volume}
-                setVolume={setVolume}
                 wavesurfer={wavesurfer}
                 track={track}
                 handlePlayPauseTrack={handlePlayPauseTrack}

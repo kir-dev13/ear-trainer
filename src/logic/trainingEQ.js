@@ -14,10 +14,11 @@ const changeGain = (
     filters,
     direction = randomDirection(),
     filterNumber = randomFilter(filters),
-    gain
+    gain,
+    timeQuestion
 ) => {
     filters[filterNumber].gain.value += gain * direction;
-    delay(timeQuestionDefault).then(() => {
+    delay(timeQuestion).then(() => {
         filters[filterNumber].gain.value -= gain * direction;
         console.log("finish");
     });
@@ -28,8 +29,14 @@ const changeGain = (
     };
 };
 
-function getQuestEq(filters, direction, filterNumber, gain) {
-    const currentAnswer = changeGain(filters, direction, filterNumber, gain);
+function getQuestEq(filters, direction, filterNumber, gain, timeQuestion) {
+    const currentAnswer = changeGain(
+        filters,
+        direction,
+        filterNumber,
+        gain,
+        timeQuestion
+    );
     console.log("currentAnswer: ", currentAnswer);
     return currentAnswer;
 }

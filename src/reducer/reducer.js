@@ -10,6 +10,11 @@ function reducer(state, action) {
                 ...state,
                 loading: action.payload,
             };
+        case "setVolume":
+            return {
+                ...state,
+                volume: action.payload,
+            };
 
         case "playingToggle":
             return {

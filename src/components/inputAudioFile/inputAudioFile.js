@@ -36,7 +36,7 @@ const InputAudioFile = ({ setTracks, trackName }) => {
         e.target.value = "";
     }
 
-    const s = trackName ? {} : { height: "128px" };
+    const s = trackName ? { height: "56px" } : { height: "128px" };
 
     return (
         <form action="">

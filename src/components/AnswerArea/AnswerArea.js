@@ -84,7 +84,8 @@ const AnswerArea = ({ wavesurfer }) => {
                 wavesurfer.filters,
                 selectedDir.value,
                 selectedFreq.num,
-                settings.gain
+                settings.gain,
+                settings.timeQuestion
             ),
             setStateApp: timeQuestionDefault / 1000,
         });
