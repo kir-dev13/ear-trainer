@@ -28,7 +28,9 @@ function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
     const [settings, setSettings] = useState({
-        filtersList: defaultFiltersList,
+        filtersList: defaultFiltersList.filter(
+            (filter) => filter.difficult === "common"
+        ),
         gain: defaultGain,
         timeQuestion: timeQuestionDefault,
         timeBeforeQustion: timeBeforeQuestionDefault,

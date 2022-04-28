@@ -12,10 +12,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import "./modalSettings.sass";
 import { settingsContext } from "../../contexts/context";
 import { Stack } from "@mui/material";
+import "./modalSettings.sass";
 
 function ModalSettings(props) {
     const [openSettings, setOpenSettings] = useState(false);
@@ -109,6 +114,7 @@ function ModalSettings(props) {
                         <Slider
                             sx={{
                                 width: "60%",
+                                marginBottom: "40px",
                             }}
                             max={12}
                             min={1}
@@ -124,14 +130,36 @@ function ModalSettings(props) {
                         />
                         <span
                             style={{
-                                // width: "5%",
-                                // padding: "10px",
                                 alignSelf: "baseline",
                                 width: "10px",
                             }}
                         >
                             {modalSettings.timeQuestion / 1000}
                         </span>
+                        {/* <FormControl
+                            sx={{
+                                flexBasis: "100%",
+                            }}
+                        >
+                            <FormLabel id="demo-radio-buttons-group-label">
+                                Набор фильтров
+                            </FormLabel>
+                            <RadioGroup
+                                defaultValue="common"
+                                name="radio-buttons-group"
+                            >
+                                <FormControlLabel
+                                    value="common"
+                                    control={<Radio />}
+                                    label="основной"
+                                />
+                                <FormControlLabel
+                                    value="advanced"
+                                    control={<Radio />}
+                                    label="расширенный"
+                                />
+                            </RadioGroup>
+                        </FormControl> */}
                     </Stack>
                 </DialogContent>
                 <DialogActions
