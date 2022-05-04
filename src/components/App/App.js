@@ -11,13 +11,13 @@ import {
     timeBeforeQuestionDefault,
 } from "../../logic/defaultSettings";
 
-import InputAudioFile from "../InputAudioFile/InputAudioFile";
+import InputAudioFile from "../InputAudioFile/inputAudioFile";
 import Player from "../Player/Player";
 import ControlPanel from "../ControlPanel/ControlPanel";
 import AnswerArea from "../AnswerArea/AnswerArea";
 import AppState from "../AppState/AppState";
 import Statistic from "../Statistic/Statstic";
-import ModalSettings from "../ModalSettings/ModalSettings";
+import ModalSettings from "../ModalSettings/modalSettings";
 
 import "./App.sass";
 
@@ -28,9 +28,10 @@ function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
     const [settings, setSettings] = useState({
-        filtersList: defaultFiltersList.filter(
-            (filter) => filter.difficult === "common"
-        ),
+        // filtersList: defaultFiltersList.filter(
+        //     (filter) => filter.difficult === "common"
+        // ),
+        difficult: "common",
         gain: defaultGain,
         timeQuestion: timeQuestionDefault,
         timeBeforeQustion: timeBeforeQuestionDefault,

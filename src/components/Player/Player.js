@@ -2,9 +2,11 @@ import { WaveSurfer, WaveForm } from "wavesurfer-react";
 import { useState, useEffect, useRef, useContext } from "react";
 import { dataContext, settingsContext } from "../../contexts/context";
 
+import { defaultFiltersList } from "../../logic/defaultSettings";
+
 import { createFilters } from "../../logic/createFilters";
 
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../Spinner/spinner";
 
 import "./Player.sass";
 
@@ -24,7 +26,7 @@ const Player = ({ setWavesurfer, wavesurfer, track }) => {
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
         }
-    }, [track, wavesurfer]);
+    }, [track, wavesurfer, settings]);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -40,7 +42,14 @@ const Player = ({ setWavesurfer, wavesurfer, track }) => {
                 setStateApp: "аудио файл загружен",
             });
             wavesurfer.setVolume(state.volume);
-            const filters = createFilters(wavesurfer, settings.filtersList); //create filters
+            const filters = createFilters(
+                wavesurfer,
+                settings.difficult === "common"
+                    ? defaultFiltersList.filter(
+                          (filter) => filter.difficult === "common"
+                      )
+                    : defaultFiltersList
+            ); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
             dispatch({ type: "loadingChange", payload: false });

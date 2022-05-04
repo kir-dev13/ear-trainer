@@ -35,6 +35,13 @@ function ModalSettings(props) {
         setOpenSettings(false);
     };
 
+    const handleChangeFilters = (e) => {
+        setModalSettings({
+            ...modalSettings,
+            difficult: e.target.value,
+        });
+    };
+
     const handleSaveChange = () => {
         setSettings(modalSettings);
         setOpenSettings(false);
@@ -136,7 +143,7 @@ function ModalSettings(props) {
                         >
                             {modalSettings.timeQuestion / 1000}
                         </span>
-                        {/* <FormControl
+                        <FormControl
                             sx={{
                                 flexBasis: "100%",
                             }}
@@ -145,8 +152,9 @@ function ModalSettings(props) {
                                 Набор фильтров
                             </FormLabel>
                             <RadioGroup
-                                defaultValue="common"
+                                defaultValue={modalSettings.difficult}
                                 name="radio-buttons-group"
+                                onChange={handleChangeFilters}
                             >
                                 <FormControlLabel
                                     value="common"
@@ -159,7 +167,7 @@ function ModalSettings(props) {
                                     label="расширенный"
                                 />
                             </RadioGroup>
-                        </FormControl> */}
+                        </FormControl>
                     </Stack>
                 </DialogContent>
                 <DialogActions
