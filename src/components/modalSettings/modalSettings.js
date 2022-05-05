@@ -152,7 +152,7 @@ function ModalSettings(props) {
                                 Набор фильтров
                             </FormLabel>
                             <RadioGroup
-                                defaultValue={modalSettings.difficult}
+                                value={modalSettings.difficult}
                                 name="radio-buttons-group"
                                 onChange={handleChangeFilters}
                             >
