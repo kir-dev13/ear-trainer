@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/ear-trainer/static/css/main.143d31bb.css",
-    "main.js": "/ear-trainer/static/js/main.fb680a8f.js",
+    "main.js": "/ear-trainer/static/js/main.30093bf5.js",
     "index.html": "/ear-trainer/index.html",
     "main.143d31bb.css.map": "/ear-trainer/static/css/main.143d31bb.css.map",
-    "main.fb680a8f.js.map": "/ear-trainer/static/js/main.fb680a8f.js.map"
+    "main.30093bf5.js.map": "/ear-trainer/static/js/main.30093bf5.js.map"
   },
   "entrypoints": [
     "static/css/main.143d31bb.css",
-    "static/js/main.fb680a8f.js"
+    "static/js/main.30093bf5.js"
   ]
 }
