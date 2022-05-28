@@ -10,7 +10,6 @@ import { dataContext, settingsContext } from "../../contexts/context";
 import { Button as ButtonMUI } from "@mui/material/";
 
 import { getQuestEq } from "../../logic/trainingEQ";
-import { timeQuestionDefault } from "../../logic/defaultSettings";
 
 import "./AnswerArea.sass";
 
@@ -27,6 +26,7 @@ const AnswerArea = ({ wavesurfer }) => {
 
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
+    // console.log("Список фильтров ", settings.filtersList);
 
     const timerListenFilter = useRef();
 
@@ -61,7 +61,7 @@ const AnswerArea = ({ wavesurfer }) => {
                     state: false,
                     value: null,
                 });
-            }, timeQuestionDefault);
+            }, settings.timeQuestion);
             if (Object.keys(state.quest).length === 0) {
                 clearTimeout(timerListenFilter.current);
             }
@@ -87,7 +87,7 @@ const AnswerArea = ({ wavesurfer }) => {
                 settings.gain,
                 settings.timeQuestion
             ),
-            setStateApp: timeQuestionDefault / 1000,
+            setStateApp: settings.timeQuestion / 1000,
         });
     };
 
@@ -146,28 +146,22 @@ const AnswerArea = ({ wavesurfer }) => {
     };
 
     const AnswerFreq = () => {
-        const buttonsList = wavesurfer.filters.map((item, i) => {
-            const s = showAnswer(
-                item.frequency.value,
-                selectedFreq,
-                state?.quest?.freq
-            );
+        const buttonsList = settings.filtersList.map((item, i) => {
+            const s = showAnswer(item.f, selectedFreq, state?.quest?.freq);
             return (
                 <li key={i}>
                     <ButtonMUI
+                        variant="outlined"
                         onClick={handleAnswerFreq}
                         color="secondary"
-                        data-freq={item.frequency.value}
+                        data-freq={item.f}
                         data-num={i}
                         className={`btn-answers frequency ${s}`}
                         disabled={
-                            (item.frequency.value === 0 && !state.training) ||
-                            !state.playing
+                            (item.f === 0 && !state.training) || !state.playing
                         }
                     >
-                        {item.frequency.value === 0
-                            ? "none"
-                            : item.frequency.value}
+                        {item.f === 0 ? "none" : item.f}
                     </ButtonMUI>
                 </li>
             );
@@ -186,6 +180,7 @@ const AnswerArea = ({ wavesurfer }) => {
 
             directionButtons.push(
                 <ButtonMUI
+                    variant="outlined"
                     key={i}
                     onClick={handleAnswerDir}
                     data-direction={i}

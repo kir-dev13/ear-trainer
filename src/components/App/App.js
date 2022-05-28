@@ -28,9 +28,9 @@ function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     const [track, setTracks] = useState(null);
     const [settings, setSettings] = useState({
-        // filtersList: defaultFiltersList.filter(
-        //     (filter) => filter.difficult === "common"
-        // ),
+        filtersList: defaultFiltersList.filter(
+            (filter) => filter.difficult === "common"
+        ),
         difficult: "common",
         gain: defaultGain,
         timeQuestion: timeQuestionDefault,
@@ -198,7 +198,7 @@ function App() {
     return (
         <div className="App">
             <settingsContext.Provider value={[settings, setSettings]}>
-                <aside>
+                <aside className="aside-menu">
                     <menu className="options">
                         <ModalSettings />
                     </menu>
@@ -208,10 +208,7 @@ function App() {
                         {inputComponent}
                         {playerComponent}
 
-                        <AppState
-                            wavesurfer={wavesurfer}
-                            track={track}
-                        ></AppState>
+                        <AppState wavesurfer={wavesurfer}></AppState>
 
                         <AnswerArea wavesurfer={wavesurfer} />
                         <Statistic answersArray={state.answersArray} />

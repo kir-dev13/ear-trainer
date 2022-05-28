@@ -1,5 +1,5 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { dataContext, settingsContext } from "../../contexts/context";
 
 import { defaultFiltersList } from "../../logic/defaultSettings";
@@ -26,7 +26,16 @@ const Player = ({ setWavesurfer, wavesurfer, track }) => {
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
         }
-    }, [track, wavesurfer, settings]);
+    }, [track, wavesurfer]);
+
+    useEffect(() => {
+        if (wavesurfer) {
+            const filters = createFilters(wavesurfer, settings.filtersList); //create filters
+            wavesurfer.backend.setFilters(filters); //connect
+            wavesurfer.filters = filters;
+            console.log(filters);
+        }
+    }, [settings.difficult, wavesurfer]);
 
     const wavesurferRef = useRef();
     //create wavesurfer instance once, when component Wavesurfer mount
@@ -42,16 +51,16 @@ const Player = ({ setWavesurfer, wavesurfer, track }) => {
                 setStateApp: "аудио файл загружен",
             });
             wavesurfer.setVolume(state.volume);
-            const filters = createFilters(
-                wavesurfer,
-                settings.difficult === "common"
-                    ? defaultFiltersList.filter(
-                          (filter) => filter.difficult === "common"
-                      )
-                    : defaultFiltersList
-            ); //create filters
-            wavesurfer.backend.setFilters(filters); //connect
-            wavesurfer.filters = filters;
+            // const filters = createFilters(
+            //     wavesurfer,
+            //     settings.difficult === "common"
+            //         ? defaultFiltersList.filter(
+            //               (filter) => filter.difficult === "common"
+            //           )
+            //         : defaultFiltersList
+            // ); //create filters
+            // wavesurfer.backend.setFilters(filters); //connect
+            // wavesurfer.filters = filters;
             dispatch({ type: "loadingChange", payload: false });
         });
 

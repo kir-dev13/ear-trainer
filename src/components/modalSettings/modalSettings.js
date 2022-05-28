@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
 
+import { defaultFiltersList } from "../../logic/defaultSettings";
+
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -43,7 +45,13 @@ function ModalSettings(props) {
     };
 
     const handleSaveChange = () => {
-        setSettings(modalSettings);
+        const newFiltersList =
+            modalSettings.difficult === "common"
+                ? defaultFiltersList.filter(
+                      (item) => item.difficult === "common"
+                  )
+                : defaultFiltersList;
+        setSettings({ ...modalSettings, filtersList: newFiltersList });
         setOpenSettings(false);
     };
 

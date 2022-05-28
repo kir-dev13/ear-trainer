@@ -73,11 +73,12 @@ const ControlPanel = ({
                     )}
                 </IconButton>
                 <ButtonMUI
+                    variant="outlined"
                     className="btn"
                     onClick={handleTrainingStart}
                     disabled={!state.playing}
                     sx={{
-                        maxWidth: "100px",
+                        maxWidth: "150px",
                         minHeight: "70px",
                         padding: "0px 15px ",
                     }}

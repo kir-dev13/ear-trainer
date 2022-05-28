@@ -2,10 +2,9 @@ import { useEffect, useRef, useContext } from "react";
 
 import { dataContext } from "../../contexts/context";
 
-import { time } from "../../logic/defaultSettings";
 import "./AppState.sass";
 
-const AppState = ({ track, wavesurfer }) => {
+const AppState = ({ wavesurfer }) => {
     const [state, dispatch] = useContext(dataContext);
 
     const { stateApp } = state;
