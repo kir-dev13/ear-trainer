@@ -1,26 +1,11 @@
 import { useContext } from "react";
 import { dataContext } from "../../contexts/context";
+import { checkInputFiles } from "../../logic/sideFunctions";
+
 import "./inputAudioFile.sass";
 
 const InputAudioFile = ({ setTracks, trackName }) => {
     const [state, dispatch] = useContext(dataContext);
-
-    function checkInputFiles(data, dataType, e = null) {
-        const resultFiles = [];
-        for (let file of data) {
-            if (resultFiles.length < 5) {
-                if (dataType.test(file.type)) {
-                    resultFiles.push(file);
-                } else {
-                    console.log("не аудио!");
-                }
-            } else {
-                console.log("попытались загрузить больше файлов");
-                return resultFiles;
-            }
-        }
-        return resultFiles;
-    }
 
     //upload files and save first in state
     function loadAudioFiles(audioFiles, e) {
