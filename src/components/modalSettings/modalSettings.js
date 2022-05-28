@@ -58,7 +58,7 @@ function ModalSettings(props) {
     return (
         <div>
             <IconButton color="primary" onClick={handleOpenSettings}>
-                <SettingsIcon className="btn" style={{ fontSize: "40px" }} />
+                <SettingsIcon className="btn" style={{ fontSize: "30px" }} />
             </IconButton>
             <Dialog
                 className="modal"

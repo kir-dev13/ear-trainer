@@ -211,9 +211,12 @@ function App() {
                         <AppState wavesurfer={wavesurfer}></AppState>
 
                         <AnswerArea wavesurfer={wavesurfer} />
-                        <Statistic answersArray={state.answersArray} />
+                        {track ? (
+                            <Statistic answersArray={state.answersArray} />
+                        ) : null}
                     </dataContext.Provider>
                 </main>
+                <footer></footer>
             </settingsContext.Provider>
         </div>
     );

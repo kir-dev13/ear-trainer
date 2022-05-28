@@ -1,23 +1,21 @@
 
 .panel
   margin: 0 auto
-  width: 90%
+  // width: 90%
   padding: 0 20px
   display: flex
   justify-content: space-between
   align-items: center
   border-radius: 25px
-  -webkit-transition: all 0.3s ease
-  -moz-transition: all 0.3s ease
-  -o-transition: all 0.3s ease
-  transition: all 0.3s ease
   .volume-slider
     width: 50%
     position: relative
+    margin-top: 20px
   &_transport
     width: 50%
     display: flex
     justify-content: space-evenly
+    margin-top: 20px
 
 @media (max-width: 576px)
   .panel
@@ -26,3 +24,5 @@
     flex-direction: column
     .volume-slider
       width: 70%
+    &_transport
+      width: 100%
