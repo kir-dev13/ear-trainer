@@ -10,14 +10,14 @@ import Spinner from "../Spinner/spinner";
 
 import "./Player.sass";
 
-const Player = ({ setWavesurfer, wavesurfer, track }) => {
+const Player = ({ setWavesurfer, wavesurfer }) => {
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
 
     //loading file in wavesurfer
     useEffect(() => {
-        if (track && wavesurfer) {
-            wavesurfer.loadBlob(track);
+        if (state.track && wavesurfer) {
+            wavesurfer.loadBlob(state?.track);
 
             dispatch({ type: "loadingChange", payload: true });
             if (state.playing) {
@@ -26,14 +26,15 @@ const Player = ({ setWavesurfer, wavesurfer, track }) => {
             dispatch({ type: "trainingOff" });
             eventsSubscribe();
         }
-    }, [track, wavesurfer]);
+    }, [state.track, wavesurfer]);
 
     useEffect(() => {
         if (wavesurfer) {
             const filters = createFilters(wavesurfer, settings.filtersList); //create filters
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
-            console.log(filters);
+
+            //!! EQSLIDERS WERE NERE HERE
         }
     }, [settings.difficult, wavesurfer]);
 

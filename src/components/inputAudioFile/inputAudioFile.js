@@ -4,24 +4,10 @@ import { checkInputFiles } from "../../logic/sideFunctions";
 
 import "./inputAudioFile.sass";
 
-const InputAudioFile = ({ setTracks, trackName }) => {
+const InputAudioFile = ({ loadAudioFiles }) => {
     const [state, dispatch] = useContext(dataContext);
 
-    //upload files and save first in state
-    function loadAudioFiles(audioFiles, e) {
-        if (audioFiles.length > 0) {
-            console.log(audioFiles);
-            setTracks(audioFiles[0]);
-        } else {
-            dispatch({
-                type: "stateAppChange",
-                setStateApp: "файл не загружен",
-            });
-        }
-        e.target.value = "";
-    }
-
-    const s = trackName ? { height: "56px" } : { height: "128px" };
+    const s = state?.track ? { height: "56px" } : { height: "128px" };
 
     return (
         <form action="">
@@ -42,10 +28,12 @@ const InputAudioFile = ({ setTracks, trackName }) => {
             />
 
             <label htmlFor="input" style={s}>
-                {trackName || (
-                    <>
-                        <p>нажмите, чтобы загрузить аудио файл</p>
-                    </>
+                {state?.track ? (
+                    <p>загр</p>
+                ) : (
+                    <p>
+                        нажмите, чтобы загрузить аудио файл с вашего устройства
+                    </p>
                 )}
             </label>
         </form>

@@ -5,6 +5,11 @@ function reducer(state, action) {
                 ...state,
                 stateApp: action.setStateApp,
             };
+        case "reducerSetTrack":
+            return {
+                ...state,
+                track: action.payload,
+            };
         case "loadingChange":
             return {
                 ...state,

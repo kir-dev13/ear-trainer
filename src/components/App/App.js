@@ -11,6 +11,7 @@ import {
     timeBeforeQuestionDefault,
 } from "../../logic/defaultSettings";
 
+import withInput from "../withInput/withInput";
 import InputAudioFile from "../InputAudioFile/inputAudioFile";
 import Player from "../Player/Player";
 import ControlPanel from "../ControlPanel/ControlPanel";
@@ -26,7 +27,7 @@ import "./App.sass";
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
-    const [track, setTracks] = useState(null);
+    // const [track, setTracks] = useState(null);
     const [settings, setSettings] = useState({
         filtersList: defaultFiltersList.filter(
             (filter) => filter.difficult === "common"
@@ -43,6 +44,7 @@ function App() {
         volume: 0.5,
         answersArray: [],
         quest: {},
+        track: null,
 
         //!!
         //?? handleTrainingStart: handleTrainingStart,
@@ -176,20 +178,22 @@ function App() {
         });
     }
 
-    const inputComponent = (
-        <InputAudioFile trackName={track?.name} setTracks={setTracks} />
-    );
-
-    const playerComponent = track ? (
+    const InputComponent =
+        // <InputAudioFile
+        //     trackName={state?.track?.name}
+        //     // setTracks={setTracks}
+        // />
+        withInput(InputAudioFile);
+    const playerComponent = state.track ? (
         <>
             <Player
                 setWavesurfer={setWavesurfer}
-                track={track}
+                // track={track}
                 wavesurfer={wavesurfer}
             />
             <ControlPanel
                 wavesurfer={wavesurfer}
-                track={track}
+                // track={track}
                 handlePlayPauseTrack={handlePlayPauseTrack}
                 handleTrainingStart={handleTrainingStart}
             />
@@ -205,13 +209,17 @@ function App() {
                 </aside>
                 <main className="main">
                     <dataContext.Provider value={[state, dispatch]}>
-                        {inputComponent}
+                        <div className="inputWrapper">
+                            <InputComponent />
+                            <InputComponent />
+                        </div>
+
                         {playerComponent}
 
                         <AppState wavesurfer={wavesurfer}></AppState>
 
                         <AnswerArea wavesurfer={wavesurfer} />
-                        {track ? (
+                        {state.track ? (
                             <Statistic answersArray={state.answersArray} />
                         ) : null}
                     </dataContext.Provider>
