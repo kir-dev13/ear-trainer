@@ -14,7 +14,6 @@ import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import "./controlPanel.sass";
 
 const ControlPanel = ({
-    track,
     wavesurfer,
     handlePlayPauseTrack,
     handleTrainingStart,
@@ -32,7 +31,7 @@ const ControlPanel = ({
 
     return (
         <div className="panel">
-            {track ? (
+            {state.track ? (
                 <Stack
                     className="volume-slider"
                     spacing={2}
