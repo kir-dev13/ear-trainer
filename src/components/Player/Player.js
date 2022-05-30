@@ -1,5 +1,5 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
-import { useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { dataContext, settingsContext } from "../../contexts/context";
 
 import { defaultFiltersList } from "../../logic/defaultSettings";
@@ -11,6 +11,9 @@ import Spinner from "../Spinner/spinner";
 import "./Player.sass";
 
 const Player = ({ setWavesurfer, wavesurfer }) => {
+    //!!
+    const [eqSlidersView, setEqSlidersView] = useState(false);
+
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
 
@@ -31,8 +34,10 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
     useEffect(() => {
         if (wavesurfer) {
             const filters = createFilters(wavesurfer, settings.filtersList); //create filters
+
             wavesurfer.backend.setFilters(filters); //connect
             wavesurfer.filters = filters;
+            setEqSlidersView(true);
         }
     }, [settings.difficult, wavesurfer]);
 
@@ -68,6 +73,84 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
         });
     };
 
+    const EQSliders = ({ filters }) => {
+        const onHandleChange = (e, filter) => {
+            console.log(filter.gain.value);
+            filter.gain.value = ~~e.target.value;
+        };
+
+        // if (document.querySelector("#equalizer")) {
+        //     document.querySelector("#equalizer").remove();
+        // }
+
+        // const equalizer = document.createElement("div");
+        return (
+            <>
+                {filters.map((filter, i) => {
+                    const input = (
+                        <div key={i}>
+                            <input
+                                onChange={(e) => onHandleChange(e, filter)}
+                                style={{ display: "inlineBlock" }}
+                                type="range"
+                                min="-12"
+                                max="12"
+                                name={filter.frequency.value}
+                                value={filter.gain.value}
+                                orient="vertical"
+                            />
+                            <label htmlFor={filter.frequency.value}>
+                                {filter.frequency.value}
+                            </label>
+                        </div>
+                    );
+
+                    // wavesurfer.drawer.style(input, {
+                    //     webkitAppearance: "slider-vertical",
+                    //     width: "50px",
+                    //     height: "150px",
+                    // });
+                    return input;
+                })}
+            </>
+        );
+        // equalizer.id = "equalizer";
+        // document.querySelector(".App").append(equalizer);
+
+        // filters.forEach((filter) => {
+        //     let input = document.createElement("input");
+
+        //     input.setAttribute("type", "range");
+        //     input.innerText = filter.frequency.value;
+        //     input.setAttribute("min", -12);
+        //     input.setAttribute("max", 12);
+        //     input.setAttribute("value", 0);
+        //     // console.log(filter.frequency.value);
+        //     input.setAttribute("title", filter.frequency.value);
+
+        //     input.style.display = "inline-block";
+        //     input.setAttribute("orient", "vertical");
+
+        // wavesurfer.drawer.style(input, {
+        //     webkitAppearance: "slider-vertical",
+        //     width: "50px",
+        //     height: "150px",
+        // });
+
+        //     console.log(input);
+
+        //     equalizer.appendChild(input);
+
+        // let onChange = function (e) {
+        //     filter.gain.value = ~~e.target.value;
+        // };
+
+        // input.addEventListener("input", onChange);
+        // input.addEventListener("change", onChange);
+        // });
+        // // wavesurfer.filters = filters;
+    };
+
     return (
         <>
             <div className="player">
@@ -85,6 +168,9 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                         {/* !! стили спинера.... !! */}
                     </WaveForm>
                 </WaveSurfer>
+                {eqSlidersView ? (
+                    <EQSliders filters={wavesurfer.filters} />
+                ) : null}
             </div>
         </>
     );

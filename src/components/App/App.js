@@ -96,43 +96,43 @@ function App() {
     };
 
     // Create vertical range sliders and bind filter to them
-    function createEQSliders(filters) {
-        if (document.querySelector("#equalizer")) {
-            document.querySelector("#equalizer").remove();
-        }
-        const equalizer = document.createElement("div");
-        equalizer.id = "equalizer";
-        document.querySelector(".App").append(equalizer);
+    // function createEQSliders(filters) {
+    //     if (document.querySelector("#equalizer")) {
+    //         document.querySelector("#equalizer").remove();
+    //     }
+    //     const equalizer = document.createElement("div");
+    //     equalizer.id = "equalizer";
+    //     document.querySelector(".App").append(equalizer);
 
-        filters.forEach(function (filter) {
-            let input = document.createElement("input");
+    //     filters.forEach(function (filter) {
+    //         let input = document.createElement("input");
 
-            input.setAttribute("type", "range");
-            input.setAttribute("min", -12);
-            input.setAttribute("max", 12);
-            input.setAttribute("value", 0);
-            input.setAttribute("title", filter.frequency.value);
+    //         input.setAttribute("type", "range");
+    //         input.setAttribute("min", -12);
+    //         input.setAttribute("max", 12);
+    //         input.setAttribute("value", 0);
+    //         input.setAttribute("title", filter.frequency.value);
 
-            input.style.display = "inline-block";
-            input.setAttribute("orient", "vertical");
+    //         input.style.display = "inline-block";
+    //         input.setAttribute("orient", "vertical");
 
-            wavesurfer.drawer.style(input, {
-                webkitAppearance: "slider-vertical",
-                width: "50px",
-                height: "150px",
-            });
+    //         wavesurfer.drawer.style(input, {
+    //             webkitAppearance: "slider-vertical",
+    //             width: "50px",
+    //             height: "150px",
+    //         });
 
-            equalizer.appendChild(input);
+    //         equalizer.appendChild(input);
 
-            let onChange = function (e) {
-                filter.gain.value = ~~e.target.value;
-            };
+    //         let onChange = function (e) {
+    //             filter.gain.value = ~~e.target.value;
+    //         };
 
-            input.addEventListener("input", onChange);
-            input.addEventListener("change", onChange);
-        });
-        wavesurfer.filters = filters;
-    }
+    //         input.addEventListener("input", onChange);
+    //         input.addEventListener("change", onChange);
+    //     });
+    //     wavesurfer.filters = filters;
+    // }
 
     //play pause button
     function handlePlayPauseTrack() {
