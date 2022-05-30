@@ -13,6 +13,7 @@ import "./Player.sass";
 const Player = ({ setWavesurfer, wavesurfer }) => {
     //!!
     const [eqSlidersView, setEqSlidersView] = useState(false);
+    // const [eqSlidersGain, setEqSlidersGain] = useState({});
 
     const [state, dispatch] = useContext(dataContext);
     const settings = useContext(settingsContext)[0];
@@ -73,22 +74,39 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
         });
     };
 
-    const EQSliders = ({ filters }) => {
+    const EQSliders = ({ filtersList }) => {
+        const [eqSlidersGain, setEqSlidersGain] = useState({});
+
+        useEffect(() => {
+            const eqSlidersArray = filtersList.map(
+                (filter) => filter.frequency.value
+            );
+            const eqSliders = {};
+            eqSlidersArray.forEach((slider) => (eqSliders[slider] = 0));
+            console.log("айнанаэ");
+
+            setEqSlidersGain(eqSliders);
+        }, [filtersList]);
+
+        const [throwaway, ...filters] = filtersList;
+
+        // console.log(eqSlidersGain);
         const onHandleChange = (e, filter) => {
-            console.log(filter.gain.value);
+            console.log(eqSlidersGain);
+
             filter.gain.value = ~~e.target.value;
+            setEqSlidersGain({
+                ...eqSlidersGain,
+                [filter.frequency.value]: ~~e.target.value,
+            });
         };
-
-        // if (document.querySelector("#equalizer")) {
-        //     document.querySelector("#equalizer").remove();
-        // }
-
-        // const equalizer = document.createElement("div");
         return (
-            <>
+            <div className="eq-container">
                 {filters.map((filter, i) => {
+                    // console.log(filter);
+
                     const input = (
-                        <div key={i}>
+                        <div className="eq-slider" key={i}>
                             <input
                                 onChange={(e) => onHandleChange(e, filter)}
                                 style={{ display: "inlineBlock" }}
@@ -96,7 +114,8 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                                 min="-12"
                                 max="12"
                                 name={filter.frequency.value}
-                                value={filter.gain.value}
+                                // value="0"
+                                value={eqSlidersGain[filter.frequency.value]}
                                 orient="vertical"
                             />
                             <label htmlFor={filter.frequency.value}>
@@ -104,52 +123,13 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                             </label>
                         </div>
                     );
-
-                    // wavesurfer.drawer.style(input, {
-                    //     webkitAppearance: "slider-vertical",
-                    //     width: "50px",
-                    //     height: "150px",
-                    // });
                     return input;
                 })}
-            </>
+            </div>
         );
-        // equalizer.id = "equalizer";
-        // document.querySelector(".App").append(equalizer);
-
-        // filters.forEach((filter) => {
-        //     let input = document.createElement("input");
-
-        //     input.setAttribute("type", "range");
-        //     input.innerText = filter.frequency.value;
-        //     input.setAttribute("min", -12);
-        //     input.setAttribute("max", 12);
-        //     input.setAttribute("value", 0);
-        //     // console.log(filter.frequency.value);
-        //     input.setAttribute("title", filter.frequency.value);
-
-        //     input.style.display = "inline-block";
-        //     input.setAttribute("orient", "vertical");
-
-        // wavesurfer.drawer.style(input, {
-        //     webkitAppearance: "slider-vertical",
-        //     width: "50px",
-        //     height: "150px",
-        // });
-
-        //     console.log(input);
-
-        //     equalizer.appendChild(input);
-
-        // let onChange = function (e) {
-        //     filter.gain.value = ~~e.target.value;
-        // };
-
-        // input.addEventListener("input", onChange);
-        // input.addEventListener("change", onChange);
-        // });
-        // // wavesurfer.filters = filters;
     };
+
+    // console.log(eqSlidersGain);
 
     return (
         <>
@@ -169,7 +149,7 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                     </WaveForm>
                 </WaveSurfer>
                 {eqSlidersView ? (
-                    <EQSliders filters={wavesurfer.filters} />
+                    <EQSliders filtersList={wavesurfer.filters} />
                 ) : null}
             </div>
         </>
