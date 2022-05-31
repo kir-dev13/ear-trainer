@@ -21,6 +21,7 @@ import Statistic from "../Statistic/Statstic";
 import ModalSettings from "../ModalSettings/modalSettings";
 
 import "./App.sass";
+import ModalEq from "../ModalEq/ModalEq";
 
 //TODO если нажать начать тренировку а потом остановить, то таймер будет работать.
 //TODO при остановке тренировки или начале надо обнулить все фильтры
@@ -95,45 +96,6 @@ function App() {
         startQuestion(state.quest);
     };
 
-    // Create vertical range sliders and bind filter to them
-    // function createEQSliders(filters) {
-    //     if (document.querySelector("#equalizer")) {
-    //         document.querySelector("#equalizer").remove();
-    //     }
-    //     const equalizer = document.createElement("div");
-    //     equalizer.id = "equalizer";
-    //     document.querySelector(".App").append(equalizer);
-
-    //     filters.forEach(function (filter) {
-    //         let input = document.createElement("input");
-
-    //         input.setAttribute("type", "range");
-    //         input.setAttribute("min", -12);
-    //         input.setAttribute("max", 12);
-    //         input.setAttribute("value", 0);
-    //         input.setAttribute("title", filter.frequency.value);
-
-    //         input.style.display = "inline-block";
-    //         input.setAttribute("orient", "vertical");
-
-    //         wavesurfer.drawer.style(input, {
-    //             webkitAppearance: "slider-vertical",
-    //             width: "50px",
-    //             height: "150px",
-    //         });
-
-    //         equalizer.appendChild(input);
-
-    //         let onChange = function (e) {
-    //             filter.gain.value = ~~e.target.value;
-    //         };
-
-    //         input.addEventListener("input", onChange);
-    //         input.addEventListener("change", onChange);
-    //     });
-    //     wavesurfer.filters = filters;
-    // }
-
     //play pause button
     function handlePlayPauseTrack() {
         if (wavesurfer) {
@@ -178,32 +140,15 @@ function App() {
         });
     }
 
-    const InputComponent =
-        // <InputAudioFile
-        //     trackName={state?.track?.name}
-        //     // setTracks={setTracks}
-        // />
-        withInput(InputAudioFile);
-    const playerComponent = state.track ? (
-        <>
-            <Player
-                setWavesurfer={setWavesurfer}
-                // track={track}
-                wavesurfer={wavesurfer}
-            />
-            <ControlPanel
-                wavesurfer={wavesurfer}
-                // track={track}
-                handlePlayPauseTrack={handlePlayPauseTrack}
-                handleTrainingStart={handleTrainingStart}
-            />
-        </>
-    ) : null;
+    const InputComponent = withInput(InputAudioFile);
+
     return (
         <div className="App">
             <settingsContext.Provider value={[settings, setSettings]}>
                 <aside className="aside-menu">
                     <menu className="options">
+                        <ModalEq wavesurfer={wavesurfer} />
+
                         <ModalSettings />
                     </menu>
                 </aside>
@@ -214,7 +159,21 @@ function App() {
                             <InputComponent />
                         </div>
 
-                        {playerComponent}
+                        {state.track ? (
+                            <>
+                                <Player
+                                    setWavesurfer={setWavesurfer}
+                                    // track={track}
+                                    wavesurfer={wavesurfer}
+                                />
+                                <ControlPanel
+                                    wavesurfer={wavesurfer}
+                                    // track={track}
+                                    handlePlayPauseTrack={handlePlayPauseTrack}
+                                    handleTrainingStart={handleTrainingStart}
+                                />
+                            </>
+                        ) : null}
 
                         <AppState wavesurfer={wavesurfer}></AppState>
 

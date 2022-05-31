@@ -4,19 +4,15 @@ import { dataContext, settingsContext } from "../../contexts/context";
 
 import { defaultFiltersList } from "../../logic/defaultSettings";
 
-import { createFilters } from "../../logic/createFilters";
+import { createAndConnectFilters } from "../../logic/createFilters";
 
 import Spinner from "../Spinner/spinner";
 
 import "./Player.sass";
 
 const Player = ({ setWavesurfer, wavesurfer }) => {
-    //!!
-    const [eqSlidersView, setEqSlidersView] = useState(false);
-    // const [eqSlidersGain, setEqSlidersGain] = useState({});
-
     const [state, dispatch] = useContext(dataContext);
-    const settings = useContext(settingsContext)[0];
+    const [settings, setSettings] = useContext(settingsContext);
 
     //loading file in wavesurfer
     useEffect(() => {
@@ -34,11 +30,13 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
 
     useEffect(() => {
         if (wavesurfer) {
-            const filters = createFilters(wavesurfer, settings.filtersList); //create filters
+            console.log("effect filtersList");
 
-            wavesurfer.backend.setFilters(filters); //connect
-            wavesurfer.filters = filters;
-            setEqSlidersView(true);
+            const filters = createAndConnectFilters(
+                wavesurfer,
+                settings.filtersList
+            );
+            setSettings({ ...settings, filters });
         }
     }, [settings.difficult, wavesurfer]);
 
@@ -74,63 +72,6 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
         });
     };
 
-    const EQSliders = ({ filtersList }) => {
-        const [eqSlidersGain, setEqSlidersGain] = useState({});
-
-        useEffect(() => {
-            const eqSlidersArray = filtersList.map(
-                (filter) => filter.frequency.value
-            );
-            const eqSliders = {};
-            eqSlidersArray.forEach((slider) => (eqSliders[slider] = 0));
-            console.log("айнанаэ");
-
-            setEqSlidersGain(eqSliders);
-        }, [filtersList]);
-
-        const [throwaway, ...filters] = filtersList;
-
-        // console.log(eqSlidersGain);
-        const onHandleChange = (e, filter) => {
-            console.log(eqSlidersGain);
-
-            filter.gain.value = ~~e.target.value;
-            setEqSlidersGain({
-                ...eqSlidersGain,
-                [filter.frequency.value]: ~~e.target.value,
-            });
-        };
-        return (
-            <div className="eq-container">
-                {filters.map((filter, i) => {
-                    // console.log(filter);
-
-                    const input = (
-                        <div className="eq-slider" key={i}>
-                            <input
-                                onChange={(e) => onHandleChange(e, filter)}
-                                style={{ display: "inlineBlock" }}
-                                type="range"
-                                min="-12"
-                                max="12"
-                                name={filter.frequency.value}
-                                // value="0"
-                                value={eqSlidersGain[filter.frequency.value]}
-                                orient="vertical"
-                            />
-                            <label htmlFor={filter.frequency.value}>
-                                {filter.frequency.value}
-                            </label>
-                        </div>
-                    );
-                    return input;
-                })}
-            </div>
-        );
-    };
-
-    // console.log(eqSlidersGain);
-
     return (
         <>
             <div className="player">
@@ -148,9 +89,6 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                         {/* !! стили спинера.... !! */}
                     </WaveForm>
                 </WaveSurfer>
-                {eqSlidersView ? (
-                    <EQSliders filtersList={wavesurfer.filters} />
-                ) : null}
             </div>
         </>
     );
