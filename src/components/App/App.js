@@ -26,6 +26,28 @@ import ModalEq from "../ModalEq/ModalEq";
 //TODO если нажать начать тренировку а потом остановить, то таймер будет работать.
 //TODO при остановке тренировки или начале надо обнулить все фильтры
 
+if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    console.log("enumerateDevices() не поддерживается.");
+}
+
+// Перечисление в цикле камер и микрофонов
+
+navigator.mediaDevices
+    .enumerateDevices()
+    .then(function (devices) {
+        devices.forEach((device) => {
+            if (
+                device.kind === "audiooutput" &&
+                device.deviceId !== "communications"
+            ) {
+                console.log(device);
+            }
+        });
+    })
+    .catch(function (err) {
+        console.log(err.name + ": " + err.message);
+    });
+
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
     // const [track, setTracks] = useState(null);
@@ -36,7 +58,7 @@ function App() {
         difficult: "common",
         gain: defaultGain,
         timeQuestion: timeQuestionDefault,
-        timeBeforeQustion: timeBeforeQuestionDefault,
+        timeBeforeQuestion: timeBeforeQuestionDefault,
     });
 
     const [state, dispatch] = useReducer(reducer, {

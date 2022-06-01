@@ -30,8 +30,6 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
 
     useEffect(() => {
         if (wavesurfer) {
-            console.log("effect filtersList");
-
             const filters = createAndConnectFilters(
                 wavesurfer,
                 settings.filtersList
