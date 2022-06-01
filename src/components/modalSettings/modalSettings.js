@@ -14,6 +14,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { Stack } from "@mui/material";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
@@ -21,10 +22,9 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 import { settingsContext } from "../../contexts/context";
-import { Stack } from "@mui/material";
 import "./modalSettings.sass";
 
-function ModalSettings(props) {
+function ModalSettings() {
     const [openSettings, setOpenSettings] = useState(false);
     const [settings, setSettings] = useContext(settingsContext);
     const [modalSettings, setModalSettings] = useState(settings);
@@ -34,6 +34,7 @@ function ModalSettings(props) {
     };
 
     const handleCloseSettings = () => {
+        setModalSettings(settings);
         setOpenSettings(false);
     };
 
@@ -64,7 +65,6 @@ function ModalSettings(props) {
                 className="modal"
                 open={openSettings}
                 onClose={handleCloseSettings}
-                style={{}}
             >
                 <DialogTitle>Settings</DialogTitle>
                 <DialogContent>

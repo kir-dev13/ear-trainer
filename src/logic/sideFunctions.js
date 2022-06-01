@@ -20,6 +20,7 @@ const delayWithInterval = (ms, func) => {
 
 function checkInputFiles(data, dataType, e = null) {
     const resultFiles = [];
+
     for (let file of data) {
         if (resultFiles.length < 5) {
             if (dataType.test(file.type)) {
@@ -32,6 +33,7 @@ function checkInputFiles(data, dataType, e = null) {
             return resultFiles;
         }
     }
+
     return resultFiles;
 }
 

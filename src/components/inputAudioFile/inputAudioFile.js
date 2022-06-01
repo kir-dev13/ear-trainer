@@ -7,7 +7,8 @@ import "./inputAudioFile.sass";
 const InputAudioFile = ({ loadAudioFiles }) => {
     const [state, dispatch] = useContext(dataContext);
 
-    const s = state?.track ? { height: "56px" } : { height: "128px" };
+    const s = state?.track ? { height: "56px" } : {};
+    // const s = {};
 
     return (
         <form action="">

@@ -1,10 +1,10 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
-import { useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { dataContext, settingsContext } from "../../contexts/context";
 
 import { defaultFiltersList } from "../../logic/defaultSettings";
 
-import { createFilters } from "../../logic/createFilters";
+import { createAndConnectFilters } from "../../logic/createFilters";
 
 import Spinner from "../Spinner/spinner";
 
@@ -12,7 +12,7 @@ import "./Player.sass";
 
 const Player = ({ setWavesurfer, wavesurfer }) => {
     const [state, dispatch] = useContext(dataContext);
-    const settings = useContext(settingsContext)[0];
+    const [settings, setSettings] = useContext(settingsContext);
 
     //loading file in wavesurfer
     useEffect(() => {
@@ -30,11 +30,11 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
 
     useEffect(() => {
         if (wavesurfer) {
-            const filters = createFilters(wavesurfer, settings.filtersList); //create filters
-            wavesurfer.backend.setFilters(filters); //connect
-            wavesurfer.filters = filters;
-
-            //!! EQSLIDERS WERE NERE HERE
+            const filters = createAndConnectFilters(
+                wavesurfer,
+                settings.filtersList
+            );
+            setSettings({ ...settings, filters });
         }
     }, [settings.difficult, wavesurfer]);
 
