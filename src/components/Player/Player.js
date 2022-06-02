@@ -1,8 +1,6 @@
 import { WaveSurfer, WaveForm } from "wavesurfer-react";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { dataContext, settingsContext } from "../../contexts/context";
-
-import { defaultFiltersList } from "../../logic/defaultSettings";
 
 import { createAndConnectFilters } from "../../logic/createFilters";
 
@@ -84,7 +82,6 @@ const Player = ({ setWavesurfer, wavesurfer }) => {
                         <div className="spinner">
                             {state.loading ? <Spinner /> : null}
                         </div>
-                        {/* !! стили спинера.... !! */}
                     </WaveForm>
                 </WaveSurfer>
             </div>

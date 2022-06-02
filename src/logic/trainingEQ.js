@@ -1,4 +1,3 @@
-import { timeQuestionDefault } from "./defaultSettings";
 import { delay } from "./sideFunctions";
 
 function randomFilter(filters) {

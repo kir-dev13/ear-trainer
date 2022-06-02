@@ -11,46 +11,20 @@ import {
     timeBeforeQuestionDefault,
 } from "../../logic/defaultSettings";
 
-import withInput from "../withInput/withInput";
-import InputAudioFile from "../InputAudioFile/inputAudioFile";
+import withLoader from "../trackLoadersComponents/withLoader/withLoader";
+import InputAudioFile from "../trackLoadersComponents/InputAudioFile/inputAudioFile";
 import Player from "../Player/Player";
 import ControlPanel from "../ControlPanel/ControlPanel";
 import AnswerArea from "../AnswerArea/AnswerArea";
 import AppState from "../AppState/AppState";
 import Statistic from "../Statistic/Statstic";
-import ModalSettings from "../ModalSettings/modalSettings";
+import ModalSettings from "../modalsComponents/ModalSettings/modalSettings";
 
 import "./App.sass";
-import ModalEq from "../ModalEq/ModalEq";
-
-//TODO если нажать начать тренировку а потом остановить, то таймер будет работать.
-//TODO при остановке тренировки или начале надо обнулить все фильтры
-
-if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-    console.log("enumerateDevices() не поддерживается.");
-}
-
-// Перечисление в цикле камер и микрофонов
-
-navigator.mediaDevices
-    .enumerateDevices()
-    .then(function (devices) {
-        devices.forEach((device) => {
-            if (
-                device.kind === "audiooutput" &&
-                device.deviceId !== "communications"
-            ) {
-                console.log(device);
-            }
-        });
-    })
-    .catch(function (err) {
-        console.log(err.name + ": " + err.message);
-    });
+import ModalEq from "../modalsComponents/ModalEq/ModalEq";
 
 function App() {
     const [wavesurfer, setWavesurfer] = useState(null);
-    // const [track, setTracks] = useState(null);
     const [settings, setSettings] = useState({
         filtersList: defaultFiltersList.filter(
             (filter) => filter.difficult === "common"
@@ -63,16 +37,11 @@ function App() {
 
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
-        stateApp: "тренажёр для восприятия частот на слух",
+        stateApp: "загрузите аудио файл",
         volume: 0.5,
         answersArray: [],
         quest: {},
         track: null,
-
-        //!!
-        //?? handleTrainingStart: handleTrainingStart,
-        //?? handlePlayPauseTrack: handlePlayPauseTrack,
-        //!!
     });
 
     //запускаем таймаут с получением нового вопроса после того, как массив с оответами поменялся
@@ -145,7 +114,6 @@ function App() {
     //training start
     function handleTrainingStart() {
         if (state.training) {
-            // clearTimeout(timerReverse.current) !!!
         } else {
             startQuestion();
         }
@@ -162,9 +130,7 @@ function App() {
         });
     }
 
-
-    const InputComponent = withInput(InputAudioFile);
-
+    const InputComponentFromDevice = withLoader(InputAudioFile);
 
     return (
         <div className="App">
@@ -179,27 +145,23 @@ function App() {
                 <main className="main">
                     <dataContext.Provider value={[state, dispatch]}>
                         <div className="inputWrapper">
-                            <InputComponent />
-                            <InputComponent />
+                            <InputComponentFromDevice />
+                            <InputComponentFromDevice />
                         </div>
-
 
                         {state.track ? (
                             <>
                                 <Player
                                     setWavesurfer={setWavesurfer}
-                                    // track={track}
                                     wavesurfer={wavesurfer}
                                 />
                                 <ControlPanel
                                     wavesurfer={wavesurfer}
-                                    // track={track}
                                     handlePlayPauseTrack={handlePlayPauseTrack}
                                     handleTrainingStart={handleTrainingStart}
                                 />
                             </>
                         ) : null}
-
 
                         <AppState wavesurfer={wavesurfer}></AppState>
 

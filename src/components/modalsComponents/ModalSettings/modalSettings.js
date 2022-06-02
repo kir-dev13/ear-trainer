@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 
-import { defaultFiltersList } from "../../logic/defaultSettings";
+import { defaultFiltersList } from "../../../logic/defaultSettings";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -21,7 +21,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { settingsContext } from "../../contexts/context";
+import { settingsContext } from "../../../contexts/context";
 import "./modalSettings.sass";
 
 function ModalSettings() {
@@ -108,8 +108,6 @@ function ModalSettings() {
                         />
                         <span
                             style={{
-                                // width: "5%",
-                                // padding: "10px",
                                 alignSelf: "baseline",
                                 width: "10px",
                             }}

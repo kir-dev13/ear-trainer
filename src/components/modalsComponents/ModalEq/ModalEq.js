@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-import { settingsContext } from "../../contexts/context";
+import { settingsContext } from "../../../contexts/context";
 
-import { createAndConnectFilters } from "../../logic/createFilters";
+import { createAndConnectFilters } from "../../../logic/createFilters";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -20,18 +20,8 @@ const ModalEq = ({ wavesurfer }) => {
 
     const [throwaway, ...filters] = settings.filtersList;
     const [eqSliders, setEqSliders] = useState(filters);
-    // console.log("settings.filtersList: ", eqSliders);
-    // console.log("eqSliders: ", eqSliders);
 
     useEffect(() => {
-        if (wavesurfer) {
-            createAndConnectFilters(wavesurfer, [
-                { f: 0, type: "peaking", difficult: "common", initialGain: 0 },
-                ...eqSliders,
-            ]);
-        }
-        // console.log("работает");
-
         setSettings({
             ...settings,
             filtersList: [
@@ -46,22 +36,21 @@ const ModalEq = ({ wavesurfer }) => {
     };
 
     const handleCloseEq = () => {
-        // setModalSettings(settings);
+        if (wavesurfer) {
+            createAndConnectFilters(wavesurfer, [
+                { f: 0, type: "peaking", difficult: "common", initialGain: 0 },
+                ...eqSliders,
+            ]);
+        }
         setOpenEq(false);
     };
 
-    // useEffect(() => {
-    //     const eqSlidersArray = settings.filtersList.map(
-    //         (filter) => filter.frequency.value
-    //     );
-    //     const eqSliders = {};
-    //     eqSlidersArray.forEach((slider) => (eqSliders[slider] = 0));
-
-    //     setEqSlidersGain(eqSliders);
-    // }, [settings.filtersList]);
-
-    // console.log(eqSlidersGain);
     const onHandleChange = (e, slider) => {
+        const currentFilter = wavesurfer.filters.filter(
+            (filter) => filter.frequency.value === slider.f
+        );
+        currentFilter[0].gain.value = e.target.value;
+
         const arr = eqSliders.map((item) =>
             item.f === slider.f
                 ? { ...item, initialGain: ~~e.target.value }
@@ -69,14 +58,6 @@ const ModalEq = ({ wavesurfer }) => {
         );
 
         setEqSliders(arr);
-
-        // filter.initialGain = ~~e.target.value;
-
-        // filter.gain.value = ~~e.target.value;
-        // setEqSliders({
-        //     ...eqSlidersGain,
-        //     [filter.frequency.value]: ~~e.target.value,
-        // });
     };
     return (
         <div>
@@ -92,7 +73,6 @@ const ModalEq = ({ wavesurfer }) => {
                     <Stack>
                         <div className="eq-container">
                             {eqSliders.map((slider, i) => {
-                                // console.log(filter);
                                 return (
                                     <div className="eq-slider" key={i}>
                                         <input
@@ -104,7 +84,6 @@ const ModalEq = ({ wavesurfer }) => {
                                             min="-12"
                                             max="12"
                                             name={slider.f}
-                                            // defaultValue={eqSliders.initialGain}
                                             value={slider.initialGain}
                                             orient="vertical"
                                         />

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { dataContext } from "../../contexts/context";
-import { checkInputFiles } from "../../logic/sideFunctions";
+import { dataContext } from "../../../contexts/context";
+import { checkInputFiles } from "../../../logic/sideFunctions";
 
 import "./inputAudioFile.sass";
 
@@ -8,7 +8,6 @@ const InputAudioFile = ({ loadAudioFiles }) => {
     const [state, dispatch] = useContext(dataContext);
 
     const s = state?.track ? { height: "56px" } : {};
-    // const s = {};
 
     return (
         <form action="">

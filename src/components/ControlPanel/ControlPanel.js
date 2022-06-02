@@ -22,7 +22,6 @@ const ControlPanel = ({
 
     const handleChangeVolume = (e) => {
         wavesurfer.setVolume(+(e.target.value / 100).toFixed(2));
-        // setVolume(+(e.target.value / 100).toFixed(2));
         dispatch({
             type: "setVolume",
             payload: +(e.target.value / 100).toFixed(2),
@@ -36,15 +35,12 @@ const ControlPanel = ({
                     className="volume-slider"
                     spacing={2}
                     direction="row"
-                    // sx={{ mb: 1 }}
                     alignItems="center"
                 >
                     <VolumeDown />
                     <Slider
                         className="volume"
                         color="secondary"
-                        // style={{ color: "#743C79" }}
-                        // #743C79
                         value={state.volume * 100}
                         onChange={handleChangeVolume}
                     />

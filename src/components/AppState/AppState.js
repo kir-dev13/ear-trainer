@@ -36,13 +36,11 @@ const AppState = ({ wavesurfer }) => {
                 type: "stateAppChange",
                 setStateApp: state.training ? "ваш ответ?" : "режим разминки",
             });
-            // clearTimeout(timerReverse.current);
         } else if (
             stateApp === "верно" ||
             stateApp === "неверно" ||
             !state.training
         ) {
-            // clearTimeout(timerQuest.current);
             clearTimeout(timerReverse.current);
         }
     }, [stateApp, state.playing, state.training]);
@@ -52,7 +50,6 @@ const AppState = ({ wavesurfer }) => {
             message.title = "пауза";
             break;
         case true:
-            //
             break;
         default:
     }

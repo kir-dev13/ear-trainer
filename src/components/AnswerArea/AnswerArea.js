@@ -156,7 +156,7 @@ const AnswerArea = ({ wavesurfer }) => {
                         color="secondary"
                         data-freq={item.f}
                         data-num={i}
-                        className={`btn-answers frequency ${s}`}
+                        className={`frequency ${s}`}
                         disabled={
                             (item.f === 0 && !state.training) || !state.playing
                         }
@@ -184,7 +184,7 @@ const AnswerArea = ({ wavesurfer }) => {
                     key={i}
                     onClick={handleAnswerDir}
                     data-direction={i}
-                    className={`direction btn-answers ${s}`}
+                    className={`direction ${s}`}
                     disabled={!state.playing}
                 >
                     {i > 0 ? "усиление" : "ослабление"}
@@ -195,15 +195,33 @@ const AnswerArea = ({ wavesurfer }) => {
     };
     return (
         <div className={"answers"}>
-            {!state.loading && wavesurfer?.filters ? (
+            {state.loading || wavesurfer?.filters ? (
                 <>
                     <AnswerDir /> <AnswerFreq />
                 </>
             ) : (
-                "загрузите аудио файл"
+                <div style={{ textAlign: "left" }}>
+                    <h1>Тренажёр для восприятия частот на слух </h1>
+                    <p>
+                        Загрузите аудиофайл, далее вы увидите список фильтров,
+                        Каждый фильтр может ослабить или усилить определённый
+                        частотный диапазон звукового сигнала. Вы можете
+                        послушать, как каждый фильтр влияет на звук в режиме
+                        разминки. Далее вы можете попрактиковаться в
+                        распознавании частот на слух, нажав кнопку "Начать
+                        тренировку".
+                    </p>
+                    <p>
+                        Уровень усиления и ослабления, а также количество
+                        фильтров можно поменять в настройках в левом нижнем
+                        углу. Также можно скорректировать уровень громкости
+                        определённых частот при помощи эквалайзера, так как
+                        слишком большое усиление на определённых частотах может
+                        быть неприятным, это особенно заметно при прослушивании
+                        в наушниках
+                    </p>
+                </div>
             )}
-            {/* <AnswerDir />
-            <AnswerFreq /> */}
         </div>
     );
 };
