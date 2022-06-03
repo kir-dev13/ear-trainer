@@ -19,6 +19,7 @@ import AnswerArea from "../AnswerArea/AnswerArea";
 import AppState from "../AppState/AppState";
 import Statistic from "../Statistic/Statstic";
 import ModalSettings from "../modalsComponents/ModalSettings/modalSettings";
+import Review from "../Review/Review";
 
 import "./App.sass";
 import ModalEq from "../modalsComponents/ModalEq/ModalEq";
@@ -75,7 +76,7 @@ function App() {
                     ),
                     setStateApp: settings.timeQuestion / 1000,
                 });
-            }, timeBeforeQuestionDefault);
+            }, settings.timeBeforeQuestion);
         }
     };
 
@@ -165,7 +166,12 @@ function App() {
 
                         <AppState wavesurfer={wavesurfer}></AppState>
 
-                        <AnswerArea wavesurfer={wavesurfer} />
+                        {state.loading || wavesurfer?.filters ? (
+                            <AnswerArea wavesurfer={wavesurfer} />
+                        ) : (
+                            <Review />
+                        )}
+
                         {state.track ? (
                             <Statistic answersArray={state.answersArray} />
                         ) : null}
