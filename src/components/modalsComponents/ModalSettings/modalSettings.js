@@ -66,7 +66,7 @@ function ModalSettings() {
                 open={openSettings}
                 onClose={handleCloseSettings}
             >
-                <DialogTitle>Settings</DialogTitle>
+                <DialogTitle>Настройки</DialogTitle>
                 <DialogContent>
                     <Stack
                         sx={{
@@ -87,7 +87,7 @@ function ModalSettings() {
                                 textAlign: "center",
                             }}
                         >
-                            gain
+                            усиление / ослабление
                         </Typography>
                         <Slider
                             sx={{
@@ -182,8 +182,8 @@ function ModalSettings() {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Button onClick={handleCloseSettings}>Cancel</Button>
-                    <Button onClick={handleSaveChange}>Save</Button>
+                    <Button onClick={handleCloseSettings}>Отмена</Button>
+                    <Button onClick={handleSaveChange}>Сохранить</Button>
                 </DialogActions>
             </Dialog>
         </div>

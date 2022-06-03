@@ -3,6 +3,7 @@ import { settingsContext } from "../../../contexts/context";
 
 import { createAndConnectFilters } from "../../../logic/createFilters";
 
+import { Slider, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import EqualizerIcon from "@mui/icons-material/Equalizer";
@@ -45,18 +46,28 @@ const ModalEq = ({ wavesurfer }) => {
         setOpenEq(false);
     };
 
-    const onHandleChange = (e, slider) => {
+    const handleReset = () => {
+        wavesurfer.filters.forEach((filter) => (filter.gain.value = 0));
+        setEqSliders((prevState) => {
+            const newState = prevState.map((slider) => ({
+                ...slider,
+                initialGain: 0,
+            }));
+            return newState;
+        });
+    };
+
+    const onHandleChange = (e, newValue) => {
         const currentFilter = wavesurfer.filters.filter(
-            (filter) => filter.frequency.value === slider.f
+            (filter) => filter.frequency.value === +e.target.name
         );
-        currentFilter[0].gain.value = e.target.value;
+        currentFilter[0].gain.value = ~~newValue;
 
         const arr = eqSliders.map((item) =>
-            item.f === slider.f
-                ? { ...item, initialGain: ~~e.target.value }
+            item.f === +e.target.name
+                ? { ...item, initialGain: ~~newValue }
                 : item
         );
-
         setEqSliders(arr);
     };
     return (
@@ -70,32 +81,47 @@ const ModalEq = ({ wavesurfer }) => {
             </IconButton>
             <Dialog className="modal" open={openEq} onClose={handleCloseEq}>
                 <DialogContent>
-                    <Stack>
-                        <div className="eq-container">
-                            {eqSliders.map((slider, i) => {
-                                return (
-                                    <div className="eq-slider" key={i}>
-                                        <input
-                                            onChange={(e) =>
-                                                onHandleChange(e, slider)
-                                            }
-                                            style={{ display: "inlineBlock" }}
-                                            type="range"
-                                            min="-12"
-                                            max="12"
-                                            name={slider.f}
-                                            value={slider.initialGain}
-                                            orient="vertical"
-                                        />
-                                        <label htmlFor={slider.f}>
-                                            {slider.f}
-                                        </label>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                    <Stack
+                        sx={{ height: 150 }}
+                        // spacing={1}
+                        direction="row"
+                        className="eq-container"
+                    >
+                        {eqSliders.map((slider, i) => {
+                            return (
+                                <div key={i} className="eq-slider">
+                                    <Slider
+                                        sx={{
+                                            '& input[type="range"]': {
+                                                WebkitAppearance:
+                                                    "slider-vertical",
+                                            },
+                                            height: "150px",
+                                        }}
+                                        valueLabelDisplay="auto"
+                                        orientation="vertical"
+                                        max={12}
+                                        min={-12}
+                                        name={`${slider.f}`}
+                                        value={slider.initialGain}
+                                        onChange={onHandleChange}
+                                        aria-label={`${slider.f}`}
+                                    />
+                                    <Typography>{slider.f}</Typography>
+                                </div>
+                            );
+                        })}
                     </Stack>
                 </DialogContent>
+                <DialogActions
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Button onClick={handleReset}>Сбросить эквалайзер</Button>
+                    <Button onClick={handleCloseEq}>Закрыть</Button>
+                </DialogActions>
             </Dialog>
         </div>
     );
