@@ -13,6 +13,7 @@ import {
 
 import withLoader from "../trackLoadersComponents/withLoader/withLoader";
 import InputAudioFile from "../trackLoadersComponents/InputAudioFile/inputAudioFile";
+import LoadAudioFile from "../trackLoadersComponents/LoadAudioFile/LoadAudioFile";
 import Player from "../Player/Player";
 import ControlPanel from "../ControlPanel/ControlPanel";
 import AnswerArea from "../AnswerArea/AnswerArea";
@@ -132,6 +133,7 @@ function App() {
     }
 
     const InputComponentFromDevice = withLoader(InputAudioFile);
+    const InputComponentFromServer = withLoader(LoadAudioFile);
 
     return (
         <div className="App">
@@ -147,7 +149,7 @@ function App() {
                     <dataContext.Provider value={[state, dispatch]}>
                         <div className="inputWrapper">
                             <InputComponentFromDevice />
-                            <InputComponentFromDevice />
+                            <InputComponentFromServer />
                         </div>
 
                         {state.track ? (

@@ -18,10 +18,14 @@ const delayWithInterval = (ms, func) => {
     });
 };
 
-function checkInputFiles(data, dataType, e = null) {
+function checkInputFiles(
+    files,
+    dataType = /audio\/mpeg|audio\/flac|audio\/mp3|audio\/mp4|audio\/ogg|audio\/x+|wav/,
+    e = null
+) {
     const resultFiles = [];
 
-    for (let file of data) {
+    for (let file of files) {
         if (resultFiles.length < 5) {
             if (dataType.test(file.type)) {
                 resultFiles.push(file);

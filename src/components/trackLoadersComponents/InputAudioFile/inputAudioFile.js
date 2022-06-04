@@ -1,13 +1,12 @@
 import { useContext } from "react";
 import { dataContext } from "../../../contexts/context";
-import { checkInputFiles } from "../../../logic/sideFunctions";
 
 import "./inputAudioFile.sass";
 
 const InputAudioFile = ({ loadAudioFiles }) => {
     const [state, dispatch] = useContext(dataContext);
 
-    const s = state?.track ? { height: "56px" } : {};
+    // const s = state?.track ? { height: "56px" } : {};
 
     return (
         <form action="">
@@ -16,20 +15,13 @@ const InputAudioFile = ({ loadAudioFiles }) => {
                 type="file"
                 // multiple
                 onChange={(e) => {
-                    loadAudioFiles(
-                        checkInputFiles(
-                            e.target.files,
-                            /audio\/mpeg|audio\/flac|audio\/mp3|audio\/mp4|audio\/ogg|audio\/x+|wav/,
-                            e
-                        ),
-                        e
-                    );
+                    loadAudioFiles(e.target.files, e);
                 }}
             />
 
-            <label htmlFor="input" style={s}>
+            <label htmlFor="input">
                 {state?.track ? (
-                    <p>загр</p>
+                    <p>загрузить другой</p>
                 ) : (
                     <p>
                         нажмите, чтобы загрузить аудио файл с вашего устройства
